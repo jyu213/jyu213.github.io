@@ -14,12 +14,12 @@
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://jyu213.github.io//index.xml">
 
     
-    <title>DPI 和 PPI - 见见 - 前端小记</title>
-    <meta property='og:title' content="DPI 和 PPI - 见见 - 前端小记">
+    <title>挖一挖 submodule - 见见 - 前端小记</title>
+    <meta property='og:title' content="挖一挖 submodule - 见见 - 前端小记">
     <meta property="og:type" content="article">
     
 
-    <meta property="og:url" content="http://jyu213.github.io/blog/2014/09/08/dpi-%E5%92%8C-ppi/">
+    <meta property="og:url" content="http://jyu213.github.io/blog/2016/07/02/%E6%8C%96%E4%B8%80%E6%8C%96-submodule/">
     
     
 
@@ -61,10 +61,10 @@
       <article class="single" itemscope="itemscope" itemtype="http://schema.org/Article">
 
         <meta itemprop="mainEntityOfPage"  itemType="https://schema.org/WebPage" content="http://jyu213.github.io/"/>
-        <meta itemprop="dateModified" content="2014-09-08T00:00:00&#43;00:00">
-        <meta itemprop="headline" content="DPI 和 PPI">
-        <meta itemprop="description" content="本文所涉及的内容在网上已有很多介绍。可相互借鉴。笔者仅为整理知识体系所用。 PPI（Pixel Per Inch） 图像分辨率所使用的单位。在图像中每英">
-        <meta itemprop="url" content="http://jyu213.github.io/blog/2014/09/08/dpi-%E5%92%8C-ppi/">
+        <meta itemprop="dateModified" content="2016-07-02T14:26:44&#43;08:00">
+        <meta itemprop="headline" content="挖一挖 submodule">
+        <meta itemprop="description" content="在很长的一段时间内，对submodule的概念含糊不清。特别是 submodule 和 subtree 这两个的区别。今天正好有时间来理一理。 子模块（submodule） 为了解">
+        <meta itemprop="url" content="http://jyu213.github.io/blog/2016/07/02/%E6%8C%96%E4%B8%80%E6%8C%96-submodule/">
         <div itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
           <meta itemprop="url" content="http://jyu213.github.io/images/default.jpg" />
           <meta itemprop="width" content="800">
@@ -83,48 +83,83 @@
         </div>
 
         <header class="article-header">
-          <h1 class="article-title">DPI 和 PPI</h1>
+          <h1 class="article-title">挖一挖 submodule</h1>
 
-          <time itemprop="datePublished" pubdate="pubdate" datetime="2014-09-08T00:00:00&#43;00:00">2014-09-08</time>
+          <time itemprop="datePublished" pubdate="pubdate" datetime="2016-07-02T14:26:44&#43;08:00">2016-07-02</time>
 
           
-            <a href="http://jyu213.github.io/tags/doc" class="tag">doc</a> 
+            <a href="http://jyu213.github.io/tags/git" class="tag">git</a> 
           
         </header>
 
         <div class="article-body" itemprop="articleBody">
           
 
-<p>本文所涉及的内容在网上已有很多介绍。可相互借鉴。笔者仅为整理知识体系所用。</p>
+<p>在很长的一段时间内，对<code>submodule</code>的概念含糊不清。特别是 <code>submodule</code> 和 <code>subtree</code> 这两个的区别。今天正好有时间来理一理。</p>
 
-<h3 id="ppi-pixel-per-inch:b8585493f60c6c7eca55ca69564e380c">PPI（Pixel Per Inch）</h3>
+<h3 id="子模块-submodule:3b642809b94e451e9d37df2cf008e2bb">子模块（submodule）</h3>
 
-<p>图像分辨率所使用的单位。在图像中每英寸所表达的像素数目。</p>
+<p>为了解决项目中的依赖问题。使得更加方便的维护与管理。子模块允许你将一个 Git         仓库作为另外一个 Git 仓库的子目录，从而保持相对独立的提交记录。</p>
 
-<h3 id="dpi-dot-per-inch:b8585493f60c6c7eca55ca69564e380c">DPI（Dot Per Inch）</h3>
+<p>子模块有点类似与一个软链。你记录他们当前确切所处的提交，但是不能记录一个子模块的 <code>master</code> 或者其它符号的引用。在 <code>git</code> 的存储信息中，<code>submodule</code> 的属于 <code>160000</code> 模式，这在Git中是一个特殊模式，基本意思是你将一个提交记录为一个目录项而不是子目录或者文件。</p>
 
-<p>打印分辨率使用的单位。每英寸所表达的打印点数。</p>
+<h4 id="用法:3b642809b94e451e9d37df2cf008e2bb">用法</h4>
 
-<h3 id="像素-pixel:b8585493f60c6c7eca55ca69564e380c">像素（Pixel）</h3>
+<p><code>submodule</code> 的使用还是挺方便的。<code>.gitmodules</code> 文件保存着项目 URL 与已经拉取的本地目录之间的映射。</p>
 
-<p>一种用来计算数码影像的单位。</p>
+<p><code>git submodule add</code> 来增加新模块，<code>git submodule init</code> 用于初始化，<code>git submodule update</code> 用于更新，就是删除的时候不太方便。
+而另外一个更新维护子模块的时候也有些繁琐，也常常会出一些坑。</p>
 
-<h3 id="分辨率:b8585493f60c6c7eca55ca69564e380c">分辨率</h3>
-
-<p>单位长度中，所表达或撷取的像素数目。</p>
+<h3 id="挖坑说明:3b642809b94e451e9d37df2cf008e2bb">挖坑说明</h3>
 
 <ul>
-<li>DPI用来表示输出设备的输出精度，如打印机，显示器</li>
-<li>DPI表示的是 像点/英寸（每英寸长度上有多少个打印点或像点）</li>
-<li>PPI用来表示输入设备的输入精度，如扫描仪，数码相机</li>
-<li>PPI表示的是　像素/英寸（每英寸长度上有多少个像素）</li>
+<li><p>当你 <code>pull master</code> 之后，如果 <code>submodule</code> 有变更，都需要记得<code>submodule update</code>一下，不然又会提交旧的信息回去了。这本质上，都是因为它在主<code>master</code>上都是已 <code>link</code> 的方式存在。</p></li>
+
+<li><p><code>submodule</code> 的时候也有点费劲的其实。当你进入 <code>submodule</code> 的目录，其实不会切到任何分支，<code>HEAD</code> 处于游离的状态，所以在改动之前需要 <code>checkout master</code>，再来改动。</p></li>
 </ul>
 
-<h3 id="参考资料:b8585493f60c6c7eca55ca69564e380c">参考资料</h3>
+<h3 id="subtree:3b642809b94e451e9d37df2cf008e2bb">subtree</h3>
+
+<p>上面讲了这个多，其实官方推荐使用 <code>subtree</code> 来代替 <code>submodule</code>。两者的区分在于，<code>submodule</code>是把一个 <code>commit</code> 嵌入到当前项目的子目录中，只相当于一个 <code>Link</code>，而 <code>subtree</code> 是合并子项目到当前项目的子目录中，是一个完整项目的拷贝。</p>
+
+<p><code>subtree</code> 除了命令长一点外，还是有挺多优点的。比如</p>
 
 <ul>
-<li><a href="http://sebastien-gabriel.com/designers-guide-to-dpi/home">Designer&rsquo;s guide to DPI</a></li>
-<li><a href="http://www.zhihu.com/question/21220154">DPI、PPI、DP、PX 的详细计算方法 - 知乎</a></li>
+<li>clone 的时候不需要 <code>init</code></li>
+<li>没有类似的 <code>.gitmodule</code> 文件</li>
+<li>管理上更加方便一些</li>
+</ul>
+
+<h4 id="用法-1:3b642809b94e451e9d37df2cf008e2bb">用法</h4>
+
+<p><code>subtree</code> 的使用相对复杂一些。这个依旧省略了各种操作的说明。具体翻看 API。</p>
+
+<ul>
+<li><p>关联：</p>
+
+<pre><code>git remote add -f &lt;子仓库名&gt; &lt;子仓库地址&gt;
+git subtree add --prefix=&lt;子目录名&gt; &lt;子仓库名&gt; &lt;分支&gt; --squash
+</code></pre></li>
+
+<li><p>更新</p>
+
+<pre><code>git fetch &lt;远程仓库名&gt; &lt;分支&gt;
+git subtree pull --prefix=&lt;子目录名&gt; &lt;远程分支&gt; &lt;分支&gt; --squash
+</code></pre></li>
+
+<li><p>推送</p>
+
+<pre><code>git subtree push --prefix=ai ai master
+</code></pre></li>
+</ul>
+
+<h3 id="参考文献:3b642809b94e451e9d37df2cf008e2bb">参考文献</h3>
+
+<ul>
+<li><a href="https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E5%AD%90%E6%A8%A1%E5%9D%97">Git 工具 - 子模块</a></li>
+<li><a href="https://git-scm.com/book/zh/v1/Git-%E5%B7%A5%E5%85%B7-%E5%AD%90%E6%A0%91%E5%90%88%E5%B9%B6">Git 工具 - 子树合并</a></li>
+<li><a href="http://stackoverflow.com/questions/31769820/differences-between-git-submodule-and-subtree">Difference between git submodule and subtree</a></li>
+<li><a href="http://alistra.ghost.io/2014/11/30/git-subtree-a-better-alternative-to-git-submodule/">git subtree - a better alternative to git submodule</a></li>
 </ul>
 
         </div>
@@ -132,7 +167,7 @@
 
         <aside>
           
-<div class="ds-thread" data-thread-key="http://jyu213.github.io/blog/2014/09/08/dpi-%E5%92%8C-ppi/" data-title="DPI 和 PPI" data-url="http://jyu213.github.io/blog/2014/09/08/dpi-%E5%92%8C-ppi/"></div>
+<div class="ds-thread" data-thread-key="http://jyu213.github.io/blog/2016/07/02/%E6%8C%96%E4%B8%80%E6%8C%96-submodule/" data-title="挖一挖 submodule" data-url="http://jyu213.github.io/blog/2016/07/02/%E6%8C%96%E4%B8%80%E6%8C%96-submodule/"></div>
 <script type="text/javascript">
 var duoshuoQuery = {short_name:"j4evee"};
     (function() {
@@ -170,13 +205,13 @@ var duoshuoQuery = {short_name:"j4evee"};
       
       <a href="http://jyu213.github.io/tags/css" class="list-group-item">css</a>
       
-      <a href="http://jyu213.github.io/tags/%E8%87%AA%E5%8A%A8%E5%8C%96" class="list-group-item">自动化</a>
-      
-      <a href="http://jyu213.github.io/tags/html5" class="list-group-item">html5</a>
-      
       <a href="http://jyu213.github.io/tags/git" class="list-group-item">git</a>
       
       <a href="http://jyu213.github.io/tags/js" class="list-group-item">js</a>
+      
+      <a href="http://jyu213.github.io/tags/%E8%87%AA%E5%8A%A8%E5%8C%96" class="list-group-item">自动化</a>
+      
+      <a href="http://jyu213.github.io/tags/html5" class="list-group-item">html5</a>
       
     </div>
   </div>

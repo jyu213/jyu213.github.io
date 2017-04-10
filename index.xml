@@ -5,8 +5,212 @@
     <link>http://jyu213.github.io/</link>
     <description>Recent content on 见见 - 前端小记</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 24 Feb 2016 00:43:23 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 01 Apr 2017 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://jyu213.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>CSS 模块化组织之道</title>
+      <link>http://jyu213.github.io/blog/2017/04/01/css-%E6%A8%A1%E5%9D%97%E5%8C%96%E7%BB%84%E7%BB%87%E4%B9%8B%E9%81%93/</link>
+      <pubDate>Sat, 01 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://jyu213.github.io/blog/2017/04/01/css-%E6%A8%A1%E5%9D%97%E5%8C%96%E7%BB%84%E7%BB%87%E4%B9%8B%E9%81%93/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;前几天还在问朋友，CSS 近期有没有推出啥比较火热的，答，除了 &lt;code&gt;Grid&lt;/code&gt; 好像没啥新东西。CSS 确实好像没有 JS 社区那么火热了。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;由于 CSS 自身语言的特点，操作起来非常容易，但是等到项目到达一定程度的时候，想要优雅的管理 CSS，却也不见得那么容易。&lt;/p&gt;
+
+&lt;p&gt;大家平常在开发 CSS 的过程中， 肯定遇到过下面的一些情况：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;全局命名空间容易冲突&lt;/li&gt;
+&lt;li&gt;文件依赖管理的混乱&lt;/li&gt;
+&lt;li&gt;层级嵌套太深&lt;/li&gt;
+&lt;li&gt;样式被重置&lt;/li&gt;
+&lt;li&gt;大量重复、冗余、无用的代码&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;好的 CSS 设计应该具有&lt;strong&gt;可读性&lt;/strong&gt;，&lt;strong&gt;维护性&lt;/strong&gt;，&lt;strong&gt;扩展性&lt;/strong&gt;和&lt;strong&gt;复用性&lt;/strong&gt;。这几条其实也不用特地的去解释，在软件开发设计中并不陌生。大体来说，就是设计 CSS 的时候，我们需要考虑书写的条理是否清晰，后续修改内容是否低成本，新增内容又是否会打破现有逻辑。而在组织 CSS 的时候，尽量地多考虑下抽象与解耦，可以依据现有的内容，快速创建新的模块。&lt;/p&gt;
+
+&lt;p&gt;而现在对于 CSS 模块化的解决方案其实也有很多，比如 &lt;code&gt;OOCSS&lt;/code&gt;，&lt;code&gt;SMACSS&lt;/code&gt;，&lt;code&gt;CSS Modules&lt;/code&gt; 以及 &lt;code&gt;BEM&lt;/code&gt; 的命名规则。在这里，我也不一一介绍这些概念具体是什么了，有兴趣的同学可以自己去研究下，相关的文章已经太多了。&lt;/p&gt;
+
+&lt;p&gt;在如此多的选择之中，甚至可以说是混乱，我觉得最重要的是，各个团队应该依据各自的业务情况选择合适的方案，并做好团队中的&lt;strong&gt;约定&lt;/strong&gt;。大家遵循同一套约定与规范，在合理解决问题的同时也避免出现使用混乱的情况。&lt;/p&gt;
+
+&lt;p&gt;下面来谈谈我自己平时项目中的一些解决方案。这也是平时开发经验和借鉴现有方案的组合。&lt;/p&gt;
+
+&lt;p&gt;闲话扯在前面的是，目前方案中推荐使用预处理器等方式。虽然即使不用也能满足绝大多数场景，但是有更优雅而便捷的方式何乐而不为呢。&lt;/p&gt;
+
+&lt;p&gt;首先，目录划分。将 CSS 分为两类，通用模块和业务模块，可以适当地分为多个小文件。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;通用模块中存放公共部分，同一类别独自一文件，可以是表示结构的，也可以是表示主题的，唯独表示页面具体逻辑的部分，不能放在该目录下。&lt;/li&gt;
+&lt;li&gt;业务模块则指具体页面对应的 CSS 文件。一个页面单独对应一个 CSS 文件。通过 &lt;code&gt;@import&lt;/code&gt; 引入相关的通用模块子文件及需要更细粒度拆分的 CSS 文件。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;如下图所示，&lt;code&gt;common&lt;/code&gt; 中存在的为共用部分文件，而 &lt;code&gt;page&lt;/code&gt; 下则具体对应到指定的页面。&lt;code&gt;Demo/style.css&lt;/code&gt; 为对应 &lt;code&gt;Demo&lt;/code&gt; 页面中的 CSS 文件。其中 &lt;code&gt;style.css&lt;/code&gt; 可能还 &lt;code&gt;@import&lt;/code&gt; 了 &lt;code&gt;common/form.css&lt;/code&gt;，&lt;code&gt;common/btn.css&lt;/code&gt; 以及 &lt;code&gt;Demo/css&lt;/code&gt; 目录下的文件。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    ├── common
+    │   ├── btn.css
+    │   ├── common.css
+    │   ├── form.css
+    │   └── layout.css
+    └── page
+        └── Demo
+            ├── css
+            │   ├── list.css
+            │   └── search.css
+            └── style.css
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其次，在命名方式上，主要以原子类 + BEM 的方式来命名。
+这里的原子类，不是像 &lt;code&gt;mr10&lt;/code&gt;， &lt;code&gt;pull-right&lt;/code&gt; 这类方式，而是带有固有前缀的命名方式。好处是可以通过命名来快速识别所属位置及功能。比如以 &lt;code&gt;ly-&lt;/code&gt; 前缀来表示和页面布局相关结构，如两栏三栏。再比如 &lt;code&gt;pos-mr10&lt;/code&gt;，&lt;code&gt;pos-fl&lt;/code&gt; ，&lt;code&gt;sty-fiz12&lt;/code&gt;等等。这个可能目前需要团队内约定。&lt;/p&gt;
+
+&lt;p&gt;至于具体到达一个组件级别的时候，直接推荐使用 BEM 方式来维护。BEM 真心强大，虽然初识乱花渐欲迷人眼。BEM 后续再单独拆出来讲吧。&lt;/p&gt;
+
+&lt;p&gt;来看一些代码的片段加强理解。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-css&#34;&gt;$orange: #fe7800;
+
+@function Mpercentage($value){
+    @return percentage($value/640);
+}
+
+// btn.css
+.btn-full{
+    display: inline-block;
+    width: 100%; height: 48px; line-height: 48px;
+    text-align: center; font-size: 1.8rem;
+}
+.btn-inline{
+    display: inline-block;
+    padding: 0 Mpercentage(60);
+    height: 30px; line-height: 30px;
+}
+.btn-purple{
+    color: #fff;
+    background: #9a78c8;
+}
+.btn-white{
+    color: #666;
+    background: #fff;
+}
+
+// login.css
+.login-form{
+    font-size: 1.4rem;
+
+    &amp;amp;__item{
+        position: relative;
+        margin-bottom: Mpercentage(20);
+    }
+    &amp;amp;__item_btn{
+        margin-top: Mpercentage(30);
+    }
+    &amp;amp;__item_tips{
+        line-height: 35px; font-size: 1.3rem;
+        color: #666;
+    }
+    &amp;amp;__input{
+        display: block;
+        padding: 0 3%;
+        width: 93%; height: 43px; line-height: 43px;
+        font-size: 1.5rem;
+        border: 1px solid #dadada;
+
+        &amp;amp;:focus{
+            border-color: #baacdf;
+        }
+        &amp;amp;.form-error{
+            border-color: $orange;
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最后，通过函数、组件模块的抽离来实现页面的快速重组。这里其实蛮多都依赖到预处理器的特性了，从而使得 CSS 可以变得更加灵活。&lt;/p&gt;
+
+&lt;p&gt;至此，主要概括起来就是通过文件与命名来解决冲突问题，通过预处理器来解决维护扩展问题。&lt;/p&gt;
+
+&lt;p&gt;那么问题来了，你发现了上述中几个不能满足的场景了么？&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>挖一挖 submodule</title>
+      <link>http://jyu213.github.io/blog/2016/07/02/%E6%8C%96%E4%B8%80%E6%8C%96-submodule/</link>
+      <pubDate>Sat, 02 Jul 2016 14:26:44 +0800</pubDate>
+      
+      <guid>http://jyu213.github.io/blog/2016/07/02/%E6%8C%96%E4%B8%80%E6%8C%96-submodule/</guid>
+      <description>
+
+&lt;p&gt;在很长的一段时间内，对&lt;code&gt;submodule&lt;/code&gt;的概念含糊不清。特别是 &lt;code&gt;submodule&lt;/code&gt; 和 &lt;code&gt;subtree&lt;/code&gt; 这两个的区别。今天正好有时间来理一理。&lt;/p&gt;
+
+&lt;h3 id=&#34;子模块-submodule:3b642809b94e451e9d37df2cf008e2bb&#34;&gt;子模块（submodule）&lt;/h3&gt;
+
+&lt;p&gt;为了解决项目中的依赖问题。使得更加方便的维护与管理。子模块允许你将一个 Git         仓库作为另外一个 Git 仓库的子目录，从而保持相对独立的提交记录。&lt;/p&gt;
+
+&lt;p&gt;子模块有点类似与一个软链。你记录他们当前确切所处的提交，但是不能记录一个子模块的 &lt;code&gt;master&lt;/code&gt; 或者其它符号的引用。在 &lt;code&gt;git&lt;/code&gt; 的存储信息中，&lt;code&gt;submodule&lt;/code&gt; 的属于 &lt;code&gt;160000&lt;/code&gt; 模式，这在Git中是一个特殊模式，基本意思是你将一个提交记录为一个目录项而不是子目录或者文件。&lt;/p&gt;
+
+&lt;h4 id=&#34;用法:3b642809b94e451e9d37df2cf008e2bb&#34;&gt;用法&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;submodule&lt;/code&gt; 的使用还是挺方便的。&lt;code&gt;.gitmodules&lt;/code&gt; 文件保存着项目 URL 与已经拉取的本地目录之间的映射。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;git submodule add&lt;/code&gt; 来增加新模块，&lt;code&gt;git submodule init&lt;/code&gt; 用于初始化，&lt;code&gt;git submodule update&lt;/code&gt; 用于更新，就是删除的时候不太方便。
+而另外一个更新维护子模块的时候也有些繁琐，也常常会出一些坑。&lt;/p&gt;
+
+&lt;h3 id=&#34;挖坑说明:3b642809b94e451e9d37df2cf008e2bb&#34;&gt;挖坑说明&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;当你 &lt;code&gt;pull master&lt;/code&gt; 之后，如果 &lt;code&gt;submodule&lt;/code&gt; 有变更，都需要记得&lt;code&gt;submodule update&lt;/code&gt;一下，不然又会提交旧的信息回去了。这本质上，都是因为它在主&lt;code&gt;master&lt;/code&gt;上都是已 &lt;code&gt;link&lt;/code&gt; 的方式存在。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;code&gt;submodule&lt;/code&gt; 的时候也有点费劲的其实。当你进入 &lt;code&gt;submodule&lt;/code&gt; 的目录，其实不会切到任何分支，&lt;code&gt;HEAD&lt;/code&gt; 处于游离的状态，所以在改动之前需要 &lt;code&gt;checkout master&lt;/code&gt;，再来改动。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;subtree:3b642809b94e451e9d37df2cf008e2bb&#34;&gt;subtree&lt;/h3&gt;
+
+&lt;p&gt;上面讲了这个多，其实官方推荐使用 &lt;code&gt;subtree&lt;/code&gt; 来代替 &lt;code&gt;submodule&lt;/code&gt;。两者的区分在于，&lt;code&gt;submodule&lt;/code&gt;是把一个 &lt;code&gt;commit&lt;/code&gt; 嵌入到当前项目的子目录中，只相当于一个 &lt;code&gt;Link&lt;/code&gt;，而 &lt;code&gt;subtree&lt;/code&gt; 是合并子项目到当前项目的子目录中，是一个完整项目的拷贝。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;subtree&lt;/code&gt; 除了命令长一点外，还是有挺多优点的。比如&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;clone 的时候不需要 &lt;code&gt;init&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;没有类似的 &lt;code&gt;.gitmodule&lt;/code&gt; 文件&lt;/li&gt;
+&lt;li&gt;管理上更加方便一些&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;用法-1:3b642809b94e451e9d37df2cf008e2bb&#34;&gt;用法&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;subtree&lt;/code&gt; 的使用相对复杂一些。这个依旧省略了各种操作的说明。具体翻看 API。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;关联：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git remote add -f &amp;lt;子仓库名&amp;gt; &amp;lt;子仓库地址&amp;gt;
+git subtree add --prefix=&amp;lt;子目录名&amp;gt; &amp;lt;子仓库名&amp;gt; &amp;lt;分支&amp;gt; --squash
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;更新&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git fetch &amp;lt;远程仓库名&amp;gt; &amp;lt;分支&amp;gt;
+git subtree pull --prefix=&amp;lt;子目录名&amp;gt; &amp;lt;远程分支&amp;gt; &amp;lt;分支&amp;gt; --squash
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;推送&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git subtree push --prefix=ai ai master
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;参考文献:3b642809b94e451e9d37df2cf008e2bb&#34;&gt;参考文献&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E5%AD%90%E6%A8%A1%E5%9D%97&#34;&gt;Git 工具 - 子模块&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://git-scm.com/book/zh/v1/Git-%E5%B7%A5%E5%85%B7-%E5%AD%90%E6%A0%91%E5%90%88%E5%B9%B6&#34;&gt;Git 工具 - 子树合并&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://stackoverflow.com/questions/31769820/differences-between-git-submodule-and-subtree&#34;&gt;Difference between git submodule and subtree&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://alistra.ghost.io/2014/11/30/git-subtree-a-better-alternative-to-git-submodule/&#34;&gt;git subtree - a better alternative to git submodule&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>CSS哲学伪命题</title>
