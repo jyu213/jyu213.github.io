@@ -5,8 +5,304 @@
     <link>http://jyu213.github.io/post/</link>
     <description>Recent content in Posts on 见见 - 前端小记</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 18 Apr 2017 01:52:13 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 10 May 2017 22:34:58 +0800</lastBuildDate>
     <atom:link href="http://jyu213.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>【译】CSS 网格的春天</title>
+      <link>http://jyu213.github.io/blog/2017/05/10/%E8%AF%91css-%E7%BD%91%E6%A0%BC%E7%9A%84%E6%98%A5%E5%A4%A9/</link>
+      <pubDate>Wed, 10 May 2017 22:34:58 +0800</pubDate>
+      
+      <guid>http://jyu213.github.io/blog/2017/05/10/%E8%AF%91css-%E7%BD%91%E6%A0%BC%E7%9A%84%E6%98%A5%E5%A4%A9/</guid>
+      <description>
+
+&lt;blockquote&gt;
+&lt;p&gt;本文为译文，原文地址： &lt;a href=&#34;http://jonibologna.com/spring-into-css-grid，作者，@jonitrythall&#34;&gt;http://jonibologna.com/spring-into-css-grid，作者，@jonitrythall&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;CSS 网格(Grid)最近一直受到很多的关注，我终于在过去的一个周末腾出时间来了解它的基本工作原理。道路很曲折，前途很美好（说真的，这是改变生活的东西），但是我在创建示例并分享的同时，整理了一些笔记。&lt;/p&gt;
+
+&lt;p&gt;这篇文章不是只看看这个布局功能有多强大，而是希望它在这混乱中把威胁因素移除，或者进入 CSS 网格。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://codepen.io/jonitrythall/full/xdOrrq/&#34;&gt;点击这里查看完整的 Demo&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;制定一个计划:b1efd1ff3bdf437f1a96cee8e8a48de6&#34;&gt;制定一个计划&lt;/h3&gt;
+
+&lt;p&gt;和学习任何网络新事物一样，我立即打开 &lt;code&gt;Adobe Illustrator&lt;/code&gt;，感受自然，网格和紫色带来的灵感，我开始绘制一个基本的户外场景，然后开始尝试用 CSS 网格来实现。&lt;/p&gt;
+
+&lt;p&gt;下图为我的最终搞：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://jonibologna.com/content/images/2017/04/scene-01.png&#34; alt=&#34;images&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;标记:b1efd1ff3bdf437f1a96cee8e8a48de6&#34;&gt;标记&lt;/h3&gt;
+
+&lt;p&gt;标记由一个 &lt;code&gt;class&lt;/code&gt; 名为 &lt;code&gt;contain&lt;/code&gt; 的 &lt;code&gt;div&lt;/code&gt; 主容器以及十二个 &lt;code&gt;class&lt;/code&gt; 名为 &lt;code&gt;spring&lt;/code&gt; 的子集 &lt;code&gt;div&lt;/code&gt; 组成。HTML 和 CSS 代码片段如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-html&#34;&gt;&amp;lt;div class=&amp;quot;contain&amp;quot;&amp;gt;
+  &amp;lt;div class=&amp;quot;spring&amp;quot;&amp;gt;
+    &amp;lt;img src=&amp;quot;https://s3-us-west-2.amazonaws.com/s.cdpn.io/80625/sun.svg&amp;quot; alt=&amp;quot;Sun&amp;quot; width=&amp;quot;15%&amp;quot; /&amp;gt;
+  &amp;lt;/div&amp;gt;
+  &amp;lt;div class=&amp;quot;spring&amp;quot;&amp;gt;
+    &amp;lt;img src=&amp;quot;https://s3-us-west-2.amazonaws.com/s.cdpn.io/80625/cloud_copy.svg&amp;quot; alt=&amp;quot;Cloud&amp;quot; width=&amp;quot;30%&amp;quot; /&amp;gt;
+  &amp;lt;/div&amp;gt;
+  &amp;lt;div class=&amp;quot;spring&amp;quot;&amp;gt;
+    &amp;lt;img src=&amp;quot;https://s3-us-west-2.amazonaws.com/s.cdpn.io/80625/cloud_copy.svg&amp;quot; alt=&amp;quot;Cloud&amp;quot; width=&amp;quot;30%&amp;quot; /&amp;gt;
+  &amp;lt;/div&amp;gt;
+  &amp;lt;div class=&amp;quot;spring&amp;quot;&amp;gt;&amp;lt;img src=&amp;quot;https://s3-us-west-2.amazonaws.com/s.cdpn.io/80625/rain.svg&amp;quot; alt=&amp;quot;Rain&amp;quot; width=&amp;quot;60%&amp;quot; /&amp;gt;&amp;lt;/div&amp;gt;
+  &amp;lt;div class=&amp;quot;spring&amp;quot;&amp;gt;
+    &amp;lt;img src=&amp;quot;https://s3-us-west-2.amazonaws.com/s.cdpn.io/80625/rain.svg&amp;quot; alt=&amp;quot;Rain&amp;quot; width=&amp;quot;60%&amp;quot; /&amp;gt;
+  &amp;lt;/div&amp;gt;
+  &amp;lt;div class=&amp;quot;spring&amp;quot;&amp;gt;
+    &amp;lt;img src=&amp;quot;https://s3-us-west-2.amazonaws.com/s.cdpn.io/80625/rain.svg&amp;quot; alt=&amp;quot;Rain&amp;quot; width=&amp;quot;27%&amp;quot; /&amp;gt;
+  &amp;lt;/div&amp;gt;
+  &amp;lt;div class=&amp;quot;spring&amp;quot;&amp;gt;
+    &amp;lt;img src=&amp;quot;https://s3-us-west-2.amazonaws.com/s.cdpn.io/80625/dragonfly.svg&amp;quot; alt=&amp;quot;Dragonfly&amp;quot; width=&amp;quot;30%&amp;quot; /&amp;gt;
+  &amp;lt;/div&amp;gt;
+  &amp;lt;div class=&amp;quot;spring&amp;quot;&amp;gt;
+    &amp;lt;img src=&amp;quot;https://s3-us-west-2.amazonaws.com/s.cdpn.io/80625/butterfly.svg&amp;quot; alt=&amp;quot;Butterfly&amp;quot; width=&amp;quot;30%&amp;quot; /&amp;gt;
+  &amp;lt;/div&amp;gt;
+  &amp;lt;div class=&amp;quot;spring&amp;quot;&amp;gt;
+    &amp;lt;img src=&amp;quot;https://s3-us-west-2.amazonaws.com/s.cdpn.io/80625/dragonfly.svg&amp;quot; alt=&amp;quot;Dragonfly&amp;quot; width=&amp;quot;30%&amp;quot; /&amp;gt;
+  &amp;lt;/div&amp;gt;
+  &amp;lt;div class=&amp;quot;spring&amp;quot;&amp;gt;
+    &amp;lt;img src=&amp;quot;https://s3-us-west-2.amazonaws.com/s.cdpn.io/80625/butterfly.svg&amp;quot; alt=&amp;quot;Butterfly&amp;quot; width=&amp;quot;30%&amp;quot;/&amp;gt;
+  &amp;lt;/div&amp;gt;
+  &amp;lt;div class=&amp;quot;spring&amp;quot;&amp;gt;
+    &amp;lt;img src=&amp;quot;https://s3-us-west-2.amazonaws.com/s.cdpn.io/80625/flower1.svg&amp;quot; alt=&amp;quot;First flower&amp;quot; /&amp;gt;
+    &amp;lt;img src=&amp;quot;https://s3-us-west-2.amazonaws.com/s.cdpn.io/80625/flower2.svg&amp;quot; alt=&amp;quot;Second flower&amp;quot; /&amp;gt;
+    &amp;lt;img src=&amp;quot;https://s3-us-west-2.amazonaws.com/s.cdpn.io/80625/flower3.svg&amp;quot; alt=&amp;quot;Third flower&amp;quot; /&amp;gt;
+  &amp;lt;/div&amp;gt;
+  &amp;lt;div class=&amp;quot;spring&amp;quot;&amp;gt;
+    &amp;lt;img src=&amp;quot;https://s3-us-west-2.amazonaws.com/s.cdpn.io/80625/flowers2.svg&amp;quot; alt=&amp;quot;Fourth flower&amp;quot; /&amp;gt;
+  &amp;lt;/div&amp;gt;
+&amp;lt;/div&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sass&#34;&gt;$orange: #FB9C6F;
+
+body {
+  border: 2px solid $orange;
+}
+
+.contain {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 2fr) 1fr 4fr;
+  grid-gap: 2px;
+  background-color: $orange;
+}
+
+.spring {
+  padding: 2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #FFF;
+}
+
+// Sun
+.spring:nth-child(1) {
+  grid-column: 1 / 5;
+}
+
+// Cloud 1
+.spring:nth-child(2) {
+  grid-column: 1 / 3;
+}
+
+// Cloud 2
+.spring:nth-child(3) {
+  grid-column: 3 / 5;
+}
+
+// Rain 1
+.spring:nth-child(4) {
+  grid-column: 1 / 2;
+}
+
+// Rain 2
+.spring:nth-child(5) {
+  grid-column: 2 / 3;
+}
+
+// Rain 3
+.spring:nth-child(6) {
+  grid-column: 3 / 5;
+}
+
+// Flowers 1
+.spring:nth-child(11) {
+  grid-column: 1 / 4;
+  justify-content: space-around;
+}
+
+// Flowers 2
+.spring:nth-child(12) {
+  grid-column: 4 / 5;
+}
+
+// Just simplifying for smaller window
+@media (max-width: 550px) {
+  .contain {
+    display: block;
+  }
+
+  .spring:nth-child(3),
+  .spring:nth-child(5),
+  .spring:nth-child(6),
+  .spring:nth-child(7),
+  .spring:nth-child(8),
+  .spring:nth-child(11) {
+    display: none;
+  }
+
+  img {
+    width: 30%;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在实现网格之前，布局是标准的状态，所有的图像堆叠在一起。如下图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://jonibologna.com/content/images/2017/04/Screen-Shot-2017-04-23-at-12-27-03-PM.png&#34; alt=&#34;images&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;columns:b1efd1ff3bdf437f1a96cee8e8a48de6&#34;&gt;columns&lt;/h3&gt;
+
+&lt;p&gt;使用网格时首先需要在 CSS 网格容器中声明它：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-css&#34;&gt;.contain {
+    display: grid;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;注意：这里也有 &lt;code&gt;inline-grid&lt;/code&gt; 和 &lt;code&gt;subgrid&lt;/code&gt; 作为选项。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这里将立即设置容器内所有的子元素为网格项。&lt;/p&gt;
+
+&lt;p&gt;初始网格基于使用 &lt;code&gt;grid-template-columns&lt;/code&gt; 属性设置的四个相同大小的列。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-css&#34;&gt;.contain {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;repeat&lt;/code&gt; 函数允许缩短 &lt;code&gt;1fr 1fr 1fr 1fr&lt;/code&gt; 的写法。&lt;/p&gt;
+
+&lt;h3 id=&#34;fr-单位:b1efd1ff3bdf437f1a96cee8e8a48de6&#34;&gt;&lt;code&gt;fr&lt;/code&gt; 单位&lt;/h3&gt;
+
+&lt;p&gt;网格属性可以接受多个不同的单位值，本例中只使用了 &lt;code&gt;fr&lt;/code&gt;。这个单位是超级聪明和灵活的，因为它将可用空间划分为分数，所以 &lt;code&gt;1fr 1fr 1fr 1fr&lt;/code&gt; 将生成四个相同大小的列。&lt;/p&gt;
+
+&lt;h3 id=&#34;网格间距:b1efd1ff3bdf437f1a96cee8e8a48de6&#34;&gt;网格间距&lt;/h3&gt;
+
+&lt;p&gt;网格间距由每个项目的 &lt;code&gt;2px&lt;/code&gt; 橙色间距表示。间隙显示主容器的背景颜色，为橙色，外边框是 &lt;code&gt;body&lt;/code&gt; 本身。每个网格包含一个白色背景的图像。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://jonibologna.com/content/images/2017/04/Screen-Shot-2017-04-23-at-12-01-19-PM.png&#34; alt=&#34;images&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;示例使用缩写 &lt;code&gt;grid-gap&lt;/code&gt; 来匹配 &lt;code&gt;grid-column-gap&lt;/code&gt; 和 &lt;code&gt;grid-row-gap&lt;/code&gt;。该属性接受单个共享值或者两个不同的值，第一个参数表示行，第二个表示列。&lt;/p&gt;
+
+&lt;h3 id=&#34;从列起点和终点来排列项目:b1efd1ff3bdf437f1a96cee8e8a48de6&#34;&gt;从列起点和终点来排列项目&lt;/h3&gt;
+
+&lt;p&gt;一旦在主容器上设置基本列，容器中的每个子元素 &lt;code&gt;div&lt;/code&gt; 都可以单独进一步设计，已实现以下网格：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://jonibologna.com/content/images/2017/04/Screen-Shot-2017-04-23-at-1-02-31-PM.png&#34; alt=&#34;images&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这是通过 &lt;code&gt;grid-column-start&lt;/code&gt; 和 &lt;code&gt;grid-column-end&lt;/code&gt; 属性或 &lt;code&gt;grid-column&lt;/code&gt; 简写来指定元素的起点和终点来完成的。&lt;/p&gt;
+
+&lt;p&gt;例如，每个后代元素 &lt;code&gt;div&lt;/code&gt; 起点和终点定义如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-css&#34;&gt;.spring:nth-child(4) {
+  grid-column: 1 / 2;
+}
+
+.spring:nth-child(5) {
+  grid-column: 2 / 3;
+}
+
+.spring:nth-child(6) {
+  grid-column: 3 / 5;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;第四列项目（第一个雨图像容器）的 &lt;code&gt;grid-column: 1 / 2 ;&lt;/code&gt; 指示它在第一垂直网格线开始并在第二列结束，而第六项（第三个云图像容器）被设置为在第三垂直网格线开始并在第五列结束，使其成为其它的两倍。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://jonibologna.com/content/images/2017/04/Screen-Shot-2017-04-23-at-2-30-25-PM.png&#34; alt=&#34;images&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;最初这可能有点棘手，因为垂直线超过了实际网格列单元的个数。&lt;/p&gt;
+
+&lt;p&gt;太阳图像能够通过从第一垂直网线开始并在最后一行终止，即第五行，跨越所有四个可用单元格，从而占据全宽。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-css&#34;&gt;.spring:nth-child(1) {
+  grid-column: 1 / 5;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://jonibologna.com/content/images/2017/04/Screen-Shot-2017-04-24-at-8-50-24-AM.png&#34; alt=&#34;images&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;没有必要对蜻蜓图像和蝴蝶图像做任何事情，因为所需的布局与主容器 &lt;code&gt;.contain&lt;/code&gt; &lt;code&gt;div&lt;/code&gt; 上的列声明一致。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://jonibologna.com/content/images/2017/04/Screen-Shot-2017-04-23-at-12-13-05-PM.png&#34; alt=&#34;images&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;rows:b1efd1ff3bdf437f1a96cee8e8a48de6&#34;&gt;rows&lt;/h3&gt;
+
+&lt;p&gt;回到容器元素设置行，这是我来演示这个奇怪风景的最后一步。尽管初始列由相等的间距组成，但是行具有更多的变化。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://jonibologna.com/content/images/2017/04/Screen-Shot-2017-04-23-at-12-57-19-PM.png&#34; alt=&#34;images&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;前三行是最小行的两倍，而最大行是最小行的四倍，如下所示： &lt;code&gt;grid-template-rows: repeat(3, 2fr) 1fr 4fr;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;这个设计对于行的需求是相当轻的，这就是行样式所需的程度，但是行有自己的一组属性，有些甚至可以与列属性组合来创建速记法，保持 CSS 的简洁。&lt;/p&gt;
+
+&lt;h3 id=&#34;flexbox:b1efd1ff3bdf437f1a96cee8e8a48de6&#34;&gt;Flexbox&lt;/h3&gt;
+
+&lt;p&gt;谈及 flexbox（并且最近创建了一个&lt;a href=&#34;https://gum.co/YdWw&#34;&gt;印刷视觉指南&lt;/a&gt;），我只想说，在这个示例中，&lt;code&gt;flexbox&lt;/code&gt; 用于将图像在网格中居中，而网格和 &lt;code&gt;flexbox&lt;/code&gt; 实际上可以一起使用。&lt;/p&gt;
+
+&lt;p&gt;使用如下，使得每张图片都在项目中居中：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-css&#34;&gt;.spring {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;div&lt;/code&gt; 包含三个独立的花图像，&lt;code&gt;flexbox&lt;/code&gt; 也水平划分它们。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://jonibologna.com/content/images/2017/04/Screen-Shot-2017-04-23-at-12-15-43-PM.png&#34; alt=&#34;images&#34; /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-css&#34;&gt;.spring:nth-child(11) {
+    display: flex;
+    justify-content: space-around;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;Robin Rendle&lt;/code&gt; 最近在 &lt;code&gt;CSS-Tricks&lt;/code&gt; 上写了有关这个主题的一个&lt;a href=&#34;https://css-tricks.com/css-grid-replace-flexbox/&#34;&gt;很好的总结&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h3 id=&#34;浏览器支持:b1efd1ff3bdf437f1a96cee8e8a48de6&#34;&gt;浏览器支持&lt;/h3&gt;
+
+&lt;p&gt;目前浏览器支持状况：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://jonibologna.com/content/images/2017/04/Screen-Shot-2017-04-23-at-1-24-17-PM.png&#34; alt=&#34;images&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;资源:b1efd1ff3bdf437f1a96cee8e8a48de6&#34;&gt;资源&lt;/h3&gt;
+
+&lt;p&gt;这里有一些比较好的扩展阅读：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://css-tricks.com/getting-started-css-grid/&#34;&gt;Getting Started with CSS Grid&lt;/a&gt;
+&lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout/Basic_Concepts_of_Grid_Layout&#34;&gt;Basic CSS Grid Concepts on MDN&lt;/a&gt;
+&lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout&#34;&gt;CSS Grid Layout on MDN&lt;/a&gt;
+&lt;a href=&#34;https://www.w3.org/TR/css3-grid-layout/&#34;&gt;The spec&lt;/a&gt;
+&lt;a href=&#34;http://cssgridgarden.com/&#34;&gt;CSS Grid Garden&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;结尾:b1efd1ff3bdf437f1a96cee8e8a48de6&#34;&gt;结尾&lt;/h3&gt;
+
+&lt;p&gt;要了解 CSS Grid 的功能，还需要学习更多的东西，我迫不及待地写更多的内容，但希望这篇文章可以作为一个有趣的起点。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>GTD 学习笔记</title>
@@ -1332,164 +1628,6 @@ user-scalable: yes/no // 是否允可以手动缩放
 &lt;li&gt;&lt;a href=&#34;http://www.quirksmode.org/mobile/viewports2.html&#34;&gt;ppk - viewport2&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://www.quirksmode.org/mobile/metaviewport/&#34;&gt;ppk - viewport3&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://youtu.be/8J6EdpXdzqc&#34;&gt;ppk 大神的视频&lt;/a&gt;，建议看看。&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>移动端Web系列4 -- meta</title>
-      <link>http://jyu213.github.io/blog/1/01/01/%E7%A7%BB%E5%8A%A8%E7%AB%AFweb%E7%B3%BB%E5%88%974----meta/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://jyu213.github.io/blog/1/01/01/%E7%A7%BB%E5%8A%A8%E7%AB%AFweb%E7%B3%BB%E5%88%974----meta/</guid>
-      <description>
-
-&lt;h2 id=&#34;分类:4e435b7af9c4b4216c2cd567c2e774c2&#34;&gt;分类&lt;/h2&gt;
-
-&lt;p&gt;在介绍移动端特有 meta 标签之前，先简单说一下 HTML meta 标签的一些知识。
-meta 标签包含了 &lt;strong&gt;HTTP 标题信息&lt;/strong&gt;(http-equiv) 和&lt;strong&gt;页面描述信息&lt;/strong&gt;(name)。
-* http-equiv:
-    该枚举的属性定义，可以改变服务器和用户代理行为的编译。编译的值取content 里的内容。简单来说即可以模拟 HTTP 协议响应头。
-    最常见的大概属于&lt;code&gt;Content-Type&lt;/code&gt;了，设置编码类型。如&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;     &amp;lt;meta http-equiv=&amp;quot;Content-Type&amp;quot; content=&amp;quot;text/html; charset=utf-8&amp;quot; /&amp;gt;
-
-H5中可以简化为
-
-    &amp;lt;meta charset=&amp;quot;utf-8&amp;quot;&amp;gt;
-
-
-http-equiv常见还有其它如下等（合理使用可增加 SEO 收录）。
-- Content-Language : 设置网页语言
-- Refresh : 指定时间刷新页面
-- set-cookie : 设定页面 cookie 过期时间
-- last-modified : 页面最后生成时间
-- expires : 设置 cache 过期时间
-- cache-control : 设置文档的缓存机制
-- ...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;name:
-该属性定义了文档级元数据的名称。用于对应网页内容，便于搜索引擎查找分类，如 keywords, description; 也可以使用浏览器厂商自定义的 meta， 如 viewport；&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;移动端特有属性:4e435b7af9c4b4216c2cd567c2e774c2&#34;&gt;移动端特有属性&lt;/h3&gt;
-
-&lt;h4 id=&#34;viewport:4e435b7af9c4b4216c2cd567c2e774c2&#34;&gt;viewport&lt;/h4&gt;
-
-&lt;p&gt;可视区域的定义，如屏幕缩放等。告诉浏览器如何规范的渲染网页。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;meta name=&amp;quot;viewport&amp;quot; content=&amp;quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0&amp;quot;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;上一章节中已经详细讲解过了，这边就不再重复了。&lt;/p&gt;
-
-&lt;h4 id=&#34;format-detection:4e435b7af9c4b4216c2cd567c2e774c2&#34;&gt;format-detection&lt;/h4&gt;
-
-&lt;p&gt;对电话号码的识别&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    &amp;lt;meta name=&amp;quot;format-detection&amp;quot; content=&amp;quot;telphone=no&amp;quot; /&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;ios私有属性:4e435b7af9c4b4216c2cd567c2e774c2&#34;&gt;IOS私有属性&lt;/h3&gt;
-
-&lt;h4 id=&#34;apple-mobile-web-app-capable:4e435b7af9c4b4216c2cd567c2e774c2&#34;&gt;apple-mobile-web-app-capable&lt;/h4&gt;
-
-&lt;p&gt;启用 webapp 模式, 会隐藏工具栏和菜单栏，和其它配合使用。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    &amp;lt;meta name=&amp;quot;apple-mobile-web-app-capable&amp;quot; content=&amp;quot;yes&amp;quot; /&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;apple-mobile-web-app-status-bar-style:4e435b7af9c4b4216c2cd567c2e774c2&#34;&gt;apple-mobile-web-app-status-bar-style&lt;/h4&gt;
-
-&lt;p&gt;在webapp模式下，改变顶部状态条的颜色。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    &amp;lt;meta name=&amp;quot;apple-mobile-web-app-status-bar-style&amp;quot; content=&amp;quot;black&amp;quot; /&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;default(白色，默认) | black(黑色) | black-translucent(半透明)
-注意：若值为“black-translucent”将会占据页面位置，浮在页面上方（会覆盖页面 20px 高度， Retina 屏幕为 40px ）。&lt;/p&gt;
-
-&lt;h3 id=&#34;webapp对应的link标签:4e435b7af9c4b4216c2cd567c2e774c2&#34;&gt;webapp对应的Link标签&lt;/h3&gt;
-
-&lt;h4 id=&#34;apple-touch-icon:4e435b7af9c4b4216c2cd567c2e774c2&#34;&gt;apple-touch-icon&lt;/h4&gt;
-
-&lt;p&gt;在webapp下，指定放置主屏幕上 icon 文件路径;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;link rel=&amp;quot;apple-touch-icon&amp;quot; href=&amp;quot;touch-icon-iphone.png&amp;quot;&amp;gt;
-&amp;lt;link rel=&amp;quot;apple-touch-icon&amp;quot; sizes=&amp;quot;76x76&amp;quot; href=&amp;quot;touch-icon-ipad.png&amp;quot;&amp;gt;
-&amp;lt;link rel=&amp;quot;apple-touch-icon&amp;quot; sizes=&amp;quot;120x120&amp;quot; href=&amp;quot;touch-icon-iphone-retina.png&amp;quot;&amp;gt;
-&amp;lt;link rel=&amp;quot;apple-touch-icon&amp;quot; sizes=&amp;quot;152x152&amp;quot; href=&amp;quot;touch-icon-ipad-retina.png&amp;quot;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;默认 iphone 大小为 60px, ipad 为 76px, retina 屏乘2；
-如没有一致尺寸的图标，会优先选择比推荐尺寸大，但是最接近推荐尺寸的图标。
-ios7以前系统默认会对图标添加特效（圆角及高光），如果不希望系统添加特效，则可以用apple-touch-icon-precomposed.png代替apple-touch-icon.png&lt;/p&gt;
-
-&lt;h4 id=&#34;apple-touch-startup-image:4e435b7af9c4b4216c2cd567c2e774c2&#34;&gt;apple-touch-startup-image&lt;/h4&gt;
-
-&lt;p&gt;在 webapp 下，设置启动时候的界面;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    &amp;lt;link rel=&amp;quot;apple-touch-startup-image&amp;quot; href=&amp;quot;/startup.png&amp;quot; /&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;不支持 size 属性，可以使用 media query 来控制。iphone 和 touch 上，图片大小必须是 230*480 px,只支持竖屏;&lt;/p&gt;
-
-&lt;h3 id=&#34;其它meta:4e435b7af9c4b4216c2cd567c2e774c2&#34;&gt;其它meta&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;!-- 启用360浏览器的极速模式(webkit) --&amp;gt;
-&amp;lt;meta name=&amp;quot;renderer&amp;quot; content=&amp;quot;webkit&amp;quot;&amp;gt;
-&amp;lt;!-- 避免IE使用兼容模式 --&amp;gt;
-&amp;lt;meta http-equiv=&amp;quot;X-UA-Compatible&amp;quot; content=&amp;quot;IE=edge&amp;quot;&amp;gt;
-&amp;lt;!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 --&amp;gt;
-&amp;lt;meta name=&amp;quot;HandheldFriendly&amp;quot; content=&amp;quot;true&amp;quot;&amp;gt;
-&amp;lt;!-- 微软的老式浏览器 --&amp;gt;
-&amp;lt;meta name=&amp;quot;MobileOptimized&amp;quot; content=&amp;quot;320&amp;quot;&amp;gt;
-&amp;lt;!-- uc强制竖屏 --&amp;gt;
-&amp;lt;meta name=&amp;quot;screen-orientation&amp;quot; content=&amp;quot;portrait&amp;quot;&amp;gt;
-&amp;lt;!-- QQ强制竖屏 --&amp;gt;
-&amp;lt;meta name=&amp;quot;x5-orientation&amp;quot; content=&amp;quot;portrait&amp;quot;&amp;gt;
-&amp;lt;!-- UC强制全屏 --&amp;gt;
-&amp;lt;meta name=&amp;quot;full-screen&amp;quot; content=&amp;quot;yes&amp;quot;&amp;gt;
-&amp;lt;!-- QQ强制全屏 --&amp;gt;
-&amp;lt;meta name=&amp;quot;x5-fullscreen&amp;quot; content=&amp;quot;true&amp;quot;&amp;gt;
-&amp;lt;!-- UC应用模式 --&amp;gt;
-&amp;lt;meta name=&amp;quot;browsermode&amp;quot; content=&amp;quot;application&amp;quot;&amp;gt;
-&amp;lt;!-- QQ应用模式 --&amp;gt;
-&amp;lt;meta name=&amp;quot;x5-page-mode&amp;quot; content=&amp;quot;app&amp;quot;&amp;gt;
-&amp;lt;!-- windows phone 点击无高光 --&amp;gt;
-&amp;lt;meta name=&amp;quot;msapplication-tap-highlight&amp;quot; content=&amp;quot;no&amp;quot;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://www.w3cplus.com/mobile/mobile-terminal-refactoring-create-page.html&#34;&gt;参见w3cplus&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;末尾总结:4e435b7af9c4b4216c2cd567c2e774c2&#34;&gt;末尾总结&lt;/h3&gt;
-
-&lt;p&gt;所以，一般新建页面的时候，可以采用如下结构， 再依据自己的实际需要添加所需即可。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;
-&amp;lt;html&amp;gt;
-&amp;lt;head&amp;gt;
-    &amp;lt;meta charset=&amp;quot;UTF-8&amp;quot;&amp;gt;
-    &amp;lt;meta name=&amp;quot;viewport&amp;quot; content=&amp;quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0&amp;quot;&amp;gt;
-    &amp;lt;meta name=&amp;quot;apple-mobile-web-app-capable&amp;quot; content=&amp;quot;yes&amp;quot; /&amp;gt;
-    &amp;lt;meta name=&amp;quot;format-detection&amp;quot;content=&amp;quot;telephone=no&amp;quot; /&amp;gt;
-    &amp;lt;title&amp;gt;Demo&amp;lt;/title&amp;gt;
-&amp;lt;/head&amp;gt;
-&amp;lt;body&amp;gt;
-    &amp;lt;!-- code here --&amp;gt;
-&amp;lt;/body&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;文献参考:4e435b7af9c4b4216c2cd567c2e774c2&#34;&gt;文献参考&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta&#34;&gt;MDN meta&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://developer.apple.com/library/safari/documentation/appleapplications/reference/SafariHTMLRef/Articles/MetaTags.html&#34;&gt;苹果官方 webapp meta 说明&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://developer.apple.com/Library/ios/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html&#34;&gt;IOS Configuring Web Applications&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.w3cplus.com/mobile/mobile-terminal-refactoring-create-page.html&#34;&gt;移动端重构系列2——新建空白页面&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
