@@ -143,7 +143,7 @@ http://vanseodesign.com/css/drop-shadow-filter/"><code>url()</code> 和 <code>gr
 
 <p>原始图像包含很多灰色，但我认为你可以看到滤镜的效果，因为现在所有的颜色都已被删除。</p>
 
-<p><img src="http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg" alt="img2" /></p>
+<p><img src="http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg" alt="img2" style="filter: grayscale(1);"></p>
 
 <p>为了比较矩阵和 <code>filter-function</code>，公平起见，通过将 <code>type</code> 属性设置为 <code>saturate</code> 来使 <code>feColorMatrix</code> 更轻松地删除颜色。看如下部分代码：</p>
 
@@ -175,7 +175,7 @@ http://vanseodesign.com/css/drop-shadow-filter/"><code>url()</code> 和 <code>gr
 
 <p>该值将红色和黄色的花朵变成含有更多粉色，紫色和蓝色的花朵。</p>
 
-<p><img src="http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg" alt="img3" /></p>
+<p><img src="http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg" alt="img3" style="filter: hue-rotate(225deg);"></p>
 
 <p>以下是 SVG <code>filter</code> 的对比。CSS 依旧更简单。不过这种情况并不多。</p>
 
@@ -203,11 +203,11 @@ http://vanseodesign.com/css/drop-shadow-filter/"><code>url()</code> 和 <code>gr
 
 <p>返回图片如下。</p>
 
-<p><img src="http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg" alt="img4" /></p>
+<p><img src="http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg" alt="img4" style="filter: saturate(0.5);"></p>
 
 <p>不允许使用负值，但是你可以提供大于 100% 或 1.0 的值。使得元素超饱和、再次使用 900% 饱和度的图像（ <code>filter:saturate(9);</code>）。</p>
 
-<p><img src="http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg" alt="img5" /></p>
+<p><img src="http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg" alt="img5" style="filter: saturate(9);"></p>
 
 <p>如同 <code>saturate()</code>，相应的 SVG <code>filter</code> 是比较简单的。</p>
 
@@ -238,7 +238,7 @@ http://vanseodesign.com/css/drop-shadow-filter/"><code>url()</code> 和 <code>gr
 
 <p>图片如下：</p>
 
-<p><img src="http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg" alt="img6" /></p>
+<p><img src="http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg" alt="img6" style="filter: sepia(75%);"></p>
 
 <p>对于没有 <code>sepia</code>  类型的 <code>feColorMatrix</code>，所有想要获得与使用另一个矩阵的深褐色效果。</p>
 
@@ -301,15 +301,15 @@ var duoshuoQuery = {short_name:"j4evee"};
       
       <a href="http://jyu213.github.io/tags/doc" class="list-group-item">doc</a>
       
-      <a href="http://jyu213.github.io/tags/translate" class="list-group-item">translate</a>
-      
       <a href="http://jyu213.github.io/tags/es6" class="list-group-item">es6</a>
       
-      <a href="http://jyu213.github.io/tags/js" class="list-group-item">js</a>
+      <a href="http://jyu213.github.io/tags/translate" class="list-group-item">translate</a>
       
       <a href="http://jyu213.github.io/tags/html5" class="list-group-item">html5</a>
       
       <a href="http://jyu213.github.io/tags/git" class="list-group-item">git</a>
+      
+      <a href="http://jyu213.github.io/tags/js" class="list-group-item">js</a>
       
       <a href="http://jyu213.github.io/tags/%E8%87%AA%E5%8A%A8%E5%8C%96" class="list-group-item">自动化</a>
       

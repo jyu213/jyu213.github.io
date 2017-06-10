@@ -64,7 +64,7 @@ http://vanseodesign.com/css/drop-shadow-filter/&#34;&gt;&lt;code&gt;url()&lt;/co
 
 &lt;p&gt;原始图像包含很多灰色，但我认为你可以看到滤镜的效果，因为现在所有的颜色都已被删除。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg&#34; alt=&#34;img2&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg&#34; alt=&#34;img2&#34; style=&#34;filter: grayscale(1);&#34;&gt;&lt;/p&gt;
 
 &lt;p&gt;为了比较矩阵和 &lt;code&gt;filter-function&lt;/code&gt;，公平起见，通过将 &lt;code&gt;type&lt;/code&gt; 属性设置为 &lt;code&gt;saturate&lt;/code&gt; 来使 &lt;code&gt;feColorMatrix&lt;/code&gt; 更轻松地删除颜色。看如下部分代码：&lt;/p&gt;
 
@@ -96,7 +96,7 @@ http://vanseodesign.com/css/drop-shadow-filter/&#34;&gt;&lt;code&gt;url()&lt;/co
 
 &lt;p&gt;该值将红色和黄色的花朵变成含有更多粉色，紫色和蓝色的花朵。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg&#34; alt=&#34;img3&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg&#34; alt=&#34;img3&#34; style=&#34;filter: hue-rotate(225deg);&#34;&gt;&lt;/p&gt;
 
 &lt;p&gt;以下是 SVG &lt;code&gt;filter&lt;/code&gt; 的对比。CSS 依旧更简单。不过这种情况并不多。&lt;/p&gt;
 
@@ -124,11 +124,11 @@ http://vanseodesign.com/css/drop-shadow-filter/&#34;&gt;&lt;code&gt;url()&lt;/co
 
 &lt;p&gt;返回图片如下。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg&#34; alt=&#34;img4&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg&#34; alt=&#34;img4&#34; style=&#34;filter: saturate(0.5);&#34;&gt;&lt;/p&gt;
 
 &lt;p&gt;不允许使用负值，但是你可以提供大于 100% 或 1.0 的值。使得元素超饱和、再次使用 900% 饱和度的图像（ &lt;code&gt;filter:saturate(9);&lt;/code&gt;）。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg&#34; alt=&#34;img5&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg&#34; alt=&#34;img5&#34; style=&#34;filter: saturate(9);&#34;&gt;&lt;/p&gt;
 
 &lt;p&gt;如同 &lt;code&gt;saturate()&lt;/code&gt;，相应的 SVG &lt;code&gt;filter&lt;/code&gt; 是比较简单的。&lt;/p&gt;
 
@@ -159,7 +159,7 @@ http://vanseodesign.com/css/drop-shadow-filter/&#34;&gt;&lt;code&gt;url()&lt;/co
 
 &lt;p&gt;图片如下：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg&#34; alt=&#34;img6&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg&#34; alt=&#34;img6&#34; style=&#34;filter: sepia(75%);&#34;&gt;&lt;/p&gt;
 
 &lt;p&gt;对于没有 &lt;code&gt;sepia&lt;/code&gt;  类型的 &lt;code&gt;feColorMatrix&lt;/code&gt;，所有想要获得与使用另一个矩阵的深褐色效果。&lt;/p&gt;
 
