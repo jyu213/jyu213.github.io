@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.15" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans|Marcellus+SC'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://jyu213.github.io//index.xml">
+
+    
+    <title>四个调节颜色的 CSS 滤镜 - 见见 - 前端小记</title>
+    <meta property='og:title' content="四个调节颜色的 CSS 滤镜 - 见见 - 前端小记">
+    <meta property="og:type" content="article">
+    
+
+    <meta property="og:url" content="http://jyu213.github.io/blog/2017/06/09/%E5%9B%9B%E4%B8%AA%E8%B0%83%E8%8A%82%E9%A2%9C%E8%89%B2%E7%9A%84-css-%E6%BB%A4%E9%95%9C/">
+    
+    
+
+  </head>
+
+  <body>
+
+    <header class="site">
+      <nav class="navbar navbar-default">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://jyu213.github.io/">见见 - 前端小记</a>
+          </div>
+
+          <div id="navbar" class="collapse navbar-collapse">
+            
+          </div>
+
+        </div>
+      </nav>
+    </header>
+
+    <div class="site">
+      <div class="container">
+
+
+
+<div class="single">
+
+  <div class="row">
+    <div class="col-md-8">
+
+      <article class="single" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+        <meta itemprop="mainEntityOfPage"  itemType="https://schema.org/WebPage" content="http://jyu213.github.io/"/>
+        <meta itemprop="dateModified" content="2017-06-09T01:05:16&#43;08:00">
+        <meta itemprop="headline" content="四个调节颜色的 CSS 滤镜">
+        <meta itemprop="description" content="本文为译文，原文地址： http://vanseodesign.com/css/4-css-filters-for-adjusting-color/ ，作者，@Steven Bradley SVG 提供了一种非破坏性的方式来改变图像或图形的某些颜色属性。不幸的是，其中的一些变化比其它的更">
+        <meta itemprop="url" content="http://jyu213.github.io/blog/2017/06/09/%E5%9B%9B%E4%B8%AA%E8%B0%83%E8%8A%82%E9%A2%9C%E8%89%B2%E7%9A%84-css-%E6%BB%A4%E9%95%9C/">
+        <div itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
+          <meta itemprop="url" content="http://jyu213.github.io/images/default.jpg" />
+          <meta itemprop="width" content="800">
+          <meta itemprop="height" content="800">
+        </div>
+        <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
+          <div itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
+            <meta itemprop="url" content="http://jyu213.github.io/images/logo.jpg">
+            <meta itemprop="width" content="100">
+            <meta itemprop="height" content="100">
+          </div>
+          <meta itemprop="name" content="见见 - 前端小记">
+        </div>
+        <div itemprop="author" itemscope itemtype="https://schema.org/Person">
+          <meta itemprop="name" content="见见">
+        </div>
+
+        <header class="article-header">
+          <h1 class="article-title">四个调节颜色的 CSS 滤镜</h1>
+
+          <time itemprop="datePublished" pubdate="pubdate" datetime="2017-06-09T01:05:16&#43;08:00">2017-06-09</time>
+
+          
+            <a href="http://jyu213.github.io/tags/translate" class="tag">translate</a> <a href="http://jyu213.github.io/tags/css" class="tag">css</a> 
+          
+        </header>
+
+        <div class="article-body" itemprop="articleBody">
+          
+
+<blockquote>
+<p>本文为译文，原文地址： <a href="http://vanseodesign.com/css/4-css-filters-for-adjusting-color/">http://vanseodesign.com/css/4-css-filters-for-adjusting-color/</a> ，作者，@Steven Bradley</p>
+</blockquote>
+
+<p>SVG 提供了一种非破坏性的方式来改变图像或图形的某些颜色属性。不幸的是，其中的一些变化比其它的更麻烦。CSS 滤镜允许你无损的改变颜色的一些性质，比 SVG 简单。</p>
+
+<p>最近几周我一直在谈论 CSS 滤镜作为 SVG 滤镜的替代品。首先我提供了一个<a href="http://vanseodesign.com/css/css-filters-introduction/">介绍</a>和展示 <code>blur()</code> 滤镜函数的示例，然后我浏览了 <a href="镜函数，并分别提供了示例。
+http://vanseodesign.com/css/drop-shadow-filter/"><code>url()</code> 和 <code>grop-shadow() </code></a> 滤镜函数，并分别提供了示例。</p>
+
+<p>今天我想介绍四个 CSS 滤镜函数，所有这些都是 SVG 滤镜原语 <code>feColorMatrix</code> 的不同类型和值的映射。</p>
+
+<h2 id="fecolormatrix-滤镜原语-filter-primitive:ee681bce9ee04229105ee174e1606b94">feColorMatrix 滤镜原语（Filter Primitive）</h2>
+
+<p><code>feColorMatrix</code> 滤镜原语可以用于更改元素<a href="http://vanseodesign.com/web-design/hue-saturation-and-lightness/">颜色的一些基本属性</a>。顾名思义，原语使用矩形来添加不同的滤镜效果。</p>
+
+<p>存在四种不同的 CSS <code>filter-function</code> 来达到 <code>feColorMatrix</code> 的效果。这是一个例子，其中单个 SVG 原语可以比任何一个 CSS 滤镜功能做得更多。</p>
+
+<p>这是四种 CSS 滤镜：</p>
+
+<ul>
+<li>grayscale()</li>
+<li>hue-rotate()</li>
+<li>saturate()</li>
+<li>sepia()</li>
+</ul>
+
+<p>让我们在下图中做一些具体的实践。</p>
+
+<p><img src="http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg" alt="img1" /></p>
+
+<h2 id="grayscale-函数:ee681bce9ee04229105ee174e1606b94">grayscale() 函数</h2>
+
+<p><code>grayscale()</code> <code>filter-function</code> 功能将图像转换为灰度。</p>
+
+<pre><code>grayscale() = grayscale( [ &lt;number&gt; | &lt;percentage&gt; ] )
+</code></pre>
+
+<p>你可以通过提供 0.0 到 1.0 之间的百分比或数字来确定转换图像的比例。100%（或 1.0）是完全转换为灰度，0% （或 0.0）则没有任何转换。0.0 和 1.0 或 0% 和 100% 直接的值是线性的乘数效应。负值是不被允许的。</p>
+
+<p>在第一个例子中，我使用 <code>filter-function</code> 中的值 1 将 100% 的灰度应用到上图中。</p>
+
+<pre><code>.strawberry {
+ filter: grayscale(1);
+}
+</code></pre>
+
+<p>原始图像包含很多灰色，但我认为你可以看到滤镜的效果，因为现在所有的颜色都已被删除。</p>
+
+<p><img src="http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg" alt="img2" /></p>
+
+<p>为了比较矩阵和 <code>filter-function</code>，公平起见，通过将 <code>type</code> 属性设置为 <code>saturate</code> 来使 <code>feColorMatrix</code> 更轻松地删除颜色。看如下部分代码：</p>
+
+<pre><code>&lt;filter id=&quot;grayscale&quot;&gt;
+ &lt;feColorMatrix type=&quot;matrix&quot;
+    values=&quot;(0.2126 + 0.7874 * [1 - amount]) (0.7152 - 0.7152 * [1 - amount]) (0.0722 - 0.0722 * [1 - amount]) 0 0
+            (0.2126 - 0.2126 * [1 - amount]) (0.7152 + 0.2848 * [1 - amount]) (0.0722 - 0.0722 * [1 - amount]) 0 0
+            (0.2126 - 0.2126 * [1 - amount]) (0.7152 - 0.7152 * [1 - amount]) (0.0722 + 0.9278 * [1 - amount]) 0 0 0 0 0 1 0&quot;/&gt;
+&lt;/filter&gt;
+</code></pre>
+
+<p>不过，这绝对是 CSS <code>filter-function</code> 功能更容易使用的情况。我知道使用这个特定的矩阵唯一的原因是我在网上发现一个例子，不需要搜索 <code>filter-function</code> 的值为 1。</p>
+
+<h2 id="hue-rotate-函数:ee681bce9ee04229105ee174e1606b94">hue-rotate() 函数</h2>
+
+<p><code>hue-rotate() filter-function</code> 将元素中每个像素的色调改变为你指定的数量。</p>
+
+<pre><code>hue-rotate() = hue-rotate( &lt;angle&gt; )
+</code></pre>
+
+<p>角度设置为度数，你需要将单位指定为 <code>deg</code>。 0deg 的角度使得元素不变， 和 360deg(720deg, 1080deg, 1440p等)的任意倍数一致。</p>
+
+<p>这个例子中我设置了角度为 255deg。</p>
+
+<pre><code>.strawberry {
+ filter: hue-rotate(225deg);
+}
+</code></pre>
+
+<p>该值将红色和黄色的花朵变成含有更多粉色，紫色和蓝色的花朵。</p>
+
+<p><img src="http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg" alt="img3" /></p>
+
+<p>以下是 SVG <code>filter</code> 的对比。CSS 依旧更简单。不过这种情况并不多。</p>
+
+<pre><code>&lt;filter id=&quot;hue-rotate&quot;&gt;
+ &lt;feColorMatrix type=&quot;hueRotate&quot; values=&quot;225&quot;/&gt;
+&lt;/filter&gt;
+</code></pre>
+
+<h2 id="saturate-函数:ee681bce9ee04229105ee174e1606b94">saturate() 函数</h2>
+
+<p>CSS 还提供了一个 <code>saturate() filter-function</code>，你可以使用它来更改元素饱和度。</p>
+
+<pre><code>saturate() = saturate( [ &lt;number&gt; | &lt;percentage&gt; ] )
+</code></pre>
+
+<p><code>
+和</code>grayscale` 函数一样，该值定义了转让的比例。0% （或 0.0） 导致完全饱和度的元素，100%（或 1.0） 使元素保持不变。之间的值是线性的乘数效应。</p>
+
+<p>这里我设置了 50%。</p>
+
+<pre><code>.strawberry {
+ filter: saturate(0.5);
+}
+</code></pre>
+
+<p>返回图片如下。</p>
+
+<p><img src="http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg" alt="img4" /></p>
+
+<p>不允许使用负值，但是你可以提供大于 100% 或 1.0 的值。使得元素超饱和、再次使用 900% 饱和度的图像（ <code>filter:saturate(9);</code>）。</p>
+
+<p><img src="http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg" alt="img5" /></p>
+
+<p>如同 <code>saturate()</code>，相应的 SVG <code>filter</code> 是比较简单的。</p>
+
+<pre><code>&lt;filter id=&quot;saturate&quot;&gt;
+ &lt;feColorMatrix type=&quot;saturate&quot; values=&quot;0.5&quot;/&gt;
+&lt;/filter&gt;
+</code></pre>
+
+<p>我之前提到，你可以通过将 <code>type</code> 属性设置为 <code>saturate</code>，来使 <code>feColorMatrix</code> 更轻松地创建灰度图像。你只需要将值设置为 0，使得图像完全饱和，这与将其设置为 100% 灰度产生。</p>
+
+<h2 id="sepia-函数:ee681bce9ee04229105ee174e1606b94">sepia() 函数</h2>
+
+<p>最后还有 <code>sepia() filter-function</code> 将图像转换为深褐色。</p>
+
+<pre><code>sepia() = sepia( [ &lt;number&gt; | &lt;percentage&gt; ] )
+</code></pre>
+
+<p>现在应该很熟悉，但是值定义了转换的比例。100%（1.0）是完全深褐色，而 0%（0.0）则保持图像不变。期间的值是效果间的线性乘数效应。</p>
+
+<p>不允许使用负值，但是你可以提供大于 100% 或 1.0 的值，但不会添加效果。</p>
+
+<p>这里我设置为 75%。</p>
+
+<pre><code>.strawberry {
+ filter: sepia(75%);
+}
+</code></pre>
+
+<p>图片如下：</p>
+
+<p><img src="http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg" alt="img6" /></p>
+
+<p>对于没有 <code>sepia</code>  类型的 <code>feColorMatrix</code>，所有想要获得与使用另一个矩阵的深褐色效果。</p>
+
+<pre><code>&lt;filter id=&quot;sepia&quot;&gt;
+ &lt;feColorMatrix type=&quot;matrix&quot;
+    values=&quot;(0.393 + 0.607 * [1 - amount]) (0.769 - 0.769 * [1 - amount]) (0.189 - 0.189 * [1 - amount]) 0 0
+            (0.349 - 0.349 * [1 - amount]) (0.686 + 0.314 * [1 - amount]) (0.168 - 0.168 * [1 - amount]) 0 0
+            (0.272 - 0.272 * [1 - amount]) (0.534 - 0.534 * [1 - amount]) (0.131 + 0.869 * [1 - amount]) 0 0 0 0 0 1 0&quot;/&gt;
+&lt;/filter&gt;
+</code></pre>
+
+<p>我认为你同意 CSS 滤镜功能是这两个选项，即使 SVG 在更灵活配置。</p>
+
+<h2 id="总结:ee681bce9ee04229105ee174e1606b94">总结</h2>
+
+<p>这四个 CSS 过滤器功能都是 滤镜原语 <code>feColorMatrix</code> 的不同类型和值的映射。其中两个代替复杂的矩阵，而另外两个替换一个特定类型的原语。</p>
+
+<p>我希望您同意，所有这四个过滤功能都足够容易理解和使用。我怀疑你会很难与他们合作，或弄清楚用来调整图像和图形的值。</p>
+
+<p>下一周，我将通过查看四个更多的<a href="http://vanseodesign.com/web-design/svg-filter-primitives-fecomponenttransfer/">滤镜原语</a>创建的效果。与今天四个功能一样，我相你会下周的功能通常与原语更若以使用。</p>
+
+        </div>
+
+
+        <aside>
+          
+<div class="ds-thread" data-thread-key="http://jyu213.github.io/blog/2017/06/09/%E5%9B%9B%E4%B8%AA%E8%B0%83%E8%8A%82%E9%A2%9C%E8%89%B2%E7%9A%84-css-%E6%BB%A4%E9%95%9C/" data-title="四个调节颜色的 CSS 滤镜" data-url="http://jyu213.github.io/blog/2017/06/09/%E5%9B%9B%E4%B8%AA%E8%B0%83%E8%8A%82%E9%A2%9C%E8%89%B2%E7%9A%84-css-%E6%BB%A4%E9%95%9C/"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"j4evee"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+
+
+        </aside>
+
+      </article>
+
+    </div>
+    <div class="col-md-4">
+      
+<aside class="site">
+
+  
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h2 class="panel-title">tag</h2>
+    </div>
+    <div class="list-group">
+      
+      <a href="http://jyu213.github.io/tags/css" class="list-group-item">css</a>
+      
+      <a href="http://jyu213.github.io/tags/mobile" class="list-group-item">mobile</a>
+      
+      <a href="http://jyu213.github.io/tags/doc" class="list-group-item">doc</a>
+      
+      <a href="http://jyu213.github.io/tags/translate" class="list-group-item">translate</a>
+      
+      <a href="http://jyu213.github.io/tags/es6" class="list-group-item">es6</a>
+      
+      <a href="http://jyu213.github.io/tags/js" class="list-group-item">js</a>
+      
+      <a href="http://jyu213.github.io/tags/html5" class="list-group-item">html5</a>
+      
+      <a href="http://jyu213.github.io/tags/git" class="list-group-item">git</a>
+      
+      <a href="http://jyu213.github.io/tags/%E8%87%AA%E5%8A%A8%E5%8C%96" class="list-group-item">自动化</a>
+      
+    </div>
+  </div>
+  
+
+</aside>
+
+
+    </div>
+  </div>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site">
+      <div class="container">
+        <p>&copy; 2017 见见</p>
+        <p>Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>,</p>
+        <p>Theme <a href="https://github.com/dim0627/hugo_theme_robust" target="_blank">Robust</a> designed by <a href="http://yet.unresolved.xyz" target="_blank">Daisuke Tsuji</a></p>
+      </div>
+    </footer>
+
+    <script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-41493088-2', 'auto');
+      ga('send', 'pageview');
+    </script>
+    
+
+  </body>
+</html>
+
