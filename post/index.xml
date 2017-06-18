@@ -5,8 +5,114 @@
     <link>http://jyu213.github.io/post/</link>
     <description>Recent content in Posts on 见见 - 前端小记</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 09 Jun 2017 01:05:16 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 18 Jun 2017 22:10:05 +0800</lastBuildDate>
     <atom:link href="http://jyu213.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>ES7 Decorators</title>
+      <link>http://jyu213.github.io/blog/2017/06/18/es7-decorators/</link>
+      <pubDate>Sun, 18 Jun 2017 22:10:05 +0800</pubDate>
+      
+      <guid>http://jyu213.github.io/blog/2017/06/18/es7-decorators/</guid>
+      <description>
+
+&lt;p&gt;Decorators 的概念来源于 Python，可以称为&lt;strong&gt;装饰器&lt;/strong&gt;。简单的理解其实它就是一个 &lt;code&gt;wrapper&lt;/code&gt;，&lt;strong&gt;对目标函数或对象进行修改并返回&lt;/strong&gt;。如果从 Java 的角度的话，可以看作是一个 &lt;code&gt;filter&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;它只是一种语法糖，本质上是对函数的变换。先来看看经典的日志系统吧。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class Person {
+  @log
+  getFullName(firstname, lastname) {
+    return `${firstname}${lastname}`
+  }
+}
+
+function log(target, key, descriptor){
+  const value = descriptor.value
+  descriptor.value = (...args) =&amp;gt; {
+    console.log(`Calling ${key} with`, args)
+    return value.apply(null, arguments)
+  }
+  return descriptor
+}
+
+const person = new Person()
+person.getFullName(&#39;LeBron&#39;, &#39;James&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;@&lt;/code&gt; 声明的 &lt;code&gt;@log&lt;/code&gt; 即为 &lt;code&gt;decorator&lt;/code&gt;，它是一个函数，接收三个参数：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;target&lt;/code&gt;，需要定义属性的对象&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;key&lt;/code&gt;，属性名&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;descriptor&lt;/code&gt;， 属性描述符，同 &lt;code&gt;Object.defineProperty&lt;/code&gt; 的 &lt;code&gt;decorator&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;发现了么，其实 &lt;code&gt;decorators&lt;/code&gt; 底层用的也是 &lt;code&gt;Object.defineProperty&lt;/code&gt; 的属性来写的。&lt;/p&gt;
+
+&lt;p&gt;如果单纯通过外面包的一层函数来实现的话，会是怎么样的？其实也挺简单的。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function log(target){
+  console.log(target.name, typeof target, arguments)
+  return (...args) =&amp;gt; {
+   console.log(`Calling ${target.name} with`, args)
+    target.call(this, [](#).slice.call(arguments))
+  }
+}
+
+class Person{
+  getFullName(firstname, lastname) {
+    // …
+  }
+}
+Person.prototype.getFullName = log(Person.prototype.getFullName)
+// …
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;实际项目开发中，我们可以通过使用 &lt;code&gt;babel-plugin-syntax-decorators&lt;/code&gt; 或 &lt;code&gt;babel-plugin-transform-decorators-legacy&lt;/code&gt; 来转码。让我们来看看 babel 中的实现方式。以下只是一些伪代码。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+  // descriptor 赋值逻辑以及默认属性
+  Object[&#39;keys&#39;](#)(descriptor).forEach(function (key) {
+    desc[key](#) = descriptor[key](#);
+  });
+  desc.enumerable = !!desc.enumerable;
+  desc.configurable = !!desc.configurable;
+
+  desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+    return decorator(target, property, desc) || desc;
+  }, desc);
+
+  if (desc.initializer === void 0) {
+    Object[&#39;defineProperty&#39;](#)(target, property, desc);
+    desc = null;
+  }
+
+  return desc;
+}
+
+let Person = (_class = class Person {
+  getFullName(firstname, lastname) {
+    return `${ firstname }${ lastname }`;
+  }
+}, (_applyDecoratedDescriptor(_class.prototype, &#39;getFullName&#39;, [log](#), Object.getOwnPropertyDescriptor(_class.prototype, &#39;getFullName&#39;), _class.prototype)), _class);
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;作用-结尾:a593262b97a8f3ec1e2657c7b6ab1472&#34;&gt;作用 &amp;amp; 结尾&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;用于函数或类的修饰&lt;/li&gt;
+&lt;li&gt;由于用的 Object.defineProperty 特性，所以 descriptor 还可以对对象属性层级的操作&lt;/li&gt;
+&lt;li&gt;实现 &lt;code&gt;mixin&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;用于工厂函数&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;几个有趣的库，对 decorator 做了一些加强。有兴趣的同学可以翻翻。
+* &lt;a href=&#34;https://github.com/jayphelps/core-decorators.js&#34;&gt;core-decorators.js&lt;/a&gt;
+* &lt;a href=&#34;https://github.com/akira-cn/core-wrappers&#34;&gt;core-wrappers&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>四个调节颜色的 CSS 滤镜</title>
@@ -1620,90 +1726,6 @@ if(NotifySupport){
 &lt;li&gt;&lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/API/notification&#34;&gt;MDN Notification&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://yangzhuoyu.com/an-introduce-to-html5-notification/&#34;&gt;HTML5 Notification 介绍&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>移动端Web系列2 --- 调试</title>
-      <link>http://jyu213.github.io/blog/1/01/01/%E7%A7%BB%E5%8A%A8%E7%AB%AFweb%E7%B3%BB%E5%88%972-----%E8%B0%83%E8%AF%95/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://jyu213.github.io/blog/1/01/01/%E7%A7%BB%E5%8A%A8%E7%AB%AFweb%E7%B3%BB%E5%88%972-----%E8%B0%83%E8%AF%95/</guid>
-      <description>
-
-&lt;h3 id=&#34;浏览器调试:2594d53d9336389dbe2fe5dd4d91c2f1&#34;&gt;浏览器调试&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;chrome（V35.0.1916.153）
-使用chrome deleloper tool模拟移动设备。注意，部分功能还是与真机有差别，所以还是建议开发完成后在真机中看一下效果。
-打开方法&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;调出开发者工具（MAC: cmd+opt+i / WIN: F12）&lt;/li&gt;
-&lt;li&gt;点击&lt;code&gt;show console&lt;/code&gt;（MAC: Esc）&lt;/li&gt;
-&lt;li&gt;选择&lt;code&gt;Emulation&lt;/code&gt;，选择需要的device/user Agent等参数&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Firefox (V30.0)
-我平时没用FF开发。部分细节不是特别熟悉。
-好像这个没有对手势等的支持。&lt;/p&gt;
-
-&lt;p&gt;打开方法：&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;工具 - Web开发者 - 响应式设计视图&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;safari
-Develop - User Agent。
-我只在数据线连接  iphone 的调试的时候用的比较多。 这个下面会讲到。&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;设备调试:2594d53d9336389dbe2fe5dd4d91c2f1&#34;&gt;设备调试&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;IOS设备远程调试（MAC）&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;IOS中设置safari高级选项中开启Web检查器&lt;/li&gt;
-&lt;li&gt;IOS设备通过数据线连接MAC&lt;/li&gt;
-&lt;li&gt;IOS safari中打开页面&lt;/li&gt;
-&lt;li&gt;打开桌面版Safari，点击开发菜单，选择你调试的设备名，选择调试的网页&lt;/li&gt;
-&lt;li&gt;可看到类似Web的调试界面。具体功能再自己琢磨好了&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Android设备远程调试（MAC/PC）&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;开启系统设置中USB调试（开发人员选项）&lt;/li&gt;
-&lt;li&gt;开启桌面Chrome设置中的USB调试选项&lt;/li&gt;
-&lt;li&gt;手机chrome浏览器中打开相应的网页&lt;/li&gt;
-&lt;li&gt;桌面Chrome可看到对应打开的页面选项&lt;/li&gt;
-&lt;li&gt;备注： 网上的ADB插件，貌似在最新版本chrome中可以不用的&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;移动设置 UC浏览器&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://plus.uc.cn/document/webapp/doc5.html&#34;&gt;参见官方文档&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;模拟器:2594d53d9336389dbe2fe5dd4d91c2f1&#34;&gt;模拟器&lt;/h3&gt;
-
-&lt;p&gt;没尝试过。&lt;/p&gt;
-
-&lt;h3 id=&#34;其它:2594d53d9336389dbe2fe5dd4d91c2f1&#34;&gt;其它&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;二维码扫描，真机测试。可使用插件生成二维码。&lt;/li&gt;
-&lt;li&gt;同网络中，ip地址访问（注意引用资源路径，也需做相应转换）&lt;/li&gt;
-&lt;li&gt;weinre,MIHTol等，现在基本不在使用了&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;写在最后:2594d53d9336389dbe2fe5dd4d91c2f1&#34;&gt;写在最后&lt;/h3&gt;
-
-&lt;p&gt;还有更高效的方法的，欢迎继续做补充。&lt;/p&gt;
 </description>
     </item>
     

@@ -14,12 +14,12 @@
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://jyu213.github.io//index.xml">
 
     
-    <title>DPI 和 PPI - 见见 - 前端小记</title>
-    <meta property='og:title' content="DPI 和 PPI - 见见 - 前端小记">
+    <title>ES7 Decorators - 见见 - 前端小记</title>
+    <meta property='og:title' content="ES7 Decorators - 见见 - 前端小记">
     <meta property="og:type" content="article">
     
 
-    <meta property="og:url" content="http://jyu213.github.io/blog/2014/09/08/dpi-%E5%92%8C-ppi/">
+    <meta property="og:url" content="http://jyu213.github.io/blog/2017/06/18/es7-decorators/">
     
     
 
@@ -61,10 +61,10 @@
       <article class="single" itemscope="itemscope" itemtype="http://schema.org/Article">
 
         <meta itemprop="mainEntityOfPage"  itemType="https://schema.org/WebPage" content="http://jyu213.github.io/"/>
-        <meta itemprop="dateModified" content="2014-09-08T00:00:00&#43;00:00">
-        <meta itemprop="headline" content="DPI 和 PPI">
-        <meta itemprop="description" content="本文所涉及的内容在网上已有很多介绍。可相互借鉴。笔者仅为整理知识体系所用。 PPI（Pixel Per Inch） 图像分辨率所使用的单位。在图像中每英">
-        <meta itemprop="url" content="http://jyu213.github.io/blog/2014/09/08/dpi-%E5%92%8C-ppi/">
+        <meta itemprop="dateModified" content="2017-06-18T22:10:05&#43;08:00">
+        <meta itemprop="headline" content="ES7 Decorators">
+        <meta itemprop="description" content="Decorators 的概念来源于 Python，可以称为装饰器。简单的理解其实它就是一个 wrapper，对目标函数或对象进行修改并返回。如果从 Java 的角度的话，可以">
+        <meta itemprop="url" content="http://jyu213.github.io/blog/2017/06/18/es7-decorators/">
         <div itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
           <meta itemprop="url" content="http://jyu213.github.io/images/default.jpg" />
           <meta itemprop="width" content="800">
@@ -83,56 +83,118 @@
         </div>
 
         <header class="article-header">
-          <h1 class="article-title">DPI 和 PPI</h1>
+          <h1 class="article-title">ES7 Decorators</h1>
 
-          <time itemprop="datePublished" pubdate="pubdate" datetime="2014-09-08T00:00:00&#43;00:00">2014-09-08</time>
+          <time itemprop="datePublished" pubdate="pubdate" datetime="2017-06-18T22:10:05&#43;08:00">2017-06-18</time>
 
-          
-            <a href="http://jyu213.github.io/tags/doc" class="tag">doc</a> 
           
         </header>
 
         <div class="article-body" itemprop="articleBody">
           
 
-<p>本文所涉及的内容在网上已有很多介绍。可相互借鉴。笔者仅为整理知识体系所用。</p>
+<p>Decorators 的概念来源于 Python，可以称为<strong>装饰器</strong>。简单的理解其实它就是一个 <code>wrapper</code>，<strong>对目标函数或对象进行修改并返回</strong>。如果从 Java 的角度的话，可以看作是一个 <code>filter</code>。</p>
 
-<h3 id="ppi-pixel-per-inch:b8585493f60c6c7eca55ca69564e380c">PPI（Pixel Per Inch）</h3>
+<p>它只是一种语法糖，本质上是对函数的变换。先来看看经典的日志系统吧。</p>
 
-<p>图像分辨率所使用的单位。在图像中每英寸所表达的像素数目。</p>
+<pre><code>class Person {
+  @log
+  getFullName(firstname, lastname) {
+    return `${firstname}${lastname}`
+  }
+}
 
-<h3 id="dpi-dot-per-inch:b8585493f60c6c7eca55ca69564e380c">DPI（Dot Per Inch）</h3>
+function log(target, key, descriptor){
+  const value = descriptor.value
+  descriptor.value = (...args) =&gt; {
+    console.log(`Calling ${key} with`, args)
+    return value.apply(null, arguments)
+  }
+  return descriptor
+}
 
-<p>打印分辨率使用的单位。每英寸所表达的打印点数。</p>
+const person = new Person()
+person.getFullName('LeBron', 'James')
+</code></pre>
 
-<h3 id="像素-pixel:b8585493f60c6c7eca55ca69564e380c">像素（Pixel）</h3>
-
-<p>一种用来计算数码影像的单位。</p>
-
-<h3 id="分辨率:b8585493f60c6c7eca55ca69564e380c">分辨率</h3>
-
-<p>单位长度中，所表达或撷取的像素数目。</p>
+<p><code>@</code> 声明的 <code>@log</code> 即为 <code>decorator</code>，它是一个函数，接收三个参数：</p>
 
 <ul>
-<li>DPI用来表示输出设备的输出精度，如打印机，显示器</li>
-<li>DPI表示的是 像点/英寸（每英寸长度上有多少个打印点或像点）</li>
-<li>PPI用来表示输入设备的输入精度，如扫描仪，数码相机</li>
-<li>PPI表示的是　像素/英寸（每英寸长度上有多少个像素）</li>
+<li><code>target</code>，需要定义属性的对象</li>
+<li><code>key</code>，属性名</li>
+<li><code>descriptor</code>， 属性描述符，同 <code>Object.defineProperty</code> 的 <code>decorator</code></li>
 </ul>
 
-<h3 id="参考资料:b8585493f60c6c7eca55ca69564e380c">参考资料</h3>
+<p>发现了么，其实 <code>decorators</code> 底层用的也是 <code>Object.defineProperty</code> 的属性来写的。</p>
+
+<p>如果单纯通过外面包的一层函数来实现的话，会是怎么样的？其实也挺简单的。</p>
+
+<pre><code>function log(target){
+  console.log(target.name, typeof target, arguments)
+  return (...args) =&gt; {
+   console.log(`Calling ${target.name} with`, args)
+    target.call(this, [](#).slice.call(arguments))
+  }
+}
+
+class Person{
+  getFullName(firstname, lastname) {
+    // …
+  }
+}
+Person.prototype.getFullName = log(Person.prototype.getFullName)
+// …
+</code></pre>
+
+<p>实际项目开发中，我们可以通过使用 <code>babel-plugin-syntax-decorators</code> 或 <code>babel-plugin-transform-decorators-legacy</code> 来转码。让我们来看看 babel 中的实现方式。以下只是一些伪代码。</p>
+
+<pre><code>function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+  // descriptor 赋值逻辑以及默认属性
+  Object['keys'](#)(descriptor).forEach(function (key) {
+    desc[key](#) = descriptor[key](#);
+  });
+  desc.enumerable = !!desc.enumerable;
+  desc.configurable = !!desc.configurable;
+
+  desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+    return decorator(target, property, desc) || desc;
+  }, desc);
+
+  if (desc.initializer === void 0) {
+    Object['defineProperty'](#)(target, property, desc);
+    desc = null;
+  }
+
+  return desc;
+}
+
+let Person = (_class = class Person {
+  getFullName(firstname, lastname) {
+    return `${ firstname }${ lastname }`;
+  }
+}, (_applyDecoratedDescriptor(_class.prototype, 'getFullName', [log](#), Object.getOwnPropertyDescriptor(_class.prototype, 'getFullName'), _class.prototype)), _class);
+
+</code></pre>
+
+<h3 id="作用-结尾:a593262b97a8f3ec1e2657c7b6ab1472">作用 &amp; 结尾</h3>
 
 <ul>
-<li><a href="http://sebastien-gabriel.com/designers-guide-to-dpi/home">Designer&rsquo;s guide to DPI</a></li>
-<li><a href="http://www.zhihu.com/question/21220154">DPI、PPI、DP、PX 的详细计算方法 - 知乎</a></li>
+<li>用于函数或类的修饰</li>
+<li>由于用的 Object.defineProperty 特性，所以 descriptor 还可以对对象属性层级的操作</li>
+<li>实现 <code>mixin</code></li>
+<li>用于工厂函数</li>
 </ul>
+
+<p>几个有趣的库，对 decorator 做了一些加强。有兴趣的同学可以翻翻。
+* <a href="https://github.com/jayphelps/core-decorators.js">core-decorators.js</a>
+* <a href="https://github.com/akira-cn/core-wrappers">core-wrappers</a></p>
 
         </div>
 
 
         <aside>
           
-<div class="ds-thread" data-thread-key="http://jyu213.github.io/blog/2014/09/08/dpi-%E5%92%8C-ppi/" data-title="DPI 和 PPI" data-url="http://jyu213.github.io/blog/2014/09/08/dpi-%E5%92%8C-ppi/"></div>
+<div class="ds-thread" data-thread-key="http://jyu213.github.io/blog/2017/06/18/es7-decorators/" data-title="ES7 Decorators" data-url="http://jyu213.github.io/blog/2017/06/18/es7-decorators/"></div>
 <script type="text/javascript">
 var duoshuoQuery = {short_name:"j4evee"};
     (function() {
@@ -168,17 +230,17 @@ var duoshuoQuery = {short_name:"j4evee"};
       
       <a href="http://jyu213.github.io/tags/doc" class="list-group-item">doc</a>
       
-      <a href="http://jyu213.github.io/tags/translate" class="list-group-item">translate</a>
-      
       <a href="http://jyu213.github.io/tags/es6" class="list-group-item">es6</a>
       
-      <a href="http://jyu213.github.io/tags/git" class="list-group-item">git</a>
+      <a href="http://jyu213.github.io/tags/translate" class="list-group-item">translate</a>
       
-      <a href="http://jyu213.github.io/tags/js" class="list-group-item">js</a>
+      <a href="http://jyu213.github.io/tags/git" class="list-group-item">git</a>
       
       <a href="http://jyu213.github.io/tags/%E8%87%AA%E5%8A%A8%E5%8C%96" class="list-group-item">自动化</a>
       
       <a href="http://jyu213.github.io/tags/html5" class="list-group-item">html5</a>
+      
+      <a href="http://jyu213.github.io/tags/js" class="list-group-item">js</a>
       
     </div>
   </div>
