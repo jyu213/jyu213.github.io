@@ -2,20 +2,20 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="generator" content="Hugo 0.15" />
+    <meta name="generator" content="Hugo 0.30.2" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-    <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans|Marcellus+SC'>
+
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/custom.css">
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://jyu213.github.io//index.xml">
 
     
-    <title>ES6 - 字符串模板 - 见见 - 前端小记</title>
-    <meta property='og:title' content="ES6 - 字符串模板 - 见见 - 前端小记">
+    <title>ES6 - 字符串模板 - 前端杂货铺</title>
+    <meta property='og:title' content="ES6 - 字符串模板 - 前端杂货铺">
     <meta property="og:type" content="article">
     
 
@@ -28,7 +28,7 @@
   <body>
 
     <header class="site">
-      <nav class="navbar navbar-default">
+      <nav class="navbar navbar-inverse">
         <div class="container">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -37,10 +37,31 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="http://jyu213.github.io/">见见 - 前端小记</a>
+            
+            <a class="navbar-brand" href="http://jyu213.github.io/">前端杂货铺</a>
           </div>
 
           <div id="navbar" class="collapse navbar-collapse">
+            
+            <ul class="nav navbar-nav navbar-right">
+              
+              
+              <li><a href="/categories/css">CSS</a></li>
+              
+              
+              
+              <li><a href="/categories/js">JS</a></li>
+              
+              
+              
+              <li><a href="/categories/translate">翻译</a></li>
+              
+              
+              
+              <li><a href="/">首页</a></li>
+              
+              
+            </ul>
             
           </div>
 
@@ -56,7 +77,7 @@
 <div class="single">
 
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-12">
 
       <article class="single" itemscope="itemscope" itemtype="http://schema.org/Article">
 
@@ -76,7 +97,7 @@
             <meta itemprop="width" content="100">
             <meta itemprop="height" content="100">
           </div>
-          <meta itemprop="name" content="见见 - 前端小记">
+          <meta itemprop="name" content="前端杂货铺">
         </div>
         <div itemprop="author" itemscope itemtype="https://schema.org/Person">
           <meta itemprop="name" content="见见">
@@ -85,7 +106,14 @@
         <header class="article-header">
           <h1 class="article-title">ES6 - 字符串模板</h1>
 
-          <time itemprop="datePublished" pubdate="pubdate" datetime="2015-12-14T00:00:00&#43;00:00">2015-12-14</time>
+          <time>
+            
+              见见
+            
+          </time>
+          <time itemprop="datePublished" pubdate="pubdate" datetime="2015-12-14T00:00:00&#43;00:00">
+            2015-12-14
+          </time>
 
           
             <a href="http://jyu213.github.io/tags/es6" class="tag">es6</a> 
@@ -95,15 +123,15 @@
         <div class="article-body" itemprop="articleBody">
           
 
-<h2 id="es6-字符串模板:806b46e229fc7cf9ebe3737ebb6a0621">ES6 - 字符串模板</h2>
+<h2 id="es6-字符串模板">ES6 - 字符串模板</h2>
 
-<h3 id="写在前面:806b46e229fc7cf9ebe3737ebb6a0621">写在前面</h3>
+<h3 id="写在前面">写在前面</h3>
 
 <p>关于 ES6, 也终于在 2015 年的 7 月 18 号尘埃落定了。虽然说各大浏览器还没有全面的支持，不过这并不妨碍我们一颗想要撸一把的心。在后端，可以使用 Node.js(0.12+)或 io.js, 前端的话，也可以使用<a href="http://babeljs.io/">Babel</a> 或<a href="https://github.com/google/traceur-compiler#what-is-traceur">Traceur</a> 进行语法预转义成 ES5使用 。</p>
 
 <p>关于该系列（不知道能不能成为一个系列，总是各种懒），会没有规律的挑选一些内容来学习。欢迎大家积极纠错，留言探讨。</p>
 
-<h3 id="模板字符串-template-strings:806b46e229fc7cf9ebe3737ebb6a0621">模板字符串(template strings)</h3>
+<h3 id="模板字符串-template-strings">模板字符串(template strings)</h3>
 
 <p>ES6 中引进的一种新型的字符串字面量语法 - 模板字符串。书面上来解释，模板字符串是一种能在字符串文本中内嵌表示式的字符串字面量。简单来讲，就是增加了变量功能的字符串。</p>
 
@@ -155,7 +183,7 @@
 * 不能很好的和国际化库配合（即不会格式化特定语言的数字，日期，文字等）
 * 没有内建循环语法，（甚至连条件语句都不支持， 只可以使用模板套构的方法）</p>
 
-<h3 id="标签模板-tagged-template:806b46e229fc7cf9ebe3737ebb6a0621">标签模板(tagged template)</h3>
+<h3 id="标签模板-tagged-template">标签模板(tagged template)</h3>
 
 <p>为此，引出了标签模板的概念。标签模板则是在反引号前面引入一个标签（tag）。该标签是一个函数，用于处于定制化模板字符串后返回值。就拿上面对特殊字符串举例。</p>
 
@@ -201,7 +229,7 @@
 
 <p>有了此类方法，就大大的增加了控制的权利。如上面说的国际化库甚至循环语句。</p>
 
-<h3 id="浏览器兼容性:806b46e229fc7cf9ebe3737ebb6a0621">浏览器兼容性</h3>
+<h3 id="浏览器兼容性">浏览器兼容性</h3>
 
 <ul>
 <li>服务器端， io.js 支持</li>
@@ -210,7 +238,7 @@
 <li>IE Tech Preview</li>
 </ul>
 
-<h3 id="扩展阅读:806b46e229fc7cf9ebe3737ebb6a0621">扩展阅读</h3>
+<h3 id="扩展阅读">扩展阅读</h3>
 
 <ul>
 <li><a href="http://es6.ruanyifeng.com/#docs/string">ECMAScript 6 入门</a></li>
@@ -225,60 +253,31 @@
 
         <aside>
           
-<div class="ds-thread" data-thread-key="http://jyu213.github.io/blog/2015/12/14/es6---%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%A8%A1%E6%9D%BF/" data-title="ES6 - 字符串模板" data-url="http://jyu213.github.io/blog/2015/12/14/es6---%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%A8%A1%E6%9D%BF/"></div>
+
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+
+
+<div id="comments" class="comments" data-thread-key="http://jyu213.github.io/blog/2015/12/14/es6---%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%A8%A1%E6%9D%BF/" data-title="ES6 - 字符串模板" data-url="http://jyu213.github.io/blog/2015/12/14/es6---%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%A8%A1%E6%9D%BF/"></div>
 <script type="text/javascript">
-var duoshuoQuery = {short_name:"j4evee"};
-    (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0]
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-    </script>
+    const gitment = new Gitment({
+      id: 'http:\/\/jyu213.github.io\/blog\/2015\/12\/14\/es6---%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%A8%A1%E6%9D%BF\/',
+      title: 'ES6 - 字符串模板',
+      owner: 'jyu213',
+      repo: 'blog_comments',
+      oauth: {
+        client_id: '3bee402f3d2d77bfe52a',
+        client_secret: 'a03e8940e2210e7990ad0ad89f6eb1259b1facb6',
+      },
+    })
+
+    gitment.render('comments')
+</script>
 
 
         </aside>
 
       </article>
-
-    </div>
-    <div class="col-md-4">
-      
-<aside class="site">
-
-  
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h2 class="panel-title">tag</h2>
-    </div>
-    <div class="list-group">
-      
-      <a href="http://jyu213.github.io/tags/css" class="list-group-item">css</a>
-      
-      <a href="http://jyu213.github.io/tags/mobile" class="list-group-item">mobile</a>
-      
-      <a href="http://jyu213.github.io/tags/doc" class="list-group-item">doc</a>
-      
-      <a href="http://jyu213.github.io/tags/translate" class="list-group-item">translate</a>
-      
-      <a href="http://jyu213.github.io/tags/es6" class="list-group-item">es6</a>
-      
-      <a href="http://jyu213.github.io/tags/git" class="list-group-item">git</a>
-      
-      <a href="http://jyu213.github.io/tags/html5" class="list-group-item">html5</a>
-      
-      <a href="http://jyu213.github.io/tags/js" class="list-group-item">js</a>
-      
-      <a href="http://jyu213.github.io/tags/%E8%87%AA%E5%8A%A8%E5%8C%96" class="list-group-item">自动化</a>
-      
-    </div>
-  </div>
-  
-
-</aside>
-
 
     </div>
   </div>
@@ -289,10 +288,8 @@ var duoshuoQuery = {short_name:"j4evee"};
     </div>
 
     <footer class="site">
-      <div class="container">
-        <p>&copy; 2017 见见</p>
-        <p>Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>,</p>
-        <p>Theme <a href="https://github.com/dim0627/hugo_theme_robust" target="_blank">Robust</a> designed by <a href="http://yet.unresolved.xyz" target="_blank">Daisuke Tsuji</a></p>
+      <div class="container text-center">
+        <p>&copy; 2017 前端杂货铺</p>
       </div>
     </footer>
 

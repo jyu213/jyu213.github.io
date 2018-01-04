@@ -2,20 +2,20 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="generator" content="Hugo 0.15" />
+    <meta name="generator" content="Hugo 0.30.2" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-    <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans|Marcellus+SC'>
+
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/custom.css">
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://jyu213.github.io//index.xml">
 
     
-    <title>【译】CSS 网格的春天 - 见见 - 前端小记</title>
-    <meta property='og:title' content="【译】CSS 网格的春天 - 见见 - 前端小记">
+    <title>【译】CSS 网格的春天 - 前端杂货铺</title>
+    <meta property='og:title' content="【译】CSS 网格的春天 - 前端杂货铺">
     <meta property="og:type" content="article">
     
 
@@ -28,7 +28,7 @@
   <body>
 
     <header class="site">
-      <nav class="navbar navbar-default">
+      <nav class="navbar navbar-inverse">
         <div class="container">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -37,10 +37,31 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="http://jyu213.github.io/">见见 - 前端小记</a>
+            
+            <a class="navbar-brand" href="http://jyu213.github.io/">前端杂货铺</a>
           </div>
 
           <div id="navbar" class="collapse navbar-collapse">
+            
+            <ul class="nav navbar-nav navbar-right">
+              
+              
+              <li><a href="/categories/css">CSS</a></li>
+              
+              
+              
+              <li><a href="/categories/js">JS</a></li>
+              
+              
+              
+              <li><a href="/categories/translate">翻译</a></li>
+              
+              
+              
+              <li><a href="/">首页</a></li>
+              
+              
+            </ul>
             
           </div>
 
@@ -56,7 +77,7 @@
 <div class="single">
 
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-12">
 
       <article class="single" itemscope="itemscope" itemtype="http://schema.org/Article">
 
@@ -76,7 +97,7 @@
             <meta itemprop="width" content="100">
             <meta itemprop="height" content="100">
           </div>
-          <meta itemprop="name" content="见见 - 前端小记">
+          <meta itemprop="name" content="前端杂货铺">
         </div>
         <div itemprop="author" itemscope itemtype="https://schema.org/Person">
           <meta itemprop="name" content="见见">
@@ -85,7 +106,14 @@
         <header class="article-header">
           <h1 class="article-title">【译】CSS 网格的春天</h1>
 
-          <time itemprop="datePublished" pubdate="pubdate" datetime="2017-05-10T22:34:58&#43;08:00">2017-05-10</time>
+          <time>
+            
+              见见
+            
+          </time>
+          <time itemprop="datePublished" pubdate="pubdate" datetime="2017-05-10T22:34:58&#43;08:00">
+            2017-05-10
+          </time>
 
           
             <a href="http://jyu213.github.io/tags/translate" class="tag">translate</a> <a href="http://jyu213.github.io/tags/css" class="tag">css</a> 
@@ -105,7 +133,7 @@
 
 <p><a href="http://codepen.io/jonitrythall/full/xdOrrq/">点击这里查看完整的 Demo</a></p>
 
-<h3 id="制定一个计划:b1efd1ff3bdf437f1a96cee8e8a48de6">制定一个计划</h3>
+<h3 id="制定一个计划">制定一个计划</h3>
 
 <p>和学习任何网络新事物一样，我立即打开 <code>Adobe Illustrator</code>，感受自然，网格和紫色带来的灵感，我开始绘制一个基本的户外场景，然后开始尝试用 CSS 网格来实现。</p>
 
@@ -113,7 +141,7 @@
 
 <p><img src="http://jonibologna.com/content/images/2017/04/scene-01.png" alt="images" /></p>
 
-<h3 id="标记:b1efd1ff3bdf437f1a96cee8e8a48de6">标记</h3>
+<h3 id="标记">标记</h3>
 
 <p>标记由一个 <code>class</code> 名为 <code>contain</code> 的 <code>div</code> 主容器以及十二个 <code>class</code> 名为 <code>spring</code> 的子集 <code>div</code> 组成。HTML 和 CSS 代码片段如下：</p>
 
@@ -245,7 +273,7 @@ body {
 
 <p><img src="http://jonibologna.com/content/images/2017/04/Screen-Shot-2017-04-23-at-12-27-03-PM.png" alt="images" /></p>
 
-<h3 id="columns:b1efd1ff3bdf437f1a96cee8e8a48de6">columns</h3>
+<h3 id="columns">columns</h3>
 
 <p>使用网格时首先需要在 CSS 网格容器中声明它：</p>
 
@@ -270,11 +298,11 @@ body {
 
 <p><code>repeat</code> 函数允许缩短 <code>1fr 1fr 1fr 1fr</code> 的写法。</p>
 
-<h3 id="fr-单位:b1efd1ff3bdf437f1a96cee8e8a48de6"><code>fr</code> 单位</h3>
+<h3 id="fr-单位"><code>fr</code> 单位</h3>
 
 <p>网格属性可以接受多个不同的单位值，本例中只使用了 <code>fr</code>。这个单位是超级聪明和灵活的，因为它将可用空间划分为分数，所以 <code>1fr 1fr 1fr 1fr</code> 将生成四个相同大小的列。</p>
 
-<h3 id="网格间距:b1efd1ff3bdf437f1a96cee8e8a48de6">网格间距</h3>
+<h3 id="网格间距">网格间距</h3>
 
 <p>网格间距由每个项目的 <code>2px</code> 橙色间距表示。间隙显示主容器的背景颜色，为橙色，外边框是 <code>body</code> 本身。每个网格包含一个白色背景的图像。</p>
 
@@ -282,7 +310,7 @@ body {
 
 <p>示例使用缩写 <code>grid-gap</code> 来匹配 <code>grid-column-gap</code> 和 <code>grid-row-gap</code>。该属性接受单个共享值或者两个不同的值，第一个参数表示行，第二个表示列。</p>
 
-<h3 id="从列起点和终点来排列项目:b1efd1ff3bdf437f1a96cee8e8a48de6">从列起点和终点来排列项目</h3>
+<h3 id="从列起点和终点来排列项目">从列起点和终点来排列项目</h3>
 
 <p>一旦在主容器上设置基本列，容器中的每个子元素 <code>div</code> 都可以单独进一步设计，已实现以下网格：</p>
 
@@ -324,7 +352,7 @@ body {
 
 <p><img src="http://jonibologna.com/content/images/2017/04/Screen-Shot-2017-04-23-at-12-13-05-PM.png" alt="images" /></p>
 
-<h3 id="rows:b1efd1ff3bdf437f1a96cee8e8a48de6">rows</h3>
+<h3 id="rows">rows</h3>
 
 <p>回到容器元素设置行，这是我来演示这个奇怪风景的最后一步。尽管初始列由相等的间距组成，但是行具有更多的变化。</p>
 
@@ -334,7 +362,7 @@ body {
 
 <p>这个设计对于行的需求是相当轻的，这就是行样式所需的程度，但是行有自己的一组属性，有些甚至可以与列属性组合来创建速记法，保持 CSS 的简洁。</p>
 
-<h3 id="flexbox:b1efd1ff3bdf437f1a96cee8e8a48de6">Flexbox</h3>
+<h3 id="flexbox">Flexbox</h3>
 
 <p>谈及 flexbox（并且最近创建了一个<a href="https://gum.co/YdWw">印刷视觉指南</a>），我只想说，在这个示例中，<code>flexbox</code> 用于将图像在网格中居中，而网格和 <code>flexbox</code> 实际上可以一起使用。</p>
 
@@ -359,13 +387,13 @@ body {
 
 <p><code>Robin Rendle</code> 最近在 <code>CSS-Tricks</code> 上写了有关这个主题的一个<a href="https://css-tricks.com/css-grid-replace-flexbox/">很好的总结</a>。</p>
 
-<h3 id="浏览器支持:b1efd1ff3bdf437f1a96cee8e8a48de6">浏览器支持</h3>
+<h3 id="浏览器支持">浏览器支持</h3>
 
 <p>目前浏览器支持状况：</p>
 
 <p><img src="http://jonibologna.com/content/images/2017/04/Screen-Shot-2017-04-23-at-1-24-17-PM.png" alt="images" /></p>
 
-<h3 id="资源:b1efd1ff3bdf437f1a96cee8e8a48de6">资源</h3>
+<h3 id="资源">资源</h3>
 
 <p>这里有一些比较好的扩展阅读：</p>
 
@@ -377,7 +405,7 @@ body {
 <a href="http://cssgridgarden.com/">CSS Grid Garden</a></li>
 </ul>
 
-<h3 id="结尾:b1efd1ff3bdf437f1a96cee8e8a48de6">结尾</h3>
+<h3 id="结尾">结尾</h3>
 
 <p>要了解 CSS Grid 的功能，还需要学习更多的东西，我迫不及待地写更多的内容，但希望这篇文章可以作为一个有趣的起点。</p>
 
@@ -386,60 +414,31 @@ body {
 
         <aside>
           
-<div class="ds-thread" data-thread-key="http://jyu213.github.io/blog/2017/05/10/%E8%AF%91css-%E7%BD%91%E6%A0%BC%E7%9A%84%E6%98%A5%E5%A4%A9/" data-title="【译】CSS 网格的春天" data-url="http://jyu213.github.io/blog/2017/05/10/%E8%AF%91css-%E7%BD%91%E6%A0%BC%E7%9A%84%E6%98%A5%E5%A4%A9/"></div>
+
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+
+
+<div id="comments" class="comments" data-thread-key="http://jyu213.github.io/blog/2017/05/10/%E8%AF%91css-%E7%BD%91%E6%A0%BC%E7%9A%84%E6%98%A5%E5%A4%A9/" data-title="【译】CSS 网格的春天" data-url="http://jyu213.github.io/blog/2017/05/10/%E8%AF%91css-%E7%BD%91%E6%A0%BC%E7%9A%84%E6%98%A5%E5%A4%A9/"></div>
 <script type="text/javascript">
-var duoshuoQuery = {short_name:"j4evee"};
-    (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0]
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-    </script>
+    const gitment = new Gitment({
+      id: 'http:\/\/jyu213.github.io\/blog\/2017\/05\/10\/%E8%AF%91css-%E7%BD%91%E6%A0%BC%E7%9A%84%E6%98%A5%E5%A4%A9\/',
+      title: '【译】CSS 网格的春天',
+      owner: 'jyu213',
+      repo: 'blog_comments',
+      oauth: {
+        client_id: '3bee402f3d2d77bfe52a',
+        client_secret: 'a03e8940e2210e7990ad0ad89f6eb1259b1facb6',
+      },
+    })
+
+    gitment.render('comments')
+</script>
 
 
         </aside>
 
       </article>
-
-    </div>
-    <div class="col-md-4">
-      
-<aside class="site">
-
-  
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h2 class="panel-title">tag</h2>
-    </div>
-    <div class="list-group">
-      
-      <a href="http://jyu213.github.io/tags/css" class="list-group-item">css</a>
-      
-      <a href="http://jyu213.github.io/tags/mobile" class="list-group-item">mobile</a>
-      
-      <a href="http://jyu213.github.io/tags/doc" class="list-group-item">doc</a>
-      
-      <a href="http://jyu213.github.io/tags/translate" class="list-group-item">translate</a>
-      
-      <a href="http://jyu213.github.io/tags/es6" class="list-group-item">es6</a>
-      
-      <a href="http://jyu213.github.io/tags/git" class="list-group-item">git</a>
-      
-      <a href="http://jyu213.github.io/tags/js" class="list-group-item">js</a>
-      
-      <a href="http://jyu213.github.io/tags/%E8%87%AA%E5%8A%A8%E5%8C%96" class="list-group-item">自动化</a>
-      
-      <a href="http://jyu213.github.io/tags/html5" class="list-group-item">html5</a>
-      
-    </div>
-  </div>
-  
-
-</aside>
-
 
     </div>
   </div>
@@ -450,10 +449,8 @@ var duoshuoQuery = {short_name:"j4evee"};
     </div>
 
     <footer class="site">
-      <div class="container">
-        <p>&copy; 2017 见见</p>
-        <p>Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>,</p>
-        <p>Theme <a href="https://github.com/dim0627/hugo_theme_robust" target="_blank">Robust</a> designed by <a href="http://yet.unresolved.xyz" target="_blank">Daisuke Tsuji</a></p>
+      <div class="container text-center">
+        <p>&copy; 2017 前端杂货铺</p>
       </div>
     </footer>
 

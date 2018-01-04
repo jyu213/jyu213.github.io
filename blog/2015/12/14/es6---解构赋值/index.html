@@ -2,20 +2,20 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="generator" content="Hugo 0.15" />
+    <meta name="generator" content="Hugo 0.30.2" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-    <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans|Marcellus+SC'>
+
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/custom.css">
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://jyu213.github.io//index.xml">
 
     
-    <title>ES6 - 解构赋值 - 见见 - 前端小记</title>
-    <meta property='og:title' content="ES6 - 解构赋值 - 见见 - 前端小记">
+    <title>ES6 - 解构赋值 - 前端杂货铺</title>
+    <meta property='og:title' content="ES6 - 解构赋值 - 前端杂货铺">
     <meta property="og:type" content="article">
     
 
@@ -28,7 +28,7 @@
   <body>
 
     <header class="site">
-      <nav class="navbar navbar-default">
+      <nav class="navbar navbar-inverse">
         <div class="container">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -37,10 +37,31 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="http://jyu213.github.io/">见见 - 前端小记</a>
+            
+            <a class="navbar-brand" href="http://jyu213.github.io/">前端杂货铺</a>
           </div>
 
           <div id="navbar" class="collapse navbar-collapse">
+            
+            <ul class="nav navbar-nav navbar-right">
+              
+              
+              <li><a href="/categories/css">CSS</a></li>
+              
+              
+              
+              <li><a href="/categories/js">JS</a></li>
+              
+              
+              
+              <li><a href="/categories/translate">翻译</a></li>
+              
+              
+              
+              <li><a href="/">首页</a></li>
+              
+              
+            </ul>
             
           </div>
 
@@ -56,7 +77,7 @@
 <div class="single">
 
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-12">
 
       <article class="single" itemscope="itemscope" itemtype="http://schema.org/Article">
 
@@ -76,7 +97,7 @@
             <meta itemprop="width" content="100">
             <meta itemprop="height" content="100">
           </div>
-          <meta itemprop="name" content="见见 - 前端小记">
+          <meta itemprop="name" content="前端杂货铺">
         </div>
         <div itemprop="author" itemscope itemtype="https://schema.org/Person">
           <meta itemprop="name" content="见见">
@@ -85,7 +106,14 @@
         <header class="article-header">
           <h1 class="article-title">ES6 - 解构赋值</h1>
 
-          <time itemprop="datePublished" pubdate="pubdate" datetime="2015-12-14T00:00:00&#43;00:00">2015-12-14</time>
+          <time>
+            
+              见见
+            
+          </time>
+          <time itemprop="datePublished" pubdate="pubdate" datetime="2015-12-14T00:00:00&#43;00:00">
+            2015-12-14
+          </time>
 
           
             <a href="http://jyu213.github.io/tags/es6" class="tag">es6</a> 
@@ -108,7 +136,7 @@
 console.log( speak + ' ' + name ); // hello destructuring
 </code></pre>
 
-<h3 id="数组的解构赋值:4428bcf4a593931f8cb7d23fa484a629">数组的解构赋值</h3>
+<h3 id="数组的解构赋值">数组的解构赋值</h3>
 
 <p>用更加直白的话来描述就是，等号两边保持相同的形式（数组对应数组，对象对应对象），则左边的变量就会被赋予对应的值。如果对应的右边值缺失，缺失部分变量值为 <code>undefined</code> ,如果右边值多余，依旧能够正常解构。</p>
 
@@ -151,7 +179,7 @@ console.log(missing);  // undefined
 
 <p>这里的数组，指的是部署了 <code>[Iterator](http://www.2ality.com/2015/02/es6-iteration.html)</code> 接口的数据结构。</p>
 
-<h3 id="对象的解构赋值:4428bcf4a593931f8cb7d23fa484a629">对象的解构赋值</h3>
+<h3 id="对象的解构赋值">对象的解构赋值</h3>
 
 <p>和数组的用法相类似，一个主要的不同点是，对象是无次序排列的，所以变量必须和属性名相同。</p>
 
@@ -166,7 +194,7 @@ let {firstName: name, lastName} = person;
 // `name`变量将会被声明为 `person.firstName` 的值
 </code></pre>
 
-<h3 id="函数参数的解构赋值:4428bcf4a593931f8cb7d23fa484a629">函数参数的解构赋值</h3>
+<h3 id="函数参数的解构赋值">函数参数的解构赋值</h3>
 
 <p>函数的参数也可以解构赋值。</p>
 
@@ -176,11 +204,11 @@ let {firstName: name, lastName} = person;
 add({1,2}); // 3
 </code></pre>
 
-<h3 id="null-和-undefined:4428bcf4a593931f8cb7d23fa484a629">null 和 undefined</h3>
+<h3 id="null-和-undefined">null 和 undefined</h3>
 
 <p>当尝试解构 <code>null</code> 和 <code>undefined</code> 的时候会报错。这是因为使用对象赋值模式时，被解构的值必需能够转换成一个对象（object）。大多数的类型都可以转换为一个对象，但null和undefined却并不能被转换。</p>
 
-<h3 id="其它:4428bcf4a593931f8cb7d23fa484a629">其它</h3>
+<h3 id="其它">其它</h3>
 
 <p>解构赋值的好处有很多，比如</p>
 
@@ -199,7 +227,7 @@ add({1,2}); // 3
 * 函数有多个返回值时，尽量使用对象解构而不用数组解构，避免出现顺序对应问题
 * 已声明过的变量不能用于解构</p>
 
-<h3 id="浏览器支持:4428bcf4a593931f8cb7d23fa484a629">浏览器支持</h3>
+<h3 id="浏览器支持">浏览器支持</h3>
 
 <p><a href="http://kangax.github.io/compat-table/es6/#destructuring">http://kangax.github.io/compat-table/es6/#destructuring</a>
 不完全统计：
@@ -212,7 +240,7 @@ add({1,2}); // 3
 
 <p>PS: 整理的时候发现以前还保留着这样一份文章，无新，基本参考下述文章内容。仅供学习。</p>
 
-<h3 id="参考文章:4428bcf4a593931f8cb7d23fa484a629">参考文章</h3>
+<h3 id="参考文章">参考文章</h3>
 
 <ul>
 <li><a href="http://es6.ruanyifeng.com/#docs/destructuring">变量的解构赋值 - 阮一峰</a></li>
@@ -225,60 +253,31 @@ add({1,2}); // 3
 
         <aside>
           
-<div class="ds-thread" data-thread-key="http://jyu213.github.io/blog/2015/12/14/es6---%E8%A7%A3%E6%9E%84%E8%B5%8B%E5%80%BC/" data-title="ES6 - 解构赋值" data-url="http://jyu213.github.io/blog/2015/12/14/es6---%E8%A7%A3%E6%9E%84%E8%B5%8B%E5%80%BC/"></div>
+
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+
+
+<div id="comments" class="comments" data-thread-key="http://jyu213.github.io/blog/2015/12/14/es6---%E8%A7%A3%E6%9E%84%E8%B5%8B%E5%80%BC/" data-title="ES6 - 解构赋值" data-url="http://jyu213.github.io/blog/2015/12/14/es6---%E8%A7%A3%E6%9E%84%E8%B5%8B%E5%80%BC/"></div>
 <script type="text/javascript">
-var duoshuoQuery = {short_name:"j4evee"};
-    (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0]
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-    </script>
+    const gitment = new Gitment({
+      id: 'http:\/\/jyu213.github.io\/blog\/2015\/12\/14\/es6---%E8%A7%A3%E6%9E%84%E8%B5%8B%E5%80%BC\/',
+      title: 'ES6 - 解构赋值',
+      owner: 'jyu213',
+      repo: 'blog_comments',
+      oauth: {
+        client_id: '3bee402f3d2d77bfe52a',
+        client_secret: 'a03e8940e2210e7990ad0ad89f6eb1259b1facb6',
+      },
+    })
+
+    gitment.render('comments')
+</script>
 
 
         </aside>
 
       </article>
-
-    </div>
-    <div class="col-md-4">
-      
-<aside class="site">
-
-  
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h2 class="panel-title">tag</h2>
-    </div>
-    <div class="list-group">
-      
-      <a href="http://jyu213.github.io/tags/mobile" class="list-group-item">mobile</a>
-      
-      <a href="http://jyu213.github.io/tags/css" class="list-group-item">css</a>
-      
-      <a href="http://jyu213.github.io/tags/doc" class="list-group-item">doc</a>
-      
-      <a href="http://jyu213.github.io/tags/translate" class="list-group-item">translate</a>
-      
-      <a href="http://jyu213.github.io/tags/es6" class="list-group-item">es6</a>
-      
-      <a href="http://jyu213.github.io/tags/js" class="list-group-item">js</a>
-      
-      <a href="http://jyu213.github.io/tags/%E8%87%AA%E5%8A%A8%E5%8C%96" class="list-group-item">自动化</a>
-      
-      <a href="http://jyu213.github.io/tags/html5" class="list-group-item">html5</a>
-      
-      <a href="http://jyu213.github.io/tags/git" class="list-group-item">git</a>
-      
-    </div>
-  </div>
-  
-
-</aside>
-
 
     </div>
   </div>
@@ -289,10 +288,8 @@ var duoshuoQuery = {short_name:"j4evee"};
     </div>
 
     <footer class="site">
-      <div class="container">
-        <p>&copy; 2017 见见</p>
-        <p>Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>,</p>
-        <p>Theme <a href="https://github.com/dim0627/hugo_theme_robust" target="_blank">Robust</a> designed by <a href="http://yet.unresolved.xyz" target="_blank">Daisuke Tsuji</a></p>
+      <div class="container text-center">
+        <p>&copy; 2017 前端杂货铺</p>
       </div>
     </footer>
 

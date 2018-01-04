@@ -2,20 +2,20 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="generator" content="Hugo 0.15" />
+    <meta name="generator" content="Hugo 0.30.2" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-    <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans|Marcellus+SC'>
+
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/custom.css">
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://jyu213.github.io//index.xml">
 
     
-    <title>四个调节颜色的 CSS 滤镜 - 见见 - 前端小记</title>
-    <meta property='og:title' content="四个调节颜色的 CSS 滤镜 - 见见 - 前端小记">
+    <title>四个调节颜色的 CSS 滤镜 - 前端杂货铺</title>
+    <meta property='og:title' content="四个调节颜色的 CSS 滤镜 - 前端杂货铺">
     <meta property="og:type" content="article">
     
 
@@ -28,7 +28,7 @@
   <body>
 
     <header class="site">
-      <nav class="navbar navbar-default">
+      <nav class="navbar navbar-inverse">
         <div class="container">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -37,10 +37,31 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="http://jyu213.github.io/">见见 - 前端小记</a>
+            
+            <a class="navbar-brand" href="http://jyu213.github.io/">前端杂货铺</a>
           </div>
 
           <div id="navbar" class="collapse navbar-collapse">
+            
+            <ul class="nav navbar-nav navbar-right">
+              
+              
+              <li><a href="/categories/css">CSS</a></li>
+              
+              
+              
+              <li><a href="/categories/js">JS</a></li>
+              
+              
+              
+              <li><a href="/categories/translate">翻译</a></li>
+              
+              
+              
+              <li><a href="/">首页</a></li>
+              
+              
+            </ul>
             
           </div>
 
@@ -56,7 +77,7 @@
 <div class="single">
 
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-12">
 
       <article class="single" itemscope="itemscope" itemtype="http://schema.org/Article">
 
@@ -76,7 +97,7 @@
             <meta itemprop="width" content="100">
             <meta itemprop="height" content="100">
           </div>
-          <meta itemprop="name" content="见见 - 前端小记">
+          <meta itemprop="name" content="前端杂货铺">
         </div>
         <div itemprop="author" itemscope itemtype="https://schema.org/Person">
           <meta itemprop="name" content="见见">
@@ -85,7 +106,14 @@
         <header class="article-header">
           <h1 class="article-title">四个调节颜色的 CSS 滤镜</h1>
 
-          <time itemprop="datePublished" pubdate="pubdate" datetime="2017-06-09T01:05:16&#43;08:00">2017-06-09</time>
+          <time>
+            
+              见见
+            
+          </time>
+          <time itemprop="datePublished" pubdate="pubdate" datetime="2017-06-09T01:05:16&#43;08:00">
+            2017-06-09
+          </time>
 
           
             <a href="http://jyu213.github.io/tags/translate" class="tag">translate</a> <a href="http://jyu213.github.io/tags/css" class="tag">css</a> 
@@ -106,7 +134,7 @@ http://vanseodesign.com/css/drop-shadow-filter/"><code>url()</code> 和 <code>gr
 
 <p>今天我想介绍四个 CSS 滤镜函数，所有这些都是 SVG 滤镜原语 <code>feColorMatrix</code> 的不同类型和值的映射。</p>
 
-<h2 id="fecolormatrix-滤镜原语-filter-primitive:ee681bce9ee04229105ee174e1606b94">feColorMatrix 滤镜原语（Filter Primitive）</h2>
+<h2 id="fecolormatrix-滤镜原语-filter-primitive">feColorMatrix 滤镜原语（Filter Primitive）</h2>
 
 <p><code>feColorMatrix</code> 滤镜原语可以用于更改元素<a href="http://vanseodesign.com/web-design/hue-saturation-and-lightness/">颜色的一些基本属性</a>。顾名思义，原语使用矩形来添加不同的滤镜效果。</p>
 
@@ -125,7 +153,7 @@ http://vanseodesign.com/css/drop-shadow-filter/"><code>url()</code> 和 <code>gr
 
 <p><img src="http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg" alt="img1" /></p>
 
-<h2 id="grayscale-函数:ee681bce9ee04229105ee174e1606b94">grayscale() 函数</h2>
+<h2 id="grayscale-函数">grayscale() 函数</h2>
 
 <p><code>grayscale()</code> <code>filter-function</code> 功能将图像转换为灰度。</p>
 
@@ -157,7 +185,7 @@ http://vanseodesign.com/css/drop-shadow-filter/"><code>url()</code> 和 <code>gr
 
 <p>不过，这绝对是 CSS <code>filter-function</code> 功能更容易使用的情况。我知道使用这个特定的矩阵唯一的原因是我在网上发现一个例子，不需要搜索 <code>filter-function</code> 的值为 1。</p>
 
-<h2 id="hue-rotate-函数:ee681bce9ee04229105ee174e1606b94">hue-rotate() 函数</h2>
+<h2 id="hue-rotate-函数">hue-rotate() 函数</h2>
 
 <p><code>hue-rotate() filter-function</code> 将元素中每个像素的色调改变为你指定的数量。</p>
 
@@ -184,7 +212,7 @@ http://vanseodesign.com/css/drop-shadow-filter/"><code>url()</code> 和 <code>gr
 &lt;/filter&gt;
 </code></pre>
 
-<h2 id="saturate-函数:ee681bce9ee04229105ee174e1606b94">saturate() 函数</h2>
+<h2 id="saturate-函数">saturate() 函数</h2>
 
 <p>CSS 还提供了一个 <code>saturate() filter-function</code>，你可以使用它来更改元素饱和度。</p>
 
@@ -218,7 +246,7 @@ http://vanseodesign.com/css/drop-shadow-filter/"><code>url()</code> 和 <code>gr
 
 <p>我之前提到，你可以通过将 <code>type</code> 属性设置为 <code>saturate</code>，来使 <code>feColorMatrix</code> 更轻松地创建灰度图像。你只需要将值设置为 0，使得图像完全饱和，这与将其设置为 100% 灰度产生。</p>
 
-<h2 id="sepia-函数:ee681bce9ee04229105ee174e1606b94">sepia() 函数</h2>
+<h2 id="sepia-函数">sepia() 函数</h2>
 
 <p>最后还有 <code>sepia() filter-function</code> 将图像转换为深褐色。</p>
 
@@ -252,7 +280,7 @@ http://vanseodesign.com/css/drop-shadow-filter/"><code>url()</code> 和 <code>gr
 
 <p>我认为你同意 CSS 滤镜功能是这两个选项，即使 SVG 在更灵活配置。</p>
 
-<h2 id="总结:ee681bce9ee04229105ee174e1606b94">总结</h2>
+<h2 id="总结">总结</h2>
 
 <p>这四个 CSS 过滤器功能都是 滤镜原语 <code>feColorMatrix</code> 的不同类型和值的映射。其中两个代替复杂的矩阵，而另外两个替换一个特定类型的原语。</p>
 
@@ -265,60 +293,31 @@ http://vanseodesign.com/css/drop-shadow-filter/"><code>url()</code> 和 <code>gr
 
         <aside>
           
-<div class="ds-thread" data-thread-key="http://jyu213.github.io/blog/2017/06/09/%E5%9B%9B%E4%B8%AA%E8%B0%83%E8%8A%82%E9%A2%9C%E8%89%B2%E7%9A%84-css-%E6%BB%A4%E9%95%9C/" data-title="四个调节颜色的 CSS 滤镜" data-url="http://jyu213.github.io/blog/2017/06/09/%E5%9B%9B%E4%B8%AA%E8%B0%83%E8%8A%82%E9%A2%9C%E8%89%B2%E7%9A%84-css-%E6%BB%A4%E9%95%9C/"></div>
+
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+
+
+<div id="comments" class="comments" data-thread-key="http://jyu213.github.io/blog/2017/06/09/%E5%9B%9B%E4%B8%AA%E8%B0%83%E8%8A%82%E9%A2%9C%E8%89%B2%E7%9A%84-css-%E6%BB%A4%E9%95%9C/" data-title="四个调节颜色的 CSS 滤镜" data-url="http://jyu213.github.io/blog/2017/06/09/%E5%9B%9B%E4%B8%AA%E8%B0%83%E8%8A%82%E9%A2%9C%E8%89%B2%E7%9A%84-css-%E6%BB%A4%E9%95%9C/"></div>
 <script type="text/javascript">
-var duoshuoQuery = {short_name:"j4evee"};
-    (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0]
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-    </script>
+    const gitment = new Gitment({
+      id: 'http:\/\/jyu213.github.io\/blog\/2017\/06\/09\/%E5%9B%9B%E4%B8%AA%E8%B0%83%E8%8A%82%E9%A2%9C%E8%89%B2%E7%9A%84-css-%E6%BB%A4%E9%95%9C\/',
+      title: '四个调节颜色的 CSS 滤镜',
+      owner: 'jyu213',
+      repo: 'blog_comments',
+      oauth: {
+        client_id: '3bee402f3d2d77bfe52a',
+        client_secret: 'a03e8940e2210e7990ad0ad89f6eb1259b1facb6',
+      },
+    })
+
+    gitment.render('comments')
+</script>
 
 
         </aside>
 
       </article>
-
-    </div>
-    <div class="col-md-4">
-      
-<aside class="site">
-
-  
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h2 class="panel-title">tag</h2>
-    </div>
-    <div class="list-group">
-      
-      <a href="http://jyu213.github.io/tags/css" class="list-group-item">css</a>
-      
-      <a href="http://jyu213.github.io/tags/mobile" class="list-group-item">mobile</a>
-      
-      <a href="http://jyu213.github.io/tags/doc" class="list-group-item">doc</a>
-      
-      <a href="http://jyu213.github.io/tags/translate" class="list-group-item">translate</a>
-      
-      <a href="http://jyu213.github.io/tags/es6" class="list-group-item">es6</a>
-      
-      <a href="http://jyu213.github.io/tags/git" class="list-group-item">git</a>
-      
-      <a href="http://jyu213.github.io/tags/html5" class="list-group-item">html5</a>
-      
-      <a href="http://jyu213.github.io/tags/js" class="list-group-item">js</a>
-      
-      <a href="http://jyu213.github.io/tags/%E8%87%AA%E5%8A%A8%E5%8C%96" class="list-group-item">自动化</a>
-      
-    </div>
-  </div>
-  
-
-</aside>
-
 
     </div>
   </div>
@@ -329,10 +328,8 @@ var duoshuoQuery = {short_name:"j4evee"};
     </div>
 
     <footer class="site">
-      <div class="container">
-        <p>&copy; 2017 见见</p>
-        <p>Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>,</p>
-        <p>Theme <a href="https://github.com/dim0627/hugo_theme_robust" target="_blank">Robust</a> designed by <a href="http://yet.unresolved.xyz" target="_blank">Daisuke Tsuji</a></p>
+      <div class="container text-center">
+        <p>&copy; 2017 前端杂货铺</p>
       </div>
     </footer>
 

@@ -6,7 +6,7 @@
     <description>Recent content in Doc on 见见 - 前端小记</description>
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Sun, 30 Nov 2014 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://jyu213.github.io/tags/doc/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/doc/" rel="self" type="application/rss+xml" />
     
     <item>
       <title>跨域那些事</title>
@@ -16,17 +16,17 @@
       <guid>http://jyu213.github.io/blog/2014/11/30/%E8%B7%A8%E5%9F%9F%E9%82%A3%E4%BA%9B%E4%BA%8B/</guid>
       <description>
 
-&lt;h3 id=&#34;同源策略:567b036fb92765e1e5410dd7f84e477b&#34;&gt;同源策略&lt;/h3&gt;
+&lt;h3 id=&#34;同源策略&#34;&gt;同源策略&lt;/h3&gt;
 
 &lt;p&gt;javascript 语言在设计之初为了安全考虑，不允许调用其它页面的对象。 跨域是由 javascript 语言安全限制中的同源策略造成的。
 &lt;strong&gt;同源策略&lt;/strong&gt;指的是，一段脚本只能读取来自同一来源的窗口和文档的属性，(同一来源指的是&lt;strong&gt;域名&lt;/strong&gt;、&lt;strong&gt;协议&lt;/strong&gt;和&lt;strong&gt;端口号&lt;/strong&gt;的组合)
 简单来讲，即不允许同一域名下的不同端口号，不同协议（http,https），不用子域名（www.dxy.cn 和 app.dxy.cn）及域名和域名对应的 ip 也不允许。&lt;/p&gt;
 
-&lt;h3 id=&#34;解决跨域的原理:567b036fb92765e1e5410dd7f84e477b&#34;&gt;解决跨域的原理&lt;/h3&gt;
+&lt;h3 id=&#34;解决跨域的原理&#34;&gt;解决跨域的原理&lt;/h3&gt;
 
 &lt;p&gt;HTML 中，静态资源是没有跨域限制的。在 HTML DOM 中，script 标签是可以跨域访问服务器上的数据的。所以我们可以手动插入 script 标签等方法来伪造。 不过，有个限制是，服务器返回 内容不能单纯为一个 json 字符串，可定变量或函数实现，如: &lt;code&gt;var json = {&amp;quot;type&amp;quot;:&amp;quot;json&amp;quot;}&lt;/code&gt; 或 &lt;code&gt;json({&amp;quot;type&amp;quot;:&amp;quot;json&amp;quot;})&lt;/code&gt;。jsonp 即采用后者形式。&lt;/p&gt;
 
-&lt;h3 id=&#34;解决方案:567b036fb92765e1e5410dd7f84e477b&#34;&gt;解决方案&lt;/h3&gt;
+&lt;h3 id=&#34;解决方案&#34;&gt;解决方案&lt;/h3&gt;
 
 &lt;ol&gt;
 &lt;li&gt;手动插入&lt;code&gt;script&lt;/code&gt;标签的形式。&lt;/li&gt;
@@ -76,19 +76,19 @@ xhr.send();
 
 &lt;p&gt;本文所涉及的内容在网上已有很多介绍。可相互借鉴。笔者仅为整理知识体系所用。&lt;/p&gt;
 
-&lt;h3 id=&#34;ppi-pixel-per-inch:b8585493f60c6c7eca55ca69564e380c&#34;&gt;PPI（Pixel Per Inch）&lt;/h3&gt;
+&lt;h3 id=&#34;ppi-pixel-per-inch&#34;&gt;PPI（Pixel Per Inch）&lt;/h3&gt;
 
 &lt;p&gt;图像分辨率所使用的单位。在图像中每英寸所表达的像素数目。&lt;/p&gt;
 
-&lt;h3 id=&#34;dpi-dot-per-inch:b8585493f60c6c7eca55ca69564e380c&#34;&gt;DPI（Dot Per Inch）&lt;/h3&gt;
+&lt;h3 id=&#34;dpi-dot-per-inch&#34;&gt;DPI（Dot Per Inch）&lt;/h3&gt;
 
 &lt;p&gt;打印分辨率使用的单位。每英寸所表达的打印点数。&lt;/p&gt;
 
-&lt;h3 id=&#34;像素-pixel:b8585493f60c6c7eca55ca69564e380c&#34;&gt;像素（Pixel）&lt;/h3&gt;
+&lt;h3 id=&#34;像素-pixel&#34;&gt;像素（Pixel）&lt;/h3&gt;
 
 &lt;p&gt;一种用来计算数码影像的单位。&lt;/p&gt;
 
-&lt;h3 id=&#34;分辨率:b8585493f60c6c7eca55ca69564e380c&#34;&gt;分辨率&lt;/h3&gt;
+&lt;h3 id=&#34;分辨率&#34;&gt;分辨率&lt;/h3&gt;
 
 &lt;p&gt;单位长度中，所表达或撷取的像素数目。&lt;/p&gt;
 
@@ -99,7 +99,7 @@ xhr.send();
 &lt;li&gt;PPI表示的是　像素/英寸（每英寸长度上有多少个像素）&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;参考资料:b8585493f60c6c7eca55ca69564e380c&#34;&gt;参考资料&lt;/h3&gt;
+&lt;h3 id=&#34;参考资料&#34;&gt;参考资料&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://sebastien-gabriel.com/designers-guide-to-dpi/home&#34;&gt;Designer&amp;rsquo;s guide to DPI&lt;/a&gt;&lt;/li&gt;
@@ -121,11 +121,11 @@ xhr.send();
 1. 有更好的方法的话，欢迎补充。
 2. 下文未对性能问题做真实的测试，请保持一颗好奇的心，并告诉我们）&lt;/p&gt;
 
-&lt;h3 id=&#34;css-sprite:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;CSS Sprite&lt;/h3&gt;
+&lt;h3 id=&#34;css-sprite&#34;&gt;CSS Sprite&lt;/h3&gt;
 
 &lt;p&gt;这是目前使用比较多的方式。也是我个人认为相对最优的一种解决方式。当然，这里的最优指的是特定环境。比如移动客户端，就不一定要这么干。CSS Sprite 是将页面中所使用到的小图片整合到一张大图上去。大家都知道，客户端向服务器发送请求是很有代价的，特别是在移动端，所以，sprite 的提出是为了减少 http 请求数，从而加快页面加载速度。&lt;/p&gt;
 
-&lt;h4 id=&#34;使用方式:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;使用方式&lt;/h4&gt;
+&lt;h4 id=&#34;使用方式&#34;&gt;使用方式&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;先将小图片整合到一张大图上&lt;/li&gt;
@@ -133,7 +133,7 @@ xhr.send();
 &lt;li&gt;然后依据图标的位置使用 background-position 进行定位&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;使用技巧:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;使用技巧&lt;/h4&gt;
+&lt;h4 id=&#34;使用技巧&#34;&gt;使用技巧&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;切图的时候就构思拼接好图片（不然后期抓心挠肺的，当然，善用工具的出门右转）&lt;/li&gt;
@@ -142,31 +142,31 @@ xhr.send();
 &lt;li&gt;合理预留空白位置（空太多文件变大，太小引起图标重叠）&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;优点:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;优点&lt;/h4&gt;
+&lt;h4 id=&#34;优点&#34;&gt;优点&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;减少 http 请求。（这个是最大的优点）&lt;/li&gt;
 &lt;li&gt;对你存在的图片一目了然（不知道这个算不算，如改进版3.0拿到的图哪些图标是之前已存在不需要重新切了的）&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;缺点:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;缺点&lt;/h4&gt;
+&lt;h4 id=&#34;缺点&#34;&gt;缺点&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;图片合并定位费时费力（谁用谁知道啊）&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;其它:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;其它&lt;/h4&gt;
+&lt;h4 id=&#34;其它&#34;&gt;其它&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;github 上有个 &lt;a href=&#34;https://github.com/Ensighten/grunt-spritesmith&#34;&gt;grunt 合并 sprite&lt;/a&gt; 的组件，可以看看&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;image-data-uri:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;image data URI&lt;/h3&gt;
+&lt;h3 id=&#34;image-data-uri&#34;&gt;image data URI&lt;/h3&gt;
 
 &lt;p&gt;即将图片资源转换为 base64 字符串格式嵌到页面或样式中。这样连图片的请求链接都省了。
 如：&lt;/p&gt;
 
-&lt;h4 id=&#34;使用方式-1:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;使用方式&lt;/h4&gt;
+&lt;h4 id=&#34;使用方式-1&#34;&gt;使用方式&lt;/h4&gt;
 
 &lt;pre&gt;&lt;code&gt;    /** 数据格式 **/
     data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAE1JREFUKJHV0MEOwCAIA9DW7MP983pymUaweluv8IAABJFUJdWonqEeD0/IwwHK8QatsYlGfIhezM9WOc8jSQAoTvMqTzY1u+Z6449gA9r24D4iZ6wwAAAAAElFTkSuQmCC
@@ -178,7 +178,7 @@ xhr.send();
     }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h4 id=&#34;标签语法:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;标签语法：&lt;/h4&gt;
+&lt;h4 id=&#34;标签语法&#34;&gt;标签语法：&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;data : 取得数据协议&lt;/li&gt;
@@ -189,7 +189,7 @@ xhr.send();
 
 &lt;p&gt;&lt;a href=&#34;http://baike.baidu.com/view/469071.htm&#34;&gt;Base64编码&lt;/a&gt; 自行百度科普吧。&lt;/p&gt;
 
-&lt;h4 id=&#34;优点-1:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;优点&lt;/h4&gt;
+&lt;h4 id=&#34;优点-1&#34;&gt;优点&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;减少 HTTP 请求&lt;/li&gt;
@@ -197,7 +197,7 @@ xhr.send();
 &lt;li&gt;无图片缓存等问题(但是一般 css 也是有缓存的好不好)&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;缺点-1:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;缺点&lt;/h4&gt;
+&lt;h4 id=&#34;缺点-1&#34;&gt;缺点&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;兼容性 （ IE6,7 不兼容, 可以使用 MHTML 来解决 ）&lt;/li&gt;
@@ -211,32 +211,32 @@ xhr.send();
 * 图片尺寸很小，使用一条 http 请求有点浪费，如渐变背景框
 * 图片在全站大规模使用，且很少被更新的，如 loading 图&lt;/p&gt;
 
-&lt;h4 id=&#34;在线转换工具:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;在线转换工具&lt;/h4&gt;
+&lt;h4 id=&#34;在线转换工具&#34;&gt;在线转换工具&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://www.pjhome.net/web/html5/encodeDataUrl.htm&#34;&gt;Encode Data URL&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://websemantics.co.uk/online_tools/image_to_data_uri_convertor/&#34;&gt;image to data URI&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h5 id=&#34;更新:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;更新&lt;/h5&gt;
+&lt;h5 id=&#34;更新&#34;&gt;更新&lt;/h5&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/medium/sus&#34;&gt;github 资源 sus 可转换 data URI&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;参考资料:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;参考资料&lt;/h4&gt;
+&lt;h4 id=&#34;参考资料&#34;&gt;参考资料&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://developer.mozilla.org/zh-CN/docs/data_URIs&#34;&gt;MDN - data URIs&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;icon-fonts:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;icon fonts&lt;/h3&gt;
+&lt;h3 id=&#34;icon-fonts&#34;&gt;icon fonts&lt;/h3&gt;
 
 &lt;p&gt;由于移动端设备拥有不同分辨率，PPI 等引起的问题， 常常需要针对不同屏幕分辨率来调整优化，如使用 &lt;code&gt;@2x&lt;/code&gt; 图片， &lt;code&gt;max-width&lt;/code&gt; 限制等。
 采用 css @font-face 用来显示 icon 也不失为一种好办法。
 因为 icon fonts (字体)是矢量图形，所以不受分辨率的影响，同时可以做到完美缩放；当然，也可使用在 WEB 端。&lt;/p&gt;
 
-&lt;h4 id=&#34;优点-2:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;优点&lt;/h4&gt;
+&lt;h4 id=&#34;优点-2&#34;&gt;优点&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;文件小&lt;/li&gt;
@@ -245,7 +245,7 @@ xhr.send();
 &lt;li&gt;IE6/7 下也支持&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;缺点-2:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;缺点&lt;/h4&gt;
+&lt;h4 id=&#34;缺点-2&#34;&gt;缺点&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;样式限制，使用扁平化风格&lt;/li&gt;
@@ -255,7 +255,7 @@ xhr.send();
 &lt;li&gt;&lt;a href=&#34;http://www.cnblogs.com/demix/archive/2009/11/28/1612715.html&#34;&gt;性能问题&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;使用方法:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;使用方法&lt;/h4&gt;
+&lt;h4 id=&#34;使用方法&#34;&gt;使用方法&lt;/h4&gt;
 
 &lt;ol&gt;
 &lt;li&gt;制作字体文件
@@ -303,7 +303,7 @@ xhr.send();
     }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h4 id=&#34;资源推荐:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;资源推荐&lt;/h4&gt;
+&lt;h4 id=&#34;资源推荐&#34;&gt;资源推荐&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://www.iconfont.cn/&#34;&gt;阿里巴巴矢量图标库&lt;/a&gt;&lt;/li&gt;
@@ -311,13 +311,13 @@ xhr.send();
 &lt;li&gt;&lt;a href=&#34;http://fortawesome.github.io/Font-Awesome/&#34;&gt;font awesome&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;参考资料-1:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;参考资料&lt;/h4&gt;
+&lt;h4 id=&#34;参考资料-1&#34;&gt;参考资料&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://www.infoq.com/cn/articles/icons-fonts-as-your-responsive-strategy&#34;&gt;icon fonts 的探析及应用&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;其它一些想法:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;其它一些想法&lt;/h3&gt;
+&lt;h3 id=&#34;其它一些想法&#34;&gt;其它一些想法&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;SVG绘图&lt;/li&gt;

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Html5 on 见见 - 前端小记</title>
+    <title>Html5 on 前端杂货铺</title>
     <link>http://jyu213.github.io/tags/html5/</link>
-    <description>Recent content in Html5 on 见见 - 前端小记</description>
+    <description>Recent content in Html5 on 前端杂货铺</description>
     <generator>Hugo -- gohugo.io</generator>
-    <atom:link href="http://jyu213.github.io/tags/html5/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/html5/" rel="self" type="application/rss+xml" />
     
     <item>
       <title>html5 Notifications API</title>
@@ -17,13 +17,13 @@
 
 &lt;p&gt;html5 Notifications API 出来也有一段时间了，中间规范要点也变动过好几次，也有几个不同版本。目前仍然是 W3C 的工作草案。刚好最近有项目上应用到，故简单整理一下相关内容作为备忘。注： 本文下面讲解的方法为现阶段草案内容，并不排除后期会做变更。&lt;/p&gt;
 
-&lt;h3 id=&#34;定义:5d8658ff9f33a18b9bdbcfb20e1efa8f&#34;&gt;定义&lt;/h3&gt;
+&lt;h3 id=&#34;定义&#34;&gt;定义&lt;/h3&gt;
 
 &lt;p&gt;&lt;code&gt;Web notifications defines an API for end-user notifications. A notification allows alerting the user outside the context of a web page of an occurrence, such as the delivery of email.&lt;/code&gt; 引自&lt;a href=&#34;http://www.w3.org/TR/notifications/&#34;&gt;W3C notifications&lt;/a&gt;。&lt;/p&gt;
 
 &lt;p&gt;简单来说，就是web 端的消息提醒功能。最有印象的应该的 web版 gamil 的邮件提醒了吧。当然这个在桌面软件下早已经不陌生了的吧。不过目前好像还是不支持自定义样子之类的，所以在 UI 上各浏览器呈现具有一定的差异。&lt;/p&gt;
 
-&lt;h3 id=&#34;方法:5d8658ff9f33a18b9bdbcfb20e1efa8f&#34;&gt;方法&lt;/h3&gt;
+&lt;h3 id=&#34;方法&#34;&gt;方法&lt;/h3&gt;
 
 &lt;p&gt;&lt;code&gt;window&lt;/code&gt;对象提供了一个&lt;code&gt;Notification&lt;/code&gt; 属性。允许我们提供创建一个通知的实例。并且接收两个参数： 包含通知标题（字符串,&lt;strong&gt;必需&lt;/strong&gt;）， 配置对象的参数。&lt;/p&gt;
 
@@ -58,7 +58,7 @@
 * &lt;code&gt;onerror&lt;/code&gt;: 当通知出现错误时调用
 * &lt;code&gt;onshow&lt;/code&gt;: 当通知出现时调用&lt;/p&gt;
 
-&lt;h3 id=&#34;兼容性:5d8658ff9f33a18b9bdbcfb20e1efa8f&#34;&gt;兼容性&lt;/h3&gt;
+&lt;h3 id=&#34;兼容性&#34;&gt;兼容性&lt;/h3&gt;
 
 &lt;p&gt;目前只有少数浏览器支持该 API。且同一浏览器不同版本下支持的事件方法可能会有差异（规范改动引起）
 &lt;a href=&#34;http://caniuse.com/#feat=notifications&#34;&gt;点击查看&lt;/a&gt;浏览器支持情况&lt;/p&gt;
@@ -66,7 +66,7 @@
 &lt;p&gt;桌面浏览器: Chrome 22 and Firefox 22 and Safari 6+
 移动浏览器: Firefox and Blackberry&lt;/p&gt;
 
-&lt;h3 id=&#34;实践:5d8658ff9f33a18b9bdbcfb20e1efa8f&#34;&gt;实践&lt;/h3&gt;
+&lt;h3 id=&#34;实践&#34;&gt;实践&lt;/h3&gt;
 
 &lt;p&gt;前面啰啰嗦嗦的讲完了 API 中的大概内容后，来看看实际操作中我们该如何。
 注：示例代码中并未针对浏览器做各方面兼容。可参看&lt;a href=&#34;http://yangzhuoyu.com/an-introduce-to-html5-notification/&#34;&gt;风车&lt;/a&gt;中做了更多向下兼容。&lt;/p&gt;
@@ -95,11 +95,11 @@ if(NotifySupport){
 &lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h3 id=&#34;其它:5d8658ff9f33a18b9bdbcfb20e1efa8f&#34;&gt;其它&lt;/h3&gt;
+&lt;h3 id=&#34;其它&#34;&gt;其它&lt;/h3&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://github.com/jyu213/Notify&#34;&gt;view on github&lt;/a&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;参考文章:5d8658ff9f33a18b9bdbcfb20e1efa8f&#34;&gt;参考文章&lt;/h3&gt;
+&lt;h3 id=&#34;参考文章&#34;&gt;参考文章&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://www.w3.org/TR/notifications/&#34;&gt;W3C Notifications&lt;/a&gt;&lt;/li&gt;

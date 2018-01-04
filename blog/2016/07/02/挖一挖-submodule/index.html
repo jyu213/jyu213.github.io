@@ -2,20 +2,20 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="generator" content="Hugo 0.15" />
+    <meta name="generator" content="Hugo 0.30.2" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-    <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans|Marcellus+SC'>
+
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/custom.css">
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://jyu213.github.io//index.xml">
 
     
-    <title>挖一挖 submodule - 见见 - 前端小记</title>
-    <meta property='og:title' content="挖一挖 submodule - 见见 - 前端小记">
+    <title>挖一挖 submodule - 前端杂货铺</title>
+    <meta property='og:title' content="挖一挖 submodule - 前端杂货铺">
     <meta property="og:type" content="article">
     
 
@@ -28,7 +28,7 @@
   <body>
 
     <header class="site">
-      <nav class="navbar navbar-default">
+      <nav class="navbar navbar-inverse">
         <div class="container">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -37,10 +37,31 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="http://jyu213.github.io/">见见 - 前端小记</a>
+            
+            <a class="navbar-brand" href="http://jyu213.github.io/">前端杂货铺</a>
           </div>
 
           <div id="navbar" class="collapse navbar-collapse">
+            
+            <ul class="nav navbar-nav navbar-right">
+              
+              
+              <li><a href="/categories/css">CSS</a></li>
+              
+              
+              
+              <li><a href="/categories/js">JS</a></li>
+              
+              
+              
+              <li><a href="/categories/translate">翻译</a></li>
+              
+              
+              
+              <li><a href="/">首页</a></li>
+              
+              
+            </ul>
             
           </div>
 
@@ -56,7 +77,7 @@
 <div class="single">
 
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-12">
 
       <article class="single" itemscope="itemscope" itemtype="http://schema.org/Article">
 
@@ -76,7 +97,7 @@
             <meta itemprop="width" content="100">
             <meta itemprop="height" content="100">
           </div>
-          <meta itemprop="name" content="见见 - 前端小记">
+          <meta itemprop="name" content="前端杂货铺">
         </div>
         <div itemprop="author" itemscope itemtype="https://schema.org/Person">
           <meta itemprop="name" content="见见">
@@ -85,7 +106,14 @@
         <header class="article-header">
           <h1 class="article-title">挖一挖 submodule</h1>
 
-          <time itemprop="datePublished" pubdate="pubdate" datetime="2016-07-02T14:26:44&#43;08:00">2016-07-02</time>
+          <time>
+            
+              见见
+            
+          </time>
+          <time itemprop="datePublished" pubdate="pubdate" datetime="2016-07-02T14:26:44&#43;08:00">
+            2016-07-02
+          </time>
 
           
             <a href="http://jyu213.github.io/tags/git" class="tag">git</a> 
@@ -97,20 +125,20 @@
 
 <p>在很长的一段时间内，对<code>submodule</code>的概念含糊不清。特别是 <code>submodule</code> 和 <code>subtree</code> 这两个的区别。今天正好有时间来理一理。</p>
 
-<h3 id="子模块-submodule:3b642809b94e451e9d37df2cf008e2bb">子模块（submodule）</h3>
+<h3 id="子模块-submodule">子模块（submodule）</h3>
 
 <p>为了解决项目中的依赖问题。使得更加方便的维护与管理。子模块允许你将一个 Git         仓库作为另外一个 Git 仓库的子目录，从而保持相对独立的提交记录。</p>
 
 <p>子模块有点类似与一个软链。你记录他们当前确切所处的提交，但是不能记录一个子模块的 <code>master</code> 或者其它符号的引用。在 <code>git</code> 的存储信息中，<code>submodule</code> 的属于 <code>160000</code> 模式，这在Git中是一个特殊模式，基本意思是你将一个提交记录为一个目录项而不是子目录或者文件。</p>
 
-<h4 id="用法:3b642809b94e451e9d37df2cf008e2bb">用法</h4>
+<h4 id="用法">用法</h4>
 
 <p><code>submodule</code> 的使用还是挺方便的。<code>.gitmodules</code> 文件保存着项目 URL 与已经拉取的本地目录之间的映射。</p>
 
 <p><code>git submodule add</code> 来增加新模块，<code>git submodule init</code> 用于初始化，<code>git submodule update</code> 用于更新，就是删除的时候不太方便。
 而另外一个更新维护子模块的时候也有些繁琐，也常常会出一些坑。</p>
 
-<h3 id="挖坑说明:3b642809b94e451e9d37df2cf008e2bb">挖坑说明</h3>
+<h3 id="挖坑说明">挖坑说明</h3>
 
 <ul>
 <li><p>当你 <code>pull master</code> 之后，如果 <code>submodule</code> 有变更，都需要记得<code>submodule update</code>一下，不然又会提交旧的信息回去了。这本质上，都是因为它在主<code>master</code>上都是已 <code>link</code> 的方式存在。</p></li>
@@ -118,7 +146,7 @@
 <li><p><code>submodule</code> 的时候也有点费劲的其实。当你进入 <code>submodule</code> 的目录，其实不会切到任何分支，<code>HEAD</code> 处于游离的状态，所以在改动之前需要 <code>checkout master</code>，再来改动。</p></li>
 </ul>
 
-<h3 id="subtree:3b642809b94e451e9d37df2cf008e2bb">subtree</h3>
+<h3 id="subtree">subtree</h3>
 
 <p>上面讲了这个多，其实官方推荐使用 <code>subtree</code> 来代替 <code>submodule</code>。两者的区分在于，<code>submodule</code>是把一个 <code>commit</code> 嵌入到当前项目的子目录中，只相当于一个 <code>Link</code>，而 <code>subtree</code> 是合并子项目到当前项目的子目录中，是一个完整项目的拷贝。</p>
 
@@ -130,7 +158,7 @@
 <li>管理上更加方便一些</li>
 </ul>
 
-<h4 id="用法-1:3b642809b94e451e9d37df2cf008e2bb">用法</h4>
+<h4 id="用法-1">用法</h4>
 
 <p><code>subtree</code> 的使用相对复杂一些。这个依旧省略了各种操作的说明。具体翻看 API。</p>
 
@@ -153,7 +181,7 @@ git subtree pull --prefix=&lt;子目录名&gt; &lt;远程分支&gt; &lt;分支&g
 </code></pre></li>
 </ul>
 
-<h3 id="参考文献:3b642809b94e451e9d37df2cf008e2bb">参考文献</h3>
+<h3 id="参考文献">参考文献</h3>
 
 <ul>
 <li><a href="https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E5%AD%90%E6%A8%A1%E5%9D%97">Git 工具 - 子模块</a></li>
@@ -167,60 +195,31 @@ git subtree pull --prefix=&lt;子目录名&gt; &lt;远程分支&gt; &lt;分支&g
 
         <aside>
           
-<div class="ds-thread" data-thread-key="http://jyu213.github.io/blog/2016/07/02/%E6%8C%96%E4%B8%80%E6%8C%96-submodule/" data-title="挖一挖 submodule" data-url="http://jyu213.github.io/blog/2016/07/02/%E6%8C%96%E4%B8%80%E6%8C%96-submodule/"></div>
+
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+
+
+<div id="comments" class="comments" data-thread-key="http://jyu213.github.io/blog/2016/07/02/%E6%8C%96%E4%B8%80%E6%8C%96-submodule/" data-title="挖一挖 submodule" data-url="http://jyu213.github.io/blog/2016/07/02/%E6%8C%96%E4%B8%80%E6%8C%96-submodule/"></div>
 <script type="text/javascript">
-var duoshuoQuery = {short_name:"j4evee"};
-    (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0]
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-    </script>
+    const gitment = new Gitment({
+      id: 'http:\/\/jyu213.github.io\/blog\/2016\/07\/02\/%E6%8C%96%E4%B8%80%E6%8C%96-submodule\/',
+      title: '挖一挖 submodule',
+      owner: 'jyu213',
+      repo: 'blog_comments',
+      oauth: {
+        client_id: '3bee402f3d2d77bfe52a',
+        client_secret: 'a03e8940e2210e7990ad0ad89f6eb1259b1facb6',
+      },
+    })
+
+    gitment.render('comments')
+</script>
 
 
         </aside>
 
       </article>
-
-    </div>
-    <div class="col-md-4">
-      
-<aside class="site">
-
-  
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h2 class="panel-title">tag</h2>
-    </div>
-    <div class="list-group">
-      
-      <a href="http://jyu213.github.io/tags/mobile" class="list-group-item">mobile</a>
-      
-      <a href="http://jyu213.github.io/tags/css" class="list-group-item">css</a>
-      
-      <a href="http://jyu213.github.io/tags/doc" class="list-group-item">doc</a>
-      
-      <a href="http://jyu213.github.io/tags/translate" class="list-group-item">translate</a>
-      
-      <a href="http://jyu213.github.io/tags/es6" class="list-group-item">es6</a>
-      
-      <a href="http://jyu213.github.io/tags/js" class="list-group-item">js</a>
-      
-      <a href="http://jyu213.github.io/tags/%E8%87%AA%E5%8A%A8%E5%8C%96" class="list-group-item">自动化</a>
-      
-      <a href="http://jyu213.github.io/tags/html5" class="list-group-item">html5</a>
-      
-      <a href="http://jyu213.github.io/tags/git" class="list-group-item">git</a>
-      
-    </div>
-  </div>
-  
-
-</aside>
-
 
     </div>
   </div>
@@ -231,10 +230,8 @@ var duoshuoQuery = {short_name:"j4evee"};
     </div>
 
     <footer class="site">
-      <div class="container">
-        <p>&copy; 2017 见见</p>
-        <p>Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>,</p>
-        <p>Theme <a href="https://github.com/dim0627/hugo_theme_robust" target="_blank">Robust</a> designed by <a href="http://yet.unresolved.xyz" target="_blank">Daisuke Tsuji</a></p>
+      <div class="container text-center">
+        <p>&copy; 2017 前端杂货铺</p>
       </div>
     </footer>
 

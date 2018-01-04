@@ -82,6 +82,9 @@ article.li .date {
   font-size: .8rem;
   line-height: 1rem;
 }
+article.li .date .text{
+  margin-right: 5px;
+}
 
 article.li .title {
   font-size: 1.4rem;
@@ -94,13 +97,15 @@ article.li .body {
 }
 
 article.single .article-header {
+  max-width: 700px;
+  margin: 0 auto;
   margin-bottom: 1rem;
 }
 
 article.single .article-header time {
   font-size: .8rem;
   line-height: 1rem;
-  display: block;
+  display: inline-block;
 }
 
 article.single .article-title {
@@ -110,10 +115,9 @@ article.single .article-title {
 }
 
 article.single .article-body {
-  max-width: 650px;
+  max-width: 700px;
   margin: 0 auto;
   margin-bottom: 1rem;
-  padding: 0 1rem;
 }
 
 article.single .article-body h1,

@@ -2,20 +2,20 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="generator" content="Hugo 0.15" />
+    <meta name="generator" content="Hugo 0.30.2" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-    <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans|Marcellus+SC'>
+
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/custom.css">
     <link rel="alternate" type="application/rss+xml" title="RSS" href="http://jyu213.github.io//index.xml">
 
     
-    <title>Rollup 试炼之路 - 见见 - 前端小记</title>
-    <meta property='og:title' content="Rollup 试炼之路 - 见见 - 前端小记">
+    <title>Rollup 试炼之路 - 前端杂货铺</title>
+    <meta property='og:title' content="Rollup 试炼之路 - 前端杂货铺">
     <meta property="og:type" content="article">
     
 
@@ -28,7 +28,7 @@
   <body>
 
     <header class="site">
-      <nav class="navbar navbar-default">
+      <nav class="navbar navbar-inverse">
         <div class="container">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -37,10 +37,31 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="http://jyu213.github.io/">见见 - 前端小记</a>
+            
+            <a class="navbar-brand" href="http://jyu213.github.io/">前端杂货铺</a>
           </div>
 
           <div id="navbar" class="collapse navbar-collapse">
+            
+            <ul class="nav navbar-nav navbar-right">
+              
+              
+              <li><a href="/categories/css">CSS</a></li>
+              
+              
+              
+              <li><a href="/categories/js">JS</a></li>
+              
+              
+              
+              <li><a href="/categories/translate">翻译</a></li>
+              
+              
+              
+              <li><a href="/">首页</a></li>
+              
+              
+            </ul>
             
           </div>
 
@@ -56,7 +77,7 @@
 <div class="single">
 
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-12">
 
       <article class="single" itemscope="itemscope" itemtype="http://schema.org/Article">
 
@@ -76,7 +97,7 @@
             <meta itemprop="width" content="100">
             <meta itemprop="height" content="100">
           </div>
-          <meta itemprop="name" content="见见 - 前端小记">
+          <meta itemprop="name" content="前端杂货铺">
         </div>
         <div itemprop="author" itemscope itemtype="https://schema.org/Person">
           <meta itemprop="name" content="见见">
@@ -85,7 +106,14 @@
         <header class="article-header">
           <h1 class="article-title">Rollup 试炼之路</h1>
 
-          <time itemprop="datePublished" pubdate="pubdate" datetime="2016-01-14T00:00:00&#43;00:00">2016-01-14</time>
+          <time>
+            
+              见见
+            
+          </time>
+          <time itemprop="datePublished" pubdate="pubdate" datetime="2016-01-14T00:00:00&#43;00:00">
+            2016-01-14
+          </time>
 
           
             <a href="http://jyu213.github.io/tags/js" class="tag">js</a> <a href="http://jyu213.github.io/tags/%e8%87%aa%e5%8a%a8%e5%8c%96" class="tag">自动化</a> 
@@ -99,12 +127,12 @@
 
 <p>PS: ES6 对应 ES2015，请忽略这些细节。</p>
 
-<h3 id="什么是-rollup:94a5bc0f1c88307be9ce656c563df6ba">什么是 Rollup</h3>
+<h3 id="什么是-rollup">什么是 Rollup</h3>
 
 <p><a href="https://github.com/rollup/rollup">Rollup Github 地址</a>。根据官网的解释，Rollup 是下一代 ES6 模块化工具。ES6 之后，模块化的写法将更加的趋势化，我们会将以前的文件切割成多个的细小模块。那么如何来高效的组织管理这些文件，又有了很多不同的方案。现有的模块化打包已经有如
 <code>Browserify</code> 和 <code>Webpack</code> ，那为啥还需要一个新的呢？</p>
 
-<h3 id="优势在哪:94a5bc0f1c88307be9ce656c563df6ba">优势在哪</h3>
+<h3 id="优势在哪">优势在哪</h3>
 
 <ul>
 <li>可以生成 AMD，CMD，UMD 甚至 ES6 模块文件。</li>
@@ -117,7 +145,7 @@
 
 <p>对了，值得多说一句的是，Rollup 打包后的代码没有 <code>require</code>，<code>import</code>的，而是直接插入到文件中。</p>
 
-<h3 id="如何引用:94a5bc0f1c88307be9ce656c563df6ba">如何引用</h3>
+<h3 id="如何引用">如何引用</h3>
 
 <p>Rollup 支持 CLI 和 JS API 方式，同时提供了一些插件如解决压缩 babel 转换等问题。(PS: 此处讲解采用 API 的方式)</p>
 
@@ -151,7 +179,7 @@ rollup.rollup({
 
 <p>使用 <code>node rollup.js</code> 执行打包。另外 Rollup 好像还不支持 <code>watch</code> 的配置，我采用了 npm-watch 的方式跳过了。</p>
 
-<h3 id="采过的坑:94a5bc0f1c88307be9ce656c563df6ba">采过的坑</h3>
+<h3 id="采过的坑">采过的坑</h3>
 
 <p>试用时间不长，且内容比较简单，可能没碰到一些奇怪的点</p>
 
@@ -161,13 +189,13 @@ rollup.rollup({
 <li>Rollup 的模块引用只支持 ES6 Module，其他的需要采用 <code>npm</code> 和 <code>commonjs</code> 的插件去解决</li>
 </ul>
 
-<h3 id="自己yy下:94a5bc0f1c88307be9ce656c563df6ba">自己YY下</h3>
+<h3 id="自己yy下">自己YY下</h3>
 
 <p>不知道拿 Rollup 和 webpack 相比合不合适。我个人还是挺喜欢 webpack 的打包方式的，关键是功能强大，不过相比，配置也巨复杂。而 Rollup 的配置就简单很多了。实验的项目文件不大，所以没看出来两者在压缩体积上是否有明显的差异。Rollup 的<code>tree-shaking</code>也将会在 webpack2 中支持。所以好像并没有什么一定非它不可的感觉。</p>
 
 <p>套用朋友说的一句话，“任何产品的生命周期都得看社区的活跃程度”。从 github 的 fock 人数上，还是持有很大的保留意见的，所有我个人可能会在一些小型或者快速项目中做尝试而已。</p>
 
-<h3 id="参考文章:94a5bc0f1c88307be9ce656c563df6ba">参考文章</h3>
+<h3 id="参考文章">参考文章</h3>
 
 <ul>
 <li><a href="https://github.com/rollup/rollup">Rollup Github</a></li>
@@ -179,60 +207,31 @@ rollup.rollup({
 
         <aside>
           
-<div class="ds-thread" data-thread-key="http://jyu213.github.io/blog/2016/01/14/rollup-%E8%AF%95%E7%82%BC%E4%B9%8B%E8%B7%AF/" data-title="Rollup 试炼之路" data-url="http://jyu213.github.io/blog/2016/01/14/rollup-%E8%AF%95%E7%82%BC%E4%B9%8B%E8%B7%AF/"></div>
+
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+
+
+<div id="comments" class="comments" data-thread-key="http://jyu213.github.io/blog/2016/01/14/rollup-%E8%AF%95%E7%82%BC%E4%B9%8B%E8%B7%AF/" data-title="Rollup 试炼之路" data-url="http://jyu213.github.io/blog/2016/01/14/rollup-%E8%AF%95%E7%82%BC%E4%B9%8B%E8%B7%AF/"></div>
 <script type="text/javascript">
-var duoshuoQuery = {short_name:"j4evee"};
-    (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0]
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-    </script>
+    const gitment = new Gitment({
+      id: 'http:\/\/jyu213.github.io\/blog\/2016\/01\/14\/rollup-%E8%AF%95%E7%82%BC%E4%B9%8B%E8%B7%AF\/',
+      title: 'Rollup 试炼之路',
+      owner: 'jyu213',
+      repo: 'blog_comments',
+      oauth: {
+        client_id: '3bee402f3d2d77bfe52a',
+        client_secret: 'a03e8940e2210e7990ad0ad89f6eb1259b1facb6',
+      },
+    })
+
+    gitment.render('comments')
+</script>
 
 
         </aside>
 
       </article>
-
-    </div>
-    <div class="col-md-4">
-      
-<aside class="site">
-
-  
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h2 class="panel-title">tag</h2>
-    </div>
-    <div class="list-group">
-      
-      <a href="http://jyu213.github.io/tags/css" class="list-group-item">css</a>
-      
-      <a href="http://jyu213.github.io/tags/mobile" class="list-group-item">mobile</a>
-      
-      <a href="http://jyu213.github.io/tags/doc" class="list-group-item">doc</a>
-      
-      <a href="http://jyu213.github.io/tags/translate" class="list-group-item">translate</a>
-      
-      <a href="http://jyu213.github.io/tags/es6" class="list-group-item">es6</a>
-      
-      <a href="http://jyu213.github.io/tags/git" class="list-group-item">git</a>
-      
-      <a href="http://jyu213.github.io/tags/html5" class="list-group-item">html5</a>
-      
-      <a href="http://jyu213.github.io/tags/js" class="list-group-item">js</a>
-      
-      <a href="http://jyu213.github.io/tags/%E8%87%AA%E5%8A%A8%E5%8C%96" class="list-group-item">自动化</a>
-      
-    </div>
-  </div>
-  
-
-</aside>
-
 
     </div>
   </div>
@@ -243,10 +242,8 @@ var duoshuoQuery = {short_name:"j4evee"};
     </div>
 
     <footer class="site">
-      <div class="container">
-        <p>&copy; 2017 见见</p>
-        <p>Powered by <a href="http://gohugo.io" target="_blank">Hugo</a>,</p>
-        <p>Theme <a href="https://github.com/dim0627/hugo_theme_robust" target="_blank">Robust</a> designed by <a href="http://yet.unresolved.xyz" target="_blank">Daisuke Tsuji</a></p>
+      <div class="container text-center">
+        <p>&copy; 2017 前端杂货铺</p>
       </div>
     </footer>
 

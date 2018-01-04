@@ -1,12 +1,101 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>见见 - 前端小记</title>
+    <title>前端杂货铺 on 前端杂货铺</title>
     <link>http://jyu213.github.io/</link>
-    <description>Recent content on 见见 - 前端小记</description>
+    <description>Recent content in 前端杂货铺 on 前端杂货铺</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 18 Jun 2017 22:10:05 +0800</lastBuildDate>
-    <atom:link href="http://jyu213.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 28 Sep 2017 00:47:14 +0800</lastBuildDate>
+    <atom:link href="/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>ES6 proxy</title>
+      <link>http://jyu213.github.io/blog/2017/09/28/es6-proxy/</link>
+      <pubDate>Thu, 28 Sep 2017 00:47:14 +0800</pubDate>
+      
+      <guid>http://jyu213.github.io/blog/2017/09/28/es6-proxy/</guid>
+      <description>&lt;p&gt;Proxy，顾名思义就是代理，是指在目标对象前加一层拦截（traps），可用于对访问对象的拦截和过滤。那么这个和上一节讲到的 Decorator 有什么区别呢？&lt;/p&gt;
+
+&lt;p&gt;Decorator 是给对象添加一些额外的职责，说白了是保持原有的逻辑不变。而 Proxy 的话更倾向于为对象提供一种代理，从而控制对这个对象的访问。&lt;/p&gt;
+
+&lt;p&gt;先来看看基本的实例。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;let proxy = new Proxy(target, handler)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;target&lt;/code&gt; 表示要拦截的对象，可以是 &lt;code&gt;Array&lt;/code&gt;，&lt;code&gt;Object&lt;/code&gt;，&lt;code&gt;Function&lt;/code&gt; 或者另一个 &lt;code&gt;Proxy&lt;/code&gt;。&lt;code&gt;handler&lt;/code&gt; 表示要拦截的行为。而作用的结果则体现在 Proxy 的实例 &lt;code&gt;proxy&lt;/code&gt; 上。如果目标没有拦截，就等同于原对象。&lt;/p&gt;
+
+&lt;p&gt;对于具体的 API 这里就不做展开了，需要补充的同学可以直接&lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy&#34;&gt;点击查看&lt;/a&gt;。无非是监听对象的操作，然后执行相应的目标行为。比如 &lt;code&gt;get&lt;/code&gt;，&lt;code&gt;set&lt;/code&gt;，&lt;code&gt;deleteProperty&lt;/code&gt; 等等。&lt;/p&gt;
+
+&lt;p&gt;从一个简单的 get 操作来看看 proxy 实际是如何操作的。在取对象 obj 值的时候，记录一条日志。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;let obj = {a: 1}
+let proxy = new Proxy(obj, {
+    get (target, key, proxy) {
+        console.log(`get target key ${target[key]}`)
+        return target[key]
+    }
+})
+console.log(proxy.a)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在 Proxy 之前，我们会做类似功能来模拟。通过 globalGetInterceptor 函数来实现具体的对象操作内容。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;// babel-plugin-proxy
+var defaultHandle = {
+    get: function(obj, propName) {
+        return obj[propName]
+    }
+}
+var Proxy = function(target, handle) {
+    this.target = target
+    this.handle = handle
+
+    this.handle.get = this.handle.get || defaultHandle.get
+}
+Proxy.getTrap = function(propName) {
+    return this.handle.get(this.target, propName)
+}
+function globalGetInterceptor(obj, propName) {
+    if (obj instanceof Proxy) {
+        return obj.getTrap(propName)
+    }
+    var value = defaultHandle.get(obj, propName)
+    if (typeof value === &#39;function&#39;) {
+        return value.bind(this)
+    } else {
+        return value
+    }
+}
+globalGetInterceptor(proxy, &#39;a&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;实际上，Proxy 的应用场景挺广的。目前看到他们常用有：
+* 对对象访问的控制
+* 降低函数或类的复杂度
+* 对资源的检验&lt;/p&gt;
+
+&lt;p&gt;通过具体的例子来演示一下。&lt;/p&gt;
+
+&lt;p&gt;第一个 &lt;code&gt;console&lt;/code&gt; 的例子，稍微扩展一下的话，就可以当做监控来使用。比如在 get 或者 set 方法中加入对应的埋点等操作等等。&lt;/p&gt;
+
+&lt;p&gt;还是用上面讲到的 obj 对象。我们也可以做一些校验，访问控制等等。比如我们只允许 obj 属性赋值是数字。不然就报错。例子如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;let obj = {a: 1}
+let proxy = new Proxy(obj, {
+    set (target, key, newValue) {
+        if (isNaN(newValue)) {
+            throw &#39;Error: isNaN&#39;
+        }
+        target[key] = newValue
+    }
+})
+proxy.b = 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;还有更高阶的，比如双向绑定等等。不一一例举了。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>ES7 Decorators</title>
@@ -99,7 +188,7 @@ let Person = (_class = class Person {
 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;作用-结尾:a593262b97a8f3ec1e2657c7b6ab1472&#34;&gt;作用 &amp;amp; 结尾&lt;/h3&gt;
+&lt;h3 id=&#34;作用-结尾&#34;&gt;作用 &amp;amp; 结尾&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;用于函数或类的修饰&lt;/li&gt;
@@ -133,7 +222,7 @@ http://vanseodesign.com/css/drop-shadow-filter/&#34;&gt;&lt;code&gt;url()&lt;/co
 
 &lt;p&gt;今天我想介绍四个 CSS 滤镜函数，所有这些都是 SVG 滤镜原语 &lt;code&gt;feColorMatrix&lt;/code&gt; 的不同类型和值的映射。&lt;/p&gt;
 
-&lt;h2 id=&#34;fecolormatrix-滤镜原语-filter-primitive:ee681bce9ee04229105ee174e1606b94&#34;&gt;feColorMatrix 滤镜原语（Filter Primitive）&lt;/h2&gt;
+&lt;h2 id=&#34;fecolormatrix-滤镜原语-filter-primitive&#34;&gt;feColorMatrix 滤镜原语（Filter Primitive）&lt;/h2&gt;
 
 &lt;p&gt;&lt;code&gt;feColorMatrix&lt;/code&gt; 滤镜原语可以用于更改元素&lt;a href=&#34;http://vanseodesign.com/web-design/hue-saturation-and-lightness/&#34;&gt;颜色的一些基本属性&lt;/a&gt;。顾名思义，原语使用矩形来添加不同的滤镜效果。&lt;/p&gt;
 
@@ -152,7 +241,7 @@ http://vanseodesign.com/css/drop-shadow-filter/&#34;&gt;&lt;code&gt;url()&lt;/co
 
 &lt;p&gt;&lt;img src=&#34;http://www.vanseodesign.com/blog/wp-content/uploads/2013/09/strawberry-fields.jpg&#34; alt=&#34;img1&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;grayscale-函数:ee681bce9ee04229105ee174e1606b94&#34;&gt;grayscale() 函数&lt;/h2&gt;
+&lt;h2 id=&#34;grayscale-函数&#34;&gt;grayscale() 函数&lt;/h2&gt;
 
 &lt;p&gt;&lt;code&gt;grayscale()&lt;/code&gt; &lt;code&gt;filter-function&lt;/code&gt; 功能将图像转换为灰度。&lt;/p&gt;
 
@@ -184,7 +273,7 @@ http://vanseodesign.com/css/drop-shadow-filter/&#34;&gt;&lt;code&gt;url()&lt;/co
 
 &lt;p&gt;不过，这绝对是 CSS &lt;code&gt;filter-function&lt;/code&gt; 功能更容易使用的情况。我知道使用这个特定的矩阵唯一的原因是我在网上发现一个例子，不需要搜索 &lt;code&gt;filter-function&lt;/code&gt; 的值为 1。&lt;/p&gt;
 
-&lt;h2 id=&#34;hue-rotate-函数:ee681bce9ee04229105ee174e1606b94&#34;&gt;hue-rotate() 函数&lt;/h2&gt;
+&lt;h2 id=&#34;hue-rotate-函数&#34;&gt;hue-rotate() 函数&lt;/h2&gt;
 
 &lt;p&gt;&lt;code&gt;hue-rotate() filter-function&lt;/code&gt; 将元素中每个像素的色调改变为你指定的数量。&lt;/p&gt;
 
@@ -211,7 +300,7 @@ http://vanseodesign.com/css/drop-shadow-filter/&#34;&gt;&lt;code&gt;url()&lt;/co
 &amp;lt;/filter&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;saturate-函数:ee681bce9ee04229105ee174e1606b94&#34;&gt;saturate() 函数&lt;/h2&gt;
+&lt;h2 id=&#34;saturate-函数&#34;&gt;saturate() 函数&lt;/h2&gt;
 
 &lt;p&gt;CSS 还提供了一个 &lt;code&gt;saturate() filter-function&lt;/code&gt;，你可以使用它来更改元素饱和度。&lt;/p&gt;
 
@@ -245,7 +334,7 @@ http://vanseodesign.com/css/drop-shadow-filter/&#34;&gt;&lt;code&gt;url()&lt;/co
 
 &lt;p&gt;我之前提到，你可以通过将 &lt;code&gt;type&lt;/code&gt; 属性设置为 &lt;code&gt;saturate&lt;/code&gt;，来使 &lt;code&gt;feColorMatrix&lt;/code&gt; 更轻松地创建灰度图像。你只需要将值设置为 0，使得图像完全饱和，这与将其设置为 100% 灰度产生。&lt;/p&gt;
 
-&lt;h2 id=&#34;sepia-函数:ee681bce9ee04229105ee174e1606b94&#34;&gt;sepia() 函数&lt;/h2&gt;
+&lt;h2 id=&#34;sepia-函数&#34;&gt;sepia() 函数&lt;/h2&gt;
 
 &lt;p&gt;最后还有 &lt;code&gt;sepia() filter-function&lt;/code&gt; 将图像转换为深褐色。&lt;/p&gt;
 
@@ -279,7 +368,7 @@ http://vanseodesign.com/css/drop-shadow-filter/&#34;&gt;&lt;code&gt;url()&lt;/co
 
 &lt;p&gt;我认为你同意 CSS 滤镜功能是这两个选项，即使 SVG 在更灵活配置。&lt;/p&gt;
 
-&lt;h2 id=&#34;总结:ee681bce9ee04229105ee174e1606b94&#34;&gt;总结&lt;/h2&gt;
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
 
 &lt;p&gt;这四个 CSS 过滤器功能都是 滤镜原语 &lt;code&gt;feColorMatrix&lt;/code&gt; 的不同类型和值的映射。其中两个代替复杂的矩阵，而另外两个替换一个特定类型的原语。&lt;/p&gt;
 
@@ -307,7 +396,7 @@ http://vanseodesign.com/css/drop-shadow-filter/&#34;&gt;&lt;code&gt;url()&lt;/co
 
 &lt;p&gt;&lt;a href=&#34;http://codepen.io/jonitrythall/full/xdOrrq/&#34;&gt;点击这里查看完整的 Demo&lt;/a&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;制定一个计划:b1efd1ff3bdf437f1a96cee8e8a48de6&#34;&gt;制定一个计划&lt;/h3&gt;
+&lt;h3 id=&#34;制定一个计划&#34;&gt;制定一个计划&lt;/h3&gt;
 
 &lt;p&gt;和学习任何网络新事物一样，我立即打开 &lt;code&gt;Adobe Illustrator&lt;/code&gt;，感受自然，网格和紫色带来的灵感，我开始绘制一个基本的户外场景，然后开始尝试用 CSS 网格来实现。&lt;/p&gt;
 
@@ -315,7 +404,7 @@ http://vanseodesign.com/css/drop-shadow-filter/&#34;&gt;&lt;code&gt;url()&lt;/co
 
 &lt;p&gt;&lt;img src=&#34;http://jonibologna.com/content/images/2017/04/scene-01.png&#34; alt=&#34;images&#34; /&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;标记:b1efd1ff3bdf437f1a96cee8e8a48de6&#34;&gt;标记&lt;/h3&gt;
+&lt;h3 id=&#34;标记&#34;&gt;标记&lt;/h3&gt;
 
 &lt;p&gt;标记由一个 &lt;code&gt;class&lt;/code&gt; 名为 &lt;code&gt;contain&lt;/code&gt; 的 &lt;code&gt;div&lt;/code&gt; 主容器以及十二个 &lt;code&gt;class&lt;/code&gt; 名为 &lt;code&gt;spring&lt;/code&gt; 的子集 &lt;code&gt;div&lt;/code&gt; 组成。HTML 和 CSS 代码片段如下：&lt;/p&gt;
 
@@ -447,7 +536,7 @@ body {
 
 &lt;p&gt;&lt;img src=&#34;http://jonibologna.com/content/images/2017/04/Screen-Shot-2017-04-23-at-12-27-03-PM.png&#34; alt=&#34;images&#34; /&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;columns:b1efd1ff3bdf437f1a96cee8e8a48de6&#34;&gt;columns&lt;/h3&gt;
+&lt;h3 id=&#34;columns&#34;&gt;columns&lt;/h3&gt;
 
 &lt;p&gt;使用网格时首先需要在 CSS 网格容器中声明它：&lt;/p&gt;
 
@@ -472,11 +561,11 @@ body {
 
 &lt;p&gt;&lt;code&gt;repeat&lt;/code&gt; 函数允许缩短 &lt;code&gt;1fr 1fr 1fr 1fr&lt;/code&gt; 的写法。&lt;/p&gt;
 
-&lt;h3 id=&#34;fr-单位:b1efd1ff3bdf437f1a96cee8e8a48de6&#34;&gt;&lt;code&gt;fr&lt;/code&gt; 单位&lt;/h3&gt;
+&lt;h3 id=&#34;fr-单位&#34;&gt;&lt;code&gt;fr&lt;/code&gt; 单位&lt;/h3&gt;
 
 &lt;p&gt;网格属性可以接受多个不同的单位值，本例中只使用了 &lt;code&gt;fr&lt;/code&gt;。这个单位是超级聪明和灵活的，因为它将可用空间划分为分数，所以 &lt;code&gt;1fr 1fr 1fr 1fr&lt;/code&gt; 将生成四个相同大小的列。&lt;/p&gt;
 
-&lt;h3 id=&#34;网格间距:b1efd1ff3bdf437f1a96cee8e8a48de6&#34;&gt;网格间距&lt;/h3&gt;
+&lt;h3 id=&#34;网格间距&#34;&gt;网格间距&lt;/h3&gt;
 
 &lt;p&gt;网格间距由每个项目的 &lt;code&gt;2px&lt;/code&gt; 橙色间距表示。间隙显示主容器的背景颜色，为橙色，外边框是 &lt;code&gt;body&lt;/code&gt; 本身。每个网格包含一个白色背景的图像。&lt;/p&gt;
 
@@ -484,7 +573,7 @@ body {
 
 &lt;p&gt;示例使用缩写 &lt;code&gt;grid-gap&lt;/code&gt; 来匹配 &lt;code&gt;grid-column-gap&lt;/code&gt; 和 &lt;code&gt;grid-row-gap&lt;/code&gt;。该属性接受单个共享值或者两个不同的值，第一个参数表示行，第二个表示列。&lt;/p&gt;
 
-&lt;h3 id=&#34;从列起点和终点来排列项目:b1efd1ff3bdf437f1a96cee8e8a48de6&#34;&gt;从列起点和终点来排列项目&lt;/h3&gt;
+&lt;h3 id=&#34;从列起点和终点来排列项目&#34;&gt;从列起点和终点来排列项目&lt;/h3&gt;
 
 &lt;p&gt;一旦在主容器上设置基本列，容器中的每个子元素 &lt;code&gt;div&lt;/code&gt; 都可以单独进一步设计，已实现以下网格：&lt;/p&gt;
 
@@ -526,7 +615,7 @@ body {
 
 &lt;p&gt;&lt;img src=&#34;http://jonibologna.com/content/images/2017/04/Screen-Shot-2017-04-23-at-12-13-05-PM.png&#34; alt=&#34;images&#34; /&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;rows:b1efd1ff3bdf437f1a96cee8e8a48de6&#34;&gt;rows&lt;/h3&gt;
+&lt;h3 id=&#34;rows&#34;&gt;rows&lt;/h3&gt;
 
 &lt;p&gt;回到容器元素设置行，这是我来演示这个奇怪风景的最后一步。尽管初始列由相等的间距组成，但是行具有更多的变化。&lt;/p&gt;
 
@@ -536,7 +625,7 @@ body {
 
 &lt;p&gt;这个设计对于行的需求是相当轻的，这就是行样式所需的程度，但是行有自己的一组属性，有些甚至可以与列属性组合来创建速记法，保持 CSS 的简洁。&lt;/p&gt;
 
-&lt;h3 id=&#34;flexbox:b1efd1ff3bdf437f1a96cee8e8a48de6&#34;&gt;Flexbox&lt;/h3&gt;
+&lt;h3 id=&#34;flexbox&#34;&gt;Flexbox&lt;/h3&gt;
 
 &lt;p&gt;谈及 flexbox（并且最近创建了一个&lt;a href=&#34;https://gum.co/YdWw&#34;&gt;印刷视觉指南&lt;/a&gt;），我只想说，在这个示例中，&lt;code&gt;flexbox&lt;/code&gt; 用于将图像在网格中居中，而网格和 &lt;code&gt;flexbox&lt;/code&gt; 实际上可以一起使用。&lt;/p&gt;
 
@@ -561,13 +650,13 @@ body {
 
 &lt;p&gt;&lt;code&gt;Robin Rendle&lt;/code&gt; 最近在 &lt;code&gt;CSS-Tricks&lt;/code&gt; 上写了有关这个主题的一个&lt;a href=&#34;https://css-tricks.com/css-grid-replace-flexbox/&#34;&gt;很好的总结&lt;/a&gt;。&lt;/p&gt;
 
-&lt;h3 id=&#34;浏览器支持:b1efd1ff3bdf437f1a96cee8e8a48de6&#34;&gt;浏览器支持&lt;/h3&gt;
+&lt;h3 id=&#34;浏览器支持&#34;&gt;浏览器支持&lt;/h3&gt;
 
 &lt;p&gt;目前浏览器支持状况：&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;http://jonibologna.com/content/images/2017/04/Screen-Shot-2017-04-23-at-1-24-17-PM.png&#34; alt=&#34;images&#34; /&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;资源:b1efd1ff3bdf437f1a96cee8e8a48de6&#34;&gt;资源&lt;/h3&gt;
+&lt;h3 id=&#34;资源&#34;&gt;资源&lt;/h3&gt;
 
 &lt;p&gt;这里有一些比较好的扩展阅读：&lt;/p&gt;
 
@@ -579,7 +668,7 @@ body {
 &lt;a href=&#34;http://cssgridgarden.com/&#34;&gt;CSS Grid Garden&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;结尾:b1efd1ff3bdf437f1a96cee8e8a48de6&#34;&gt;结尾&lt;/h3&gt;
+&lt;h3 id=&#34;结尾&#34;&gt;结尾&lt;/h3&gt;
 
 &lt;p&gt;要了解 CSS Grid 的功能，还需要学习更多的东西，我迫不及待地写更多的内容，但希望这篇文章可以作为一个有趣的起点。&lt;/p&gt;
 </description>
@@ -597,25 +686,25 @@ body {
 &lt;p&gt;起由是由于最近事情比较多而且散，常常忙的焦头烂额还一头雾水。想起了之前同事推荐的软件 OmniFocus，从而花了周末的时间简单学习了下关于 GTD 的一些知识。&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;h3 id=&#34;概念:5c83224088a79eeae33e16c206f10870&#34;&gt;概念&lt;/h3&gt;
+&lt;h3 id=&#34;概念&#34;&gt;概念&lt;/h3&gt;
 
 &lt;p&gt;GTD，Getting Things Done。是目前比较流行的一套时间管理方案。来自艾伦的同名书籍。其主要思想就是把你脑中的事情全都移出收集到一个统一的地方，然后进行管理分配后，一件一件的事情去做。最后再进行定期的回顾。最主要的是保证一个时间段只做一件事情，从而来达到高效的目的。&lt;/p&gt;
 
 &lt;p&gt;GTD 中可以鉴戒的地方有很多。不过所有的概念理论肯定不适合每一个人，所以还需要依据自己的行为模式不断的实践打磨，找到一套属于自己的管理体系。自我升级，也是一件有趣的事情。目前正在尝试，期待后面会有一些新的想法。&lt;/p&gt;
 
-&lt;h3 id=&#34;核心原则:5c83224088a79eeae33e16c206f10870&#34;&gt;核心原则&lt;/h3&gt;
+&lt;h3 id=&#34;核心原则&#34;&gt;核心原则&lt;/h3&gt;
 
 &lt;p&gt;GTD 的核心原则主要是&lt;strong&gt;收集&lt;/strong&gt;，&lt;strong&gt;处理&lt;/strong&gt;，&lt;strong&gt;组织&lt;/strong&gt;，&lt;strong&gt;执行&lt;/strong&gt;，&lt;strong&gt;回顾&lt;/strong&gt;。&lt;/p&gt;
 
-&lt;h4 id=&#34;收集:5c83224088a79eeae33e16c206f10870&#34;&gt;收集&lt;/h4&gt;
+&lt;h4 id=&#34;收集&#34;&gt;收集&lt;/h4&gt;
 
 &lt;p&gt;是及时的把任何你需要做的，想到的事情都记录到收集箱（inbox）中。在这个阶段可以不用管是否有价值，因为后续还会有专门一个流程用于整理处理收集箱。记录的形式可以是纸质的或者是电子的，你喜欢就好。关键是&lt;strong&gt;及时&lt;/strong&gt;，不要拖着等到忘记了，我们需要的是无负荷的头脑。这样的好处是你可以将大脑中的一些无关信息清空，专心做事。后续只需要对着收集箱来处理即可。&lt;/p&gt;
 
-&lt;h4 id=&#34;处理:5c83224088a79eeae33e16c206f10870&#34;&gt;处理&lt;/h4&gt;
+&lt;h4 id=&#34;处理&#34;&gt;处理&lt;/h4&gt;
 
 &lt;p&gt;将你收集箱中的信息快速进行处理。建议每天清理一次。处理的方法是从上往下逐条进行，不放回收集箱。操作中有一个重要原则，&lt;strong&gt;两分钟原则&lt;/strong&gt;。任何事情如果少于两分钟，就马上执行。其它的，可以委托他人或者延期（及放入一个专门的处理箱中），或者给设定一个专门的情景，或者放入后期所需执行的日程表中，无用的信息就果断的删除。&lt;/p&gt;
 
-&lt;h4 id=&#34;组织:5c83224088a79eeae33e16c206f10870&#34;&gt;组织&lt;/h4&gt;
+&lt;h4 id=&#34;组织&#34;&gt;组织&lt;/h4&gt;
 
 &lt;p&gt;这是一个很重要的一步。对于上述中不能立即执行的，需要规划好&lt;strong&gt;下一步行动&lt;/strong&gt;（action）。把任务切割成能做的一条一条。可以按情境（context）分类。那些不能一步执行完成的可以归属为一个项目，把需要等待他人才能继续进行的设置为等待，可能在以后需要做的设置为将来状态。总而言之，就是把之前收集到的任务全部整理归类好，便于后续执行。&lt;/p&gt;
 
@@ -623,19 +712,19 @@ body {
 
 &lt;p&gt;这里我还特地去搜索了下为何按情境来分类，感觉还是不太适应。举例来说，有很多内容是需要在特定的环境下才能处理的，比如办公场所，家里，无网络状态等等。大概看了下自己，估计 90% 以上都是同一个情境的，意义不大。个人还是喜欢按四象限法则的重要程度来划分会多一点。&lt;/p&gt;
 
-&lt;h4 id=&#34;执行:5c83224088a79eeae33e16c206f10870&#34;&gt;执行&lt;/h4&gt;
+&lt;h4 id=&#34;执行&#34;&gt;执行&lt;/h4&gt;
 
 &lt;p&gt;这个就完全没有压力了。按着排好的任务一条一条往下做就好了。如果碰对紧急的统统塞进收集箱中，重要的，先保存工作场景，去处理，后续再回来。&lt;/p&gt;
 
-&lt;h4 id=&#34;回顾:5c83224088a79eeae33e16c206f10870&#34;&gt;回顾&lt;/h4&gt;
+&lt;h4 id=&#34;回顾&#34;&gt;回顾&lt;/h4&gt;
 
 &lt;p&gt;这个也很重要的。自己在这方面一直做的不好，常常有种碌碌无为怀疑人生的错觉。通过回顾来了解项目的计划及进度，并做适当的调整。最终服务于长期目标。建议每天小结，每周一完整总结。&lt;/p&gt;
 
-&lt;h3 id=&#34;工具:5c83224088a79eeae33e16c206f10870&#34;&gt;工具&lt;/h3&gt;
+&lt;h3 id=&#34;工具&#34;&gt;工具&lt;/h3&gt;
 
 &lt;p&gt;适合 GTD 的工具实在太多了。这里不罗列了。需要注意的是不要花太多精力在选择工具上，到头来适得其反。&lt;/p&gt;
 
-&lt;h3 id=&#34;结语:5c83224088a79eeae33e16c206f10870&#34;&gt;结语&lt;/h3&gt;
+&lt;h3 id=&#34;结语&#34;&gt;结语&lt;/h3&gt;
 
 &lt;p&gt;好了，让我们来回顾一下 GTD 做了啥。把要做的事情都记录下来，集中处理你的需求，是立即完成还是归到下一步行动。然后保持及时的更新与回顾。就这么简单。&lt;/p&gt;
 
@@ -780,20 +869,20 @@ body {
 
 &lt;p&gt;在很长的一段时间内，对&lt;code&gt;submodule&lt;/code&gt;的概念含糊不清。特别是 &lt;code&gt;submodule&lt;/code&gt; 和 &lt;code&gt;subtree&lt;/code&gt; 这两个的区别。今天正好有时间来理一理。&lt;/p&gt;
 
-&lt;h3 id=&#34;子模块-submodule:3b642809b94e451e9d37df2cf008e2bb&#34;&gt;子模块（submodule）&lt;/h3&gt;
+&lt;h3 id=&#34;子模块-submodule&#34;&gt;子模块（submodule）&lt;/h3&gt;
 
 &lt;p&gt;为了解决项目中的依赖问题。使得更加方便的维护与管理。子模块允许你将一个 Git         仓库作为另外一个 Git 仓库的子目录，从而保持相对独立的提交记录。&lt;/p&gt;
 
 &lt;p&gt;子模块有点类似与一个软链。你记录他们当前确切所处的提交，但是不能记录一个子模块的 &lt;code&gt;master&lt;/code&gt; 或者其它符号的引用。在 &lt;code&gt;git&lt;/code&gt; 的存储信息中，&lt;code&gt;submodule&lt;/code&gt; 的属于 &lt;code&gt;160000&lt;/code&gt; 模式，这在Git中是一个特殊模式，基本意思是你将一个提交记录为一个目录项而不是子目录或者文件。&lt;/p&gt;
 
-&lt;h4 id=&#34;用法:3b642809b94e451e9d37df2cf008e2bb&#34;&gt;用法&lt;/h4&gt;
+&lt;h4 id=&#34;用法&#34;&gt;用法&lt;/h4&gt;
 
 &lt;p&gt;&lt;code&gt;submodule&lt;/code&gt; 的使用还是挺方便的。&lt;code&gt;.gitmodules&lt;/code&gt; 文件保存着项目 URL 与已经拉取的本地目录之间的映射。&lt;/p&gt;
 
 &lt;p&gt;&lt;code&gt;git submodule add&lt;/code&gt; 来增加新模块，&lt;code&gt;git submodule init&lt;/code&gt; 用于初始化，&lt;code&gt;git submodule update&lt;/code&gt; 用于更新，就是删除的时候不太方便。
 而另外一个更新维护子模块的时候也有些繁琐，也常常会出一些坑。&lt;/p&gt;
 
-&lt;h3 id=&#34;挖坑说明:3b642809b94e451e9d37df2cf008e2bb&#34;&gt;挖坑说明&lt;/h3&gt;
+&lt;h3 id=&#34;挖坑说明&#34;&gt;挖坑说明&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;当你 &lt;code&gt;pull master&lt;/code&gt; 之后，如果 &lt;code&gt;submodule&lt;/code&gt; 有变更，都需要记得&lt;code&gt;submodule update&lt;/code&gt;一下，不然又会提交旧的信息回去了。这本质上，都是因为它在主&lt;code&gt;master&lt;/code&gt;上都是已 &lt;code&gt;link&lt;/code&gt; 的方式存在。&lt;/p&gt;&lt;/li&gt;
@@ -801,7 +890,7 @@ body {
 &lt;li&gt;&lt;p&gt;&lt;code&gt;submodule&lt;/code&gt; 的时候也有点费劲的其实。当你进入 &lt;code&gt;submodule&lt;/code&gt; 的目录，其实不会切到任何分支，&lt;code&gt;HEAD&lt;/code&gt; 处于游离的状态，所以在改动之前需要 &lt;code&gt;checkout master&lt;/code&gt;，再来改动。&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;subtree:3b642809b94e451e9d37df2cf008e2bb&#34;&gt;subtree&lt;/h3&gt;
+&lt;h3 id=&#34;subtree&#34;&gt;subtree&lt;/h3&gt;
 
 &lt;p&gt;上面讲了这个多，其实官方推荐使用 &lt;code&gt;subtree&lt;/code&gt; 来代替 &lt;code&gt;submodule&lt;/code&gt;。两者的区分在于，&lt;code&gt;submodule&lt;/code&gt;是把一个 &lt;code&gt;commit&lt;/code&gt; 嵌入到当前项目的子目录中，只相当于一个 &lt;code&gt;Link&lt;/code&gt;，而 &lt;code&gt;subtree&lt;/code&gt; 是合并子项目到当前项目的子目录中，是一个完整项目的拷贝。&lt;/p&gt;
 
@@ -813,7 +902,7 @@ body {
 &lt;li&gt;管理上更加方便一些&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;用法-1:3b642809b94e451e9d37df2cf008e2bb&#34;&gt;用法&lt;/h4&gt;
+&lt;h4 id=&#34;用法-1&#34;&gt;用法&lt;/h4&gt;
 
 &lt;p&gt;&lt;code&gt;subtree&lt;/code&gt; 的使用相对复杂一些。这个依旧省略了各种操作的说明。具体翻看 API。&lt;/p&gt;
 
@@ -836,7 +925,7 @@ git subtree pull --prefix=&amp;lt;子目录名&amp;gt; &amp;lt;远程分支&amp;
 &lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;参考文献:3b642809b94e451e9d37df2cf008e2bb&#34;&gt;参考文献&lt;/h3&gt;
+&lt;h3 id=&#34;参考文献&#34;&gt;参考文献&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E5%AD%90%E6%A8%A1%E5%9D%97&#34;&gt;Git 工具 - 子模块&lt;/a&gt;&lt;/li&gt;
@@ -849,17 +938,17 @@ git subtree pull --prefix=&amp;lt;子目录名&amp;gt; &amp;lt;远程分支&amp;
     
     <item>
       <title>CSS哲学伪命题</title>
-      <link>http://jyu213.github.io/blog/2016/02/24/css%E5%93%B2%E5%AD%A6%E4%BC%AA%E5%91%BD%E9%A2%98/</link>
+      <link>http://jyu213.github.io/blog/2016/02/24/css%E5%93%B2%E5%AD%A6%E4%BC%AA%E5%91%BD%E9%A2%98.html</link>
       <pubDate>Wed, 24 Feb 2016 00:43:23 +0800</pubDate>
       
-      <guid>http://jyu213.github.io/blog/2016/02/24/css%E5%93%B2%E5%AD%A6%E4%BC%AA%E5%91%BD%E9%A2%98/</guid>
+      <guid>http://jyu213.github.io/blog/2016/02/24/css%E5%93%B2%E5%AD%A6%E4%BC%AA%E5%91%BD%E9%A2%98.html</guid>
       <description>
 
 &lt;p&gt;标题党。这篇文章断断续续的修改过好几次，也没有满意，本来是想总结一下我这些零散的 CSS 知识结构，可能由于知识体系不全面，总是没能把知识点串联成一个通顺的内容。贴出来权当大家一起讨论下“前世今生”。文章后续可能会不定时更新。&lt;/p&gt;
 
 &lt;p&gt;CSS 作为 Web 的基础部分，极其容易上手。但是 CSS 并不算的上是一门编程语言，在语言能力上略显薄弱，往往导致整体的维护性变差。但是这并没有使得大家停止对 CSS 的探索，从命名规范，目录架构，预处理器(如&lt;code&gt;SASS&lt;/code&gt;)，后处理器（&lt;code&gt;PostCSS&lt;/code&gt;），模块化等等的方向上，努力把 CSS 变得更好。&lt;/p&gt;
 
-&lt;h3 id=&#34;关于自我历程:d680e8a854a7cbad6d490c445cba2eba&#34;&gt;关于自我历程&lt;/h3&gt;
+&lt;h3 id=&#34;关于自我历程&#34;&gt;关于自我历程&lt;/h3&gt;
 
 &lt;p&gt;其实我自己并没有系统的学习过 CSS（虽然我现在也不知道如何系统的学习），看了几个视频，扫了下中文版的 API，然后就开始了切图生涯，很多的知识点也都是后来一些零散的博客中了解到的。这过程中，的的确确踩过不少的坑，有的填了，有的继续祸害着项目里其它的同学。也导致我在很长的时段时间里都是走在一个混乱无序的 CSS 书写当中。&lt;/p&gt;
 
@@ -885,17 +974,17 @@ git subtree pull --prefix=&amp;lt;子目录名&amp;gt; &amp;lt;远程分支&amp;
 
 &lt;p&gt;采用类似 &lt;code&gt;BEM/SUIT&lt;/code&gt; 等等的命名方式等等。&lt;/p&gt;
 
-&lt;h3 id=&#34;现有的技术选择:d680e8a854a7cbad6d490c445cba2eba&#34;&gt;现有的技术选择&lt;/h3&gt;
+&lt;h3 id=&#34;现有的技术选择&#34;&gt;现有的技术选择&lt;/h3&gt;
 
 &lt;p&gt;其实我们在平时应该或多或少的接触过一些 &lt;code&gt;SASS&lt;/code&gt;, &lt;code&gt;Compass&lt;/code&gt;, &lt;code&gt;BEM&lt;/code&gt;, &lt;code&gt;SMACSS&lt;/code&gt;, &lt;code&gt;OOCSS&lt;/code&gt; 的概念与设计模式。当然并没有一种解决方案是绝对的，合适当前的项目就可以了。&lt;/p&gt;
 
-&lt;h4 id=&#34;bem:d680e8a854a7cbad6d490c445cba2eba&#34;&gt;BEM&lt;/h4&gt;
+&lt;h4 id=&#34;bem&#34;&gt;BEM&lt;/h4&gt;
 
 &lt;p&gt;用于解决项目命名规则问题。BEM 通过已&lt;code&gt;block(块)&lt;/code&gt;，&lt;code&gt;element(元素)&lt;/code&gt;，&lt;code&gt;modifier(修饰符)&lt;/code&gt; 的概念，使用连接符串联父级块作为前缀，来实现功能模块命名的唯一性。有兴趣的同学可以看一下 &lt;a href=&#34;http://www.w3cplus.com/css/the-history-of-the-bem-methodology.html&#34;&gt;BEM的进化史&lt;/a&gt;。发现一句话并不太好表述清楚，想要具体了解的同学可以移步&lt;a href=&#34;https://en.bem.info/&#34;&gt;官网&lt;/a&gt;。&lt;/p&gt;
 
 &lt;p&gt;&lt;code&gt;BEM&lt;/code&gt; 这种唯一性以及元素间的平级展开，往往在稍微复杂一点的项目里，就会把名字命名的很长很长。目前也有很多是在 &lt;code&gt;BEM&lt;/code&gt; 的基础上衍生出来的一些方式(如 &lt;code&gt;SUIT&lt;/code&gt;)。&lt;/p&gt;
 
-&lt;h4 id=&#34;oocss-object-oriented-css:d680e8a854a7cbad6d490c445cba2eba&#34;&gt;OOCSS （Object Oriented CSS）&lt;/h4&gt;
+&lt;h4 id=&#34;oocss-object-oriented-css&#34;&gt;OOCSS （Object Oriented CSS）&lt;/h4&gt;
 
 &lt;p&gt;面向对象 CSS。是一种已面向对象的维护方式去管理组织 CSS 代码。其哲学理念是模块化，功能单一性，关注点分离。&lt;/p&gt;
 
@@ -908,26 +997,26 @@ git subtree pull --prefix=&amp;lt;子目录名&amp;gt; &amp;lt;远程分支&amp;
 
 &lt;p&gt;&lt;code&gt;OOCSS&lt;/code&gt; 与 &lt;code&gt;SASS&lt;/code&gt; 结合是一个不错的选择，充分强大。&lt;/p&gt;
 
-&lt;h4 id=&#34;smacss-scalable-and-modular-architecture-for-css:d680e8a854a7cbad6d490c445cba2eba&#34;&gt;SMACSS(Scalable and Modular Architecture for CSS)&lt;/h4&gt;
+&lt;h4 id=&#34;smacss-scalable-and-modular-architecture-for-css&#34;&gt;SMACSS(Scalable and Modular Architecture for CSS)&lt;/h4&gt;
 
 &lt;p&gt;可扩展和模块化 CSS。
 把 CSS 样式划分为若干个不同类别的文件，如基础，布局，模块，主题等等。在加上一些特有前缀的组合。&lt;/p&gt;
 
-&lt;h4 id=&#34;acss-atomic-css:d680e8a854a7cbad6d490c445cba2eba&#34;&gt;ACSS (Atomic CSS)&lt;/h4&gt;
+&lt;h4 id=&#34;acss-atomic-css&#34;&gt;ACSS (Atomic CSS)&lt;/h4&gt;
 
 &lt;p&gt;原子化 CSS。遵循关注点分离原则。&lt;/p&gt;
 
-&lt;h3 id=&#34;css-模块化:d680e8a854a7cbad6d490c445cba2eba&#34;&gt;CSS 模块化&lt;/h3&gt;
+&lt;h3 id=&#34;css-模块化&#34;&gt;CSS 模块化&lt;/h3&gt;
 
 &lt;p&gt;随着 &lt;code&gt;React&lt;/code&gt; 的迅速引爆，其它关于 CSS 的另一种使用方式也在兴起。将样式在 JS 中定义。借助 &lt;code&gt;require/import&lt;/code&gt; 而解决了 CSS 中的命名空间的问题，使得单文件变得简单清晰。而通过组合，也可以实现快速的重复利用。甚至有些 CSS 可以单独与组件去绑定。&lt;/p&gt;
 
 &lt;p&gt;以及其它的一些方式。上述的方式，是比较让我眼前一亮的感觉。&lt;/p&gt;
 
-&lt;h3 id=&#34;未来走向:d680e8a854a7cbad6d490c445cba2eba&#34;&gt;未来走向&lt;/h3&gt;
+&lt;h3 id=&#34;未来走向&#34;&gt;未来走向&lt;/h3&gt;
 
 &lt;p&gt;待补充&amp;hellip;&lt;/p&gt;
 
-&lt;h3 id=&#34;扩展阅读:d680e8a854a7cbad6d490c445cba2eba&#34;&gt;扩展阅读&lt;/h3&gt;
+&lt;h3 id=&#34;扩展阅读&#34;&gt;扩展阅读&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://glenmaddern.com/articles/css-modules&#34;&gt;CSS模块&lt;/a&gt;&lt;a href=&#34;http://www.w3cplus.com/css/css-modules.html&#34;&gt;(中文翻译版)&lt;/a&gt;&lt;/li&gt;
@@ -951,12 +1040,12 @@ git subtree pull --prefix=&amp;lt;子目录名&amp;gt; &amp;lt;远程分支&amp;
 
 &lt;p&gt;PS: ES6 对应 ES2015，请忽略这些细节。&lt;/p&gt;
 
-&lt;h3 id=&#34;什么是-rollup:94a5bc0f1c88307be9ce656c563df6ba&#34;&gt;什么是 Rollup&lt;/h3&gt;
+&lt;h3 id=&#34;什么是-rollup&#34;&gt;什么是 Rollup&lt;/h3&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://github.com/rollup/rollup&#34;&gt;Rollup Github 地址&lt;/a&gt;。根据官网的解释，Rollup 是下一代 ES6 模块化工具。ES6 之后，模块化的写法将更加的趋势化，我们会将以前的文件切割成多个的细小模块。那么如何来高效的组织管理这些文件，又有了很多不同的方案。现有的模块化打包已经有如
 &lt;code&gt;Browserify&lt;/code&gt; 和 &lt;code&gt;Webpack&lt;/code&gt; ，那为啥还需要一个新的呢？&lt;/p&gt;
 
-&lt;h3 id=&#34;优势在哪:94a5bc0f1c88307be9ce656c563df6ba&#34;&gt;优势在哪&lt;/h3&gt;
+&lt;h3 id=&#34;优势在哪&#34;&gt;优势在哪&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;可以生成 AMD，CMD，UMD 甚至 ES6 模块文件。&lt;/li&gt;
@@ -969,7 +1058,7 @@ git subtree pull --prefix=&amp;lt;子目录名&amp;gt; &amp;lt;远程分支&amp;
 
 &lt;p&gt;对了，值得多说一句的是，Rollup 打包后的代码没有 &lt;code&gt;require&lt;/code&gt;，&lt;code&gt;import&lt;/code&gt;的，而是直接插入到文件中。&lt;/p&gt;
 
-&lt;h3 id=&#34;如何引用:94a5bc0f1c88307be9ce656c563df6ba&#34;&gt;如何引用&lt;/h3&gt;
+&lt;h3 id=&#34;如何引用&#34;&gt;如何引用&lt;/h3&gt;
 
 &lt;p&gt;Rollup 支持 CLI 和 JS API 方式，同时提供了一些插件如解决压缩 babel 转换等问题。(PS: 此处讲解采用 API 的方式)&lt;/p&gt;
 
@@ -1003,7 +1092,7 @@ rollup.rollup({
 
 &lt;p&gt;使用 &lt;code&gt;node rollup.js&lt;/code&gt; 执行打包。另外 Rollup 好像还不支持 &lt;code&gt;watch&lt;/code&gt; 的配置，我采用了 npm-watch 的方式跳过了。&lt;/p&gt;
 
-&lt;h3 id=&#34;采过的坑:94a5bc0f1c88307be9ce656c563df6ba&#34;&gt;采过的坑&lt;/h3&gt;
+&lt;h3 id=&#34;采过的坑&#34;&gt;采过的坑&lt;/h3&gt;
 
 &lt;p&gt;试用时间不长，且内容比较简单，可能没碰到一些奇怪的点&lt;/p&gt;
 
@@ -1013,13 +1102,13 @@ rollup.rollup({
 &lt;li&gt;Rollup 的模块引用只支持 ES6 Module，其他的需要采用 &lt;code&gt;npm&lt;/code&gt; 和 &lt;code&gt;commonjs&lt;/code&gt; 的插件去解决&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;自己yy下:94a5bc0f1c88307be9ce656c563df6ba&#34;&gt;自己YY下&lt;/h3&gt;
+&lt;h3 id=&#34;自己yy下&#34;&gt;自己YY下&lt;/h3&gt;
 
 &lt;p&gt;不知道拿 Rollup 和 webpack 相比合不合适。我个人还是挺喜欢 webpack 的打包方式的，关键是功能强大，不过相比，配置也巨复杂。而 Rollup 的配置就简单很多了。实验的项目文件不大，所以没看出来两者在压缩体积上是否有明显的差异。Rollup 的&lt;code&gt;tree-shaking&lt;/code&gt;也将会在 webpack2 中支持。所以好像并没有什么一定非它不可的感觉。&lt;/p&gt;
 
 &lt;p&gt;套用朋友说的一句话，“任何产品的生命周期都得看社区的活跃程度”。从 github 的 fock 人数上，还是持有很大的保留意见的，所有我个人可能会在一些小型或者快速项目中做尝试而已。&lt;/p&gt;
 
-&lt;h3 id=&#34;参考文章:94a5bc0f1c88307be9ce656c563df6ba&#34;&gt;参考文章&lt;/h3&gt;
+&lt;h3 id=&#34;参考文章&#34;&gt;参考文章&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/rollup/rollup&#34;&gt;Rollup Github&lt;/a&gt;&lt;/li&gt;
@@ -1036,15 +1125,15 @@ rollup.rollup({
       <guid>http://jyu213.github.io/blog/2015/12/14/es6---%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%A8%A1%E6%9D%BF/</guid>
       <description>
 
-&lt;h2 id=&#34;es6-字符串模板:806b46e229fc7cf9ebe3737ebb6a0621&#34;&gt;ES6 - 字符串模板&lt;/h2&gt;
+&lt;h2 id=&#34;es6-字符串模板&#34;&gt;ES6 - 字符串模板&lt;/h2&gt;
 
-&lt;h3 id=&#34;写在前面:806b46e229fc7cf9ebe3737ebb6a0621&#34;&gt;写在前面&lt;/h3&gt;
+&lt;h3 id=&#34;写在前面&#34;&gt;写在前面&lt;/h3&gt;
 
 &lt;p&gt;关于 ES6, 也终于在 2015 年的 7 月 18 号尘埃落定了。虽然说各大浏览器还没有全面的支持，不过这并不妨碍我们一颗想要撸一把的心。在后端，可以使用 Node.js(0.12+)或 io.js, 前端的话，也可以使用&lt;a href=&#34;http://babeljs.io/&#34;&gt;Babel&lt;/a&gt; 或&lt;a href=&#34;https://github.com/google/traceur-compiler#what-is-traceur&#34;&gt;Traceur&lt;/a&gt; 进行语法预转义成 ES5使用 。&lt;/p&gt;
 
 &lt;p&gt;关于该系列（不知道能不能成为一个系列，总是各种懒），会没有规律的挑选一些内容来学习。欢迎大家积极纠错，留言探讨。&lt;/p&gt;
 
-&lt;h3 id=&#34;模板字符串-template-strings:806b46e229fc7cf9ebe3737ebb6a0621&#34;&gt;模板字符串(template strings)&lt;/h3&gt;
+&lt;h3 id=&#34;模板字符串-template-strings&#34;&gt;模板字符串(template strings)&lt;/h3&gt;
 
 &lt;p&gt;ES6 中引进的一种新型的字符串字面量语法 - 模板字符串。书面上来解释，模板字符串是一种能在字符串文本中内嵌表示式的字符串字面量。简单来讲，就是增加了变量功能的字符串。&lt;/p&gt;
 
@@ -1096,7 +1185,7 @@ rollup.rollup({
 * 不能很好的和国际化库配合（即不会格式化特定语言的数字，日期，文字等）
 * 没有内建循环语法，（甚至连条件语句都不支持， 只可以使用模板套构的方法）&lt;/p&gt;
 
-&lt;h3 id=&#34;标签模板-tagged-template:806b46e229fc7cf9ebe3737ebb6a0621&#34;&gt;标签模板(tagged template)&lt;/h3&gt;
+&lt;h3 id=&#34;标签模板-tagged-template&#34;&gt;标签模板(tagged template)&lt;/h3&gt;
 
 &lt;p&gt;为此，引出了标签模板的概念。标签模板则是在反引号前面引入一个标签（tag）。该标签是一个函数，用于处于定制化模板字符串后返回值。就拿上面对特殊字符串举例。&lt;/p&gt;
 
@@ -1142,7 +1231,7 @@ rollup.rollup({
 
 &lt;p&gt;有了此类方法，就大大的增加了控制的权利。如上面说的国际化库甚至循环语句。&lt;/p&gt;
 
-&lt;h3 id=&#34;浏览器兼容性:806b46e229fc7cf9ebe3737ebb6a0621&#34;&gt;浏览器兼容性&lt;/h3&gt;
+&lt;h3 id=&#34;浏览器兼容性&#34;&gt;浏览器兼容性&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;服务器端， io.js 支持&lt;/li&gt;
@@ -1151,7 +1240,7 @@ rollup.rollup({
 &lt;li&gt;IE Tech Preview&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;扩展阅读:806b46e229fc7cf9ebe3737ebb6a0621&#34;&gt;扩展阅读&lt;/h3&gt;
+&lt;h3 id=&#34;扩展阅读&#34;&gt;扩展阅读&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://es6.ruanyifeng.com/#docs/string&#34;&gt;ECMAScript 6 入门&lt;/a&gt;&lt;/li&gt;
@@ -1184,7 +1273,7 @@ rollup.rollup({
 console.log( speak + &#39; &#39; + name ); // hello destructuring
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;数组的解构赋值:4428bcf4a593931f8cb7d23fa484a629&#34;&gt;数组的解构赋值&lt;/h3&gt;
+&lt;h3 id=&#34;数组的解构赋值&#34;&gt;数组的解构赋值&lt;/h3&gt;
 
 &lt;p&gt;用更加直白的话来描述就是，等号两边保持相同的形式（数组对应数组，对象对应对象），则左边的变量就会被赋予对应的值。如果对应的右边值缺失，缺失部分变量值为 &lt;code&gt;undefined&lt;/code&gt; ,如果右边值多余，依旧能够正常解构。&lt;/p&gt;
 
@@ -1227,7 +1316,7 @@ console.log(missing);  // undefined
 
 &lt;p&gt;这里的数组，指的是部署了 &lt;code&gt;[Iterator](http://www.2ality.com/2015/02/es6-iteration.html)&lt;/code&gt; 接口的数据结构。&lt;/p&gt;
 
-&lt;h3 id=&#34;对象的解构赋值:4428bcf4a593931f8cb7d23fa484a629&#34;&gt;对象的解构赋值&lt;/h3&gt;
+&lt;h3 id=&#34;对象的解构赋值&#34;&gt;对象的解构赋值&lt;/h3&gt;
 
 &lt;p&gt;和数组的用法相类似，一个主要的不同点是，对象是无次序排列的，所以变量必须和属性名相同。&lt;/p&gt;
 
@@ -1242,7 +1331,7 @@ let {firstName: name, lastName} = person;
 // `name`变量将会被声明为 `person.firstName` 的值
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;函数参数的解构赋值:4428bcf4a593931f8cb7d23fa484a629&#34;&gt;函数参数的解构赋值&lt;/h3&gt;
+&lt;h3 id=&#34;函数参数的解构赋值&#34;&gt;函数参数的解构赋值&lt;/h3&gt;
 
 &lt;p&gt;函数的参数也可以解构赋值。&lt;/p&gt;
 
@@ -1252,11 +1341,11 @@ let {firstName: name, lastName} = person;
 add({1,2}); // 3
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;null-和-undefined:4428bcf4a593931f8cb7d23fa484a629&#34;&gt;null 和 undefined&lt;/h3&gt;
+&lt;h3 id=&#34;null-和-undefined&#34;&gt;null 和 undefined&lt;/h3&gt;
 
 &lt;p&gt;当尝试解构 &lt;code&gt;null&lt;/code&gt; 和 &lt;code&gt;undefined&lt;/code&gt; 的时候会报错。这是因为使用对象赋值模式时，被解构的值必需能够转换成一个对象（object）。大多数的类型都可以转换为一个对象，但null和undefined却并不能被转换。&lt;/p&gt;
 
-&lt;h3 id=&#34;其它:4428bcf4a593931f8cb7d23fa484a629&#34;&gt;其它&lt;/h3&gt;
+&lt;h3 id=&#34;其它&#34;&gt;其它&lt;/h3&gt;
 
 &lt;p&gt;解构赋值的好处有很多，比如&lt;/p&gt;
 
@@ -1275,7 +1364,7 @@ add({1,2}); // 3
 * 函数有多个返回值时，尽量使用对象解构而不用数组解构，避免出现顺序对应问题
 * 已声明过的变量不能用于解构&lt;/p&gt;
 
-&lt;h3 id=&#34;浏览器支持:4428bcf4a593931f8cb7d23fa484a629&#34;&gt;浏览器支持&lt;/h3&gt;
+&lt;h3 id=&#34;浏览器支持&#34;&gt;浏览器支持&lt;/h3&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://kangax.github.io/compat-table/es6/#destructuring&#34;&gt;http://kangax.github.io/compat-table/es6/#destructuring&lt;/a&gt;
 不完全统计：
@@ -1288,7 +1377,7 @@ add({1,2}); // 3
 
 &lt;p&gt;PS: 整理的时候发现以前还保留着这样一份文章，无新，基本参考下述文章内容。仅供学习。&lt;/p&gt;
 
-&lt;h3 id=&#34;参考文章:4428bcf4a593931f8cb7d23fa484a629&#34;&gt;参考文章&lt;/h3&gt;
+&lt;h3 id=&#34;参考文章&#34;&gt;参考文章&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://es6.ruanyifeng.com/#docs/destructuring&#34;&gt;变量的解构赋值 - 阮一峰&lt;/a&gt;&lt;/li&gt;
@@ -1306,17 +1395,17 @@ add({1,2}); // 3
       <guid>http://jyu213.github.io/blog/2014/11/30/%E8%B7%A8%E5%9F%9F%E9%82%A3%E4%BA%9B%E4%BA%8B/</guid>
       <description>
 
-&lt;h3 id=&#34;同源策略:567b036fb92765e1e5410dd7f84e477b&#34;&gt;同源策略&lt;/h3&gt;
+&lt;h3 id=&#34;同源策略&#34;&gt;同源策略&lt;/h3&gt;
 
 &lt;p&gt;javascript 语言在设计之初为了安全考虑，不允许调用其它页面的对象。 跨域是由 javascript 语言安全限制中的同源策略造成的。
 &lt;strong&gt;同源策略&lt;/strong&gt;指的是，一段脚本只能读取来自同一来源的窗口和文档的属性，(同一来源指的是&lt;strong&gt;域名&lt;/strong&gt;、&lt;strong&gt;协议&lt;/strong&gt;和&lt;strong&gt;端口号&lt;/strong&gt;的组合)
 简单来讲，即不允许同一域名下的不同端口号，不同协议（http,https），不用子域名（www.dxy.cn 和 app.dxy.cn）及域名和域名对应的 ip 也不允许。&lt;/p&gt;
 
-&lt;h3 id=&#34;解决跨域的原理:567b036fb92765e1e5410dd7f84e477b&#34;&gt;解决跨域的原理&lt;/h3&gt;
+&lt;h3 id=&#34;解决跨域的原理&#34;&gt;解决跨域的原理&lt;/h3&gt;
 
 &lt;p&gt;HTML 中，静态资源是没有跨域限制的。在 HTML DOM 中，script 标签是可以跨域访问服务器上的数据的。所以我们可以手动插入 script 标签等方法来伪造。 不过，有个限制是，服务器返回 内容不能单纯为一个 json 字符串，可定变量或函数实现，如: &lt;code&gt;var json = {&amp;quot;type&amp;quot;:&amp;quot;json&amp;quot;}&lt;/code&gt; 或 &lt;code&gt;json({&amp;quot;type&amp;quot;:&amp;quot;json&amp;quot;})&lt;/code&gt;。jsonp 即采用后者形式。&lt;/p&gt;
 
-&lt;h3 id=&#34;解决方案:567b036fb92765e1e5410dd7f84e477b&#34;&gt;解决方案&lt;/h3&gt;
+&lt;h3 id=&#34;解决方案&#34;&gt;解决方案&lt;/h3&gt;
 
 &lt;ol&gt;
 &lt;li&gt;手动插入&lt;code&gt;script&lt;/code&gt;标签的形式。&lt;/li&gt;
@@ -1366,19 +1455,19 @@ xhr.send();
 
 &lt;p&gt;本文所涉及的内容在网上已有很多介绍。可相互借鉴。笔者仅为整理知识体系所用。&lt;/p&gt;
 
-&lt;h3 id=&#34;ppi-pixel-per-inch:b8585493f60c6c7eca55ca69564e380c&#34;&gt;PPI（Pixel Per Inch）&lt;/h3&gt;
+&lt;h3 id=&#34;ppi-pixel-per-inch&#34;&gt;PPI（Pixel Per Inch）&lt;/h3&gt;
 
 &lt;p&gt;图像分辨率所使用的单位。在图像中每英寸所表达的像素数目。&lt;/p&gt;
 
-&lt;h3 id=&#34;dpi-dot-per-inch:b8585493f60c6c7eca55ca69564e380c&#34;&gt;DPI（Dot Per Inch）&lt;/h3&gt;
+&lt;h3 id=&#34;dpi-dot-per-inch&#34;&gt;DPI（Dot Per Inch）&lt;/h3&gt;
 
 &lt;p&gt;打印分辨率使用的单位。每英寸所表达的打印点数。&lt;/p&gt;
 
-&lt;h3 id=&#34;像素-pixel:b8585493f60c6c7eca55ca69564e380c&#34;&gt;像素（Pixel）&lt;/h3&gt;
+&lt;h3 id=&#34;像素-pixel&#34;&gt;像素（Pixel）&lt;/h3&gt;
 
 &lt;p&gt;一种用来计算数码影像的单位。&lt;/p&gt;
 
-&lt;h3 id=&#34;分辨率:b8585493f60c6c7eca55ca69564e380c&#34;&gt;分辨率&lt;/h3&gt;
+&lt;h3 id=&#34;分辨率&#34;&gt;分辨率&lt;/h3&gt;
 
 &lt;p&gt;单位长度中，所表达或撷取的像素数目。&lt;/p&gt;
 
@@ -1389,7 +1478,7 @@ xhr.send();
 &lt;li&gt;PPI表示的是　像素/英寸（每英寸长度上有多少个像素）&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;参考资料:b8585493f60c6c7eca55ca69564e380c&#34;&gt;参考资料&lt;/h3&gt;
+&lt;h3 id=&#34;参考资料&#34;&gt;参考资料&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://sebastien-gabriel.com/designers-guide-to-dpi/home&#34;&gt;Designer&amp;rsquo;s guide to DPI&lt;/a&gt;&lt;/li&gt;
@@ -1411,11 +1500,11 @@ xhr.send();
 1. 有更好的方法的话，欢迎补充。
 2. 下文未对性能问题做真实的测试，请保持一颗好奇的心，并告诉我们）&lt;/p&gt;
 
-&lt;h3 id=&#34;css-sprite:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;CSS Sprite&lt;/h3&gt;
+&lt;h3 id=&#34;css-sprite&#34;&gt;CSS Sprite&lt;/h3&gt;
 
 &lt;p&gt;这是目前使用比较多的方式。也是我个人认为相对最优的一种解决方式。当然，这里的最优指的是特定环境。比如移动客户端，就不一定要这么干。CSS Sprite 是将页面中所使用到的小图片整合到一张大图上去。大家都知道，客户端向服务器发送请求是很有代价的，特别是在移动端，所以，sprite 的提出是为了减少 http 请求数，从而加快页面加载速度。&lt;/p&gt;
 
-&lt;h4 id=&#34;使用方式:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;使用方式&lt;/h4&gt;
+&lt;h4 id=&#34;使用方式&#34;&gt;使用方式&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;先将小图片整合到一张大图上&lt;/li&gt;
@@ -1423,7 +1512,7 @@ xhr.send();
 &lt;li&gt;然后依据图标的位置使用 background-position 进行定位&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;使用技巧:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;使用技巧&lt;/h4&gt;
+&lt;h4 id=&#34;使用技巧&#34;&gt;使用技巧&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;切图的时候就构思拼接好图片（不然后期抓心挠肺的，当然，善用工具的出门右转）&lt;/li&gt;
@@ -1432,31 +1521,31 @@ xhr.send();
 &lt;li&gt;合理预留空白位置（空太多文件变大，太小引起图标重叠）&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;优点:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;优点&lt;/h4&gt;
+&lt;h4 id=&#34;优点&#34;&gt;优点&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;减少 http 请求。（这个是最大的优点）&lt;/li&gt;
 &lt;li&gt;对你存在的图片一目了然（不知道这个算不算，如改进版3.0拿到的图哪些图标是之前已存在不需要重新切了的）&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;缺点:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;缺点&lt;/h4&gt;
+&lt;h4 id=&#34;缺点&#34;&gt;缺点&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;图片合并定位费时费力（谁用谁知道啊）&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;其它:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;其它&lt;/h4&gt;
+&lt;h4 id=&#34;其它&#34;&gt;其它&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;github 上有个 &lt;a href=&#34;https://github.com/Ensighten/grunt-spritesmith&#34;&gt;grunt 合并 sprite&lt;/a&gt; 的组件，可以看看&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;image-data-uri:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;image data URI&lt;/h3&gt;
+&lt;h3 id=&#34;image-data-uri&#34;&gt;image data URI&lt;/h3&gt;
 
 &lt;p&gt;即将图片资源转换为 base64 字符串格式嵌到页面或样式中。这样连图片的请求链接都省了。
 如：&lt;/p&gt;
 
-&lt;h4 id=&#34;使用方式-1:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;使用方式&lt;/h4&gt;
+&lt;h4 id=&#34;使用方式-1&#34;&gt;使用方式&lt;/h4&gt;
 
 &lt;pre&gt;&lt;code&gt;    /** 数据格式 **/
     data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAE1JREFUKJHV0MEOwCAIA9DW7MP983pymUaweluv8IAABJFUJdWonqEeD0/IwwHK8QatsYlGfIhezM9WOc8jSQAoTvMqTzY1u+Z6449gA9r24D4iZ6wwAAAAAElFTkSuQmCC
@@ -1468,7 +1557,7 @@ xhr.send();
     }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h4 id=&#34;标签语法:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;标签语法：&lt;/h4&gt;
+&lt;h4 id=&#34;标签语法&#34;&gt;标签语法：&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;data : 取得数据协议&lt;/li&gt;
@@ -1479,7 +1568,7 @@ xhr.send();
 
 &lt;p&gt;&lt;a href=&#34;http://baike.baidu.com/view/469071.htm&#34;&gt;Base64编码&lt;/a&gt; 自行百度科普吧。&lt;/p&gt;
 
-&lt;h4 id=&#34;优点-1:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;优点&lt;/h4&gt;
+&lt;h4 id=&#34;优点-1&#34;&gt;优点&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;减少 HTTP 请求&lt;/li&gt;
@@ -1487,7 +1576,7 @@ xhr.send();
 &lt;li&gt;无图片缓存等问题(但是一般 css 也是有缓存的好不好)&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;缺点-1:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;缺点&lt;/h4&gt;
+&lt;h4 id=&#34;缺点-1&#34;&gt;缺点&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;兼容性 （ IE6,7 不兼容, 可以使用 MHTML 来解决 ）&lt;/li&gt;
@@ -1501,32 +1590,32 @@ xhr.send();
 * 图片尺寸很小，使用一条 http 请求有点浪费，如渐变背景框
 * 图片在全站大规模使用，且很少被更新的，如 loading 图&lt;/p&gt;
 
-&lt;h4 id=&#34;在线转换工具:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;在线转换工具&lt;/h4&gt;
+&lt;h4 id=&#34;在线转换工具&#34;&gt;在线转换工具&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://www.pjhome.net/web/html5/encodeDataUrl.htm&#34;&gt;Encode Data URL&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://websemantics.co.uk/online_tools/image_to_data_uri_convertor/&#34;&gt;image to data URI&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h5 id=&#34;更新:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;更新&lt;/h5&gt;
+&lt;h5 id=&#34;更新&#34;&gt;更新&lt;/h5&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/medium/sus&#34;&gt;github 资源 sus 可转换 data URI&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;参考资料:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;参考资料&lt;/h4&gt;
+&lt;h4 id=&#34;参考资料&#34;&gt;参考资料&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://developer.mozilla.org/zh-CN/docs/data_URIs&#34;&gt;MDN - data URIs&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;icon-fonts:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;icon fonts&lt;/h3&gt;
+&lt;h3 id=&#34;icon-fonts&#34;&gt;icon fonts&lt;/h3&gt;
 
 &lt;p&gt;由于移动端设备拥有不同分辨率，PPI 等引起的问题， 常常需要针对不同屏幕分辨率来调整优化，如使用 &lt;code&gt;@2x&lt;/code&gt; 图片， &lt;code&gt;max-width&lt;/code&gt; 限制等。
 采用 css @font-face 用来显示 icon 也不失为一种好办法。
 因为 icon fonts (字体)是矢量图形，所以不受分辨率的影响，同时可以做到完美缩放；当然，也可使用在 WEB 端。&lt;/p&gt;
 
-&lt;h4 id=&#34;优点-2:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;优点&lt;/h4&gt;
+&lt;h4 id=&#34;优点-2&#34;&gt;优点&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;文件小&lt;/li&gt;
@@ -1535,7 +1624,7 @@ xhr.send();
 &lt;li&gt;IE6/7 下也支持&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;缺点-2:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;缺点&lt;/h4&gt;
+&lt;h4 id=&#34;缺点-2&#34;&gt;缺点&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;样式限制，使用扁平化风格&lt;/li&gt;
@@ -1545,7 +1634,7 @@ xhr.send();
 &lt;li&gt;&lt;a href=&#34;http://www.cnblogs.com/demix/archive/2009/11/28/1612715.html&#34;&gt;性能问题&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;使用方法:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;使用方法&lt;/h4&gt;
+&lt;h4 id=&#34;使用方法&#34;&gt;使用方法&lt;/h4&gt;
 
 &lt;ol&gt;
 &lt;li&gt;制作字体文件
@@ -1593,7 +1682,7 @@ xhr.send();
     }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h4 id=&#34;资源推荐:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;资源推荐&lt;/h4&gt;
+&lt;h4 id=&#34;资源推荐&#34;&gt;资源推荐&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://www.iconfont.cn/&#34;&gt;阿里巴巴矢量图标库&lt;/a&gt;&lt;/li&gt;
@@ -1601,13 +1690,13 @@ xhr.send();
 &lt;li&gt;&lt;a href=&#34;http://fortawesome.github.io/Font-Awesome/&#34;&gt;font awesome&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;参考资料-1:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;参考资料&lt;/h4&gt;
+&lt;h4 id=&#34;参考资料-1&#34;&gt;参考资料&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://www.infoq.com/cn/articles/icons-fonts-as-your-responsive-strategy&#34;&gt;icon fonts 的探析及应用&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;其它一些想法:3d62bd3930627ecd781a60ae9258c8eb&#34;&gt;其它一些想法&lt;/h3&gt;
+&lt;h3 id=&#34;其它一些想法&#34;&gt;其它一些想法&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;SVG绘图&lt;/li&gt;
@@ -1615,15 +1704,6 @@ xhr.send();
 &lt;li&gt;localStorage 存储&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-    </item>
-    
-    <item>
-      <title>移动端Web系列1 --- 初始化</title>
-      <link>http://jyu213.github.io/blog/2014/07/20/%E7%A7%BB%E5%8A%A8%E7%AB%AFweb%E7%B3%BB%E5%88%971-----%E5%88%9D%E5%A7%8B%E5%8C%96/</link>
-      <pubDate>Sun, 20 Jul 2014 00:00:00 +0000</pubDate>
-      
-      <guid>http://jyu213.github.io/blog/2014/07/20/%E7%A7%BB%E5%8A%A8%E7%AB%AFweb%E7%B3%BB%E5%88%971-----%E5%88%9D%E5%A7%8B%E5%8C%96/</guid>
-      <description></description>
     </item>
     
     <item>
@@ -1636,13 +1716,13 @@ xhr.send();
 
 &lt;p&gt;html5 Notifications API 出来也有一段时间了，中间规范要点也变动过好几次，也有几个不同版本。目前仍然是 W3C 的工作草案。刚好最近有项目上应用到，故简单整理一下相关内容作为备忘。注： 本文下面讲解的方法为现阶段草案内容，并不排除后期会做变更。&lt;/p&gt;
 
-&lt;h3 id=&#34;定义:5d8658ff9f33a18b9bdbcfb20e1efa8f&#34;&gt;定义&lt;/h3&gt;
+&lt;h3 id=&#34;定义&#34;&gt;定义&lt;/h3&gt;
 
 &lt;p&gt;&lt;code&gt;Web notifications defines an API for end-user notifications. A notification allows alerting the user outside the context of a web page of an occurrence, such as the delivery of email.&lt;/code&gt; 引自&lt;a href=&#34;http://www.w3.org/TR/notifications/&#34;&gt;W3C notifications&lt;/a&gt;。&lt;/p&gt;
 
 &lt;p&gt;简单来说，就是web 端的消息提醒功能。最有印象的应该的 web版 gamil 的邮件提醒了吧。当然这个在桌面软件下早已经不陌生了的吧。不过目前好像还是不支持自定义样子之类的，所以在 UI 上各浏览器呈现具有一定的差异。&lt;/p&gt;
 
-&lt;h3 id=&#34;方法:5d8658ff9f33a18b9bdbcfb20e1efa8f&#34;&gt;方法&lt;/h3&gt;
+&lt;h3 id=&#34;方法&#34;&gt;方法&lt;/h3&gt;
 
 &lt;p&gt;&lt;code&gt;window&lt;/code&gt;对象提供了一个&lt;code&gt;Notification&lt;/code&gt; 属性。允许我们提供创建一个通知的实例。并且接收两个参数： 包含通知标题（字符串,&lt;strong&gt;必需&lt;/strong&gt;）， 配置对象的参数。&lt;/p&gt;
 
@@ -1677,7 +1757,7 @@ xhr.send();
 * &lt;code&gt;onerror&lt;/code&gt;: 当通知出现错误时调用
 * &lt;code&gt;onshow&lt;/code&gt;: 当通知出现时调用&lt;/p&gt;
 
-&lt;h3 id=&#34;兼容性:5d8658ff9f33a18b9bdbcfb20e1efa8f&#34;&gt;兼容性&lt;/h3&gt;
+&lt;h3 id=&#34;兼容性&#34;&gt;兼容性&lt;/h3&gt;
 
 &lt;p&gt;目前只有少数浏览器支持该 API。且同一浏览器不同版本下支持的事件方法可能会有差异（规范改动引起）
 &lt;a href=&#34;http://caniuse.com/#feat=notifications&#34;&gt;点击查看&lt;/a&gt;浏览器支持情况&lt;/p&gt;
@@ -1685,7 +1765,7 @@ xhr.send();
 &lt;p&gt;桌面浏览器: Chrome 22 and Firefox 22 and Safari 6+
 移动浏览器: Firefox and Blackberry&lt;/p&gt;
 
-&lt;h3 id=&#34;实践:5d8658ff9f33a18b9bdbcfb20e1efa8f&#34;&gt;实践&lt;/h3&gt;
+&lt;h3 id=&#34;实践&#34;&gt;实践&lt;/h3&gt;
 
 &lt;p&gt;前面啰啰嗦嗦的讲完了 API 中的大概内容后，来看看实际操作中我们该如何。
 注：示例代码中并未针对浏览器做各方面兼容。可参看&lt;a href=&#34;http://yangzhuoyu.com/an-introduce-to-html5-notification/&#34;&gt;风车&lt;/a&gt;中做了更多向下兼容。&lt;/p&gt;
@@ -1714,11 +1794,11 @@ if(NotifySupport){
 &lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h3 id=&#34;其它:5d8658ff9f33a18b9bdbcfb20e1efa8f&#34;&gt;其它&lt;/h3&gt;
+&lt;h3 id=&#34;其它&#34;&gt;其它&lt;/h3&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://github.com/jyu213/Notify&#34;&gt;view on github&lt;/a&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;参考文章:5d8658ff9f33a18b9bdbcfb20e1efa8f&#34;&gt;参考文章&lt;/h3&gt;
+&lt;h3 id=&#34;参考文章&#34;&gt;参考文章&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://www.w3.org/TR/notifications/&#34;&gt;W3C Notifications&lt;/a&gt;&lt;/li&gt;
