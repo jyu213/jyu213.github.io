@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.30.2" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://jyu213.github.io//index.xml">
+
+    
+    <title>Rollup 和 Webpack 之 Tree Shaking - 前端叨叨客</title>
+    <meta property='og:title' content="Rollup 和 Webpack 之 Tree Shaking - 前端叨叨客">
+    <meta property="og:type" content="article">
+    
+
+    <meta property="og:url" content="http://jyu213.github.io/blog/1/01/01/rollup-%E5%92%8C-webpack-%E4%B9%8B-tree-shaking/">
+    
+    
+
+  </head>
+
+  <body>
+
+    <header class="site">
+      <nav class="navbar navbar-inverse">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            
+            <a class="navbar-brand" href="http://jyu213.github.io/">前端叨叨客</a>
+          </div>
+
+          <div id="navbar" class="collapse navbar-collapse">
+            
+            <ul class="nav navbar-nav navbar-right">
+              
+              
+              <li><a href="/categories/css">CSS</a></li>
+              
+              
+              
+              <li><a href="/categories/js">JS</a></li>
+              
+              
+              
+              <li><a href="/categories/translate">翻译</a></li>
+              
+              
+              
+              <li><a href="/">首页</a></li>
+              
+              
+            </ul>
+            
+          </div>
+
+        </div>
+      </nav>
+    </header>
+
+    <div class="site">
+      <div class="container">
+
+
+
+<div class="single">
+
+  <div class="row">
+    <div class="col-md-12">
+
+      <article class="single" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+        <meta itemprop="mainEntityOfPage"  itemType="https://schema.org/WebPage" content="http://jyu213.github.io/"/>
+        <meta itemprop="dateModified" content="0001-01-01T00:00:00&#43;00:00">
+        <meta itemprop="headline" content="Rollup 和 Webpack 之 Tree Shaking">
+        <meta itemprop="description" content="这个话题最早源于和同事之前的一次讨论。Webpack 也支持 Tree Shaking 了，同样 Rollup 也是，那么它们之间实现是一致的么？写了一半，中间拖了几个月，然后社区">
+        <meta itemprop="url" content="http://jyu213.github.io/blog/1/01/01/rollup-%E5%92%8C-webpack-%E4%B9%8B-tree-shaking/">
+        <div itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
+          <meta itemprop="url" content="http://jyu213.github.io/images/default.jpg" />
+          <meta itemprop="width" content="800">
+          <meta itemprop="height" content="800">
+        </div>
+        <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
+          <div itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
+            <meta itemprop="url" content="http://jyu213.github.io/images/logo.jpg">
+            <meta itemprop="width" content="100">
+            <meta itemprop="height" content="100">
+          </div>
+          <meta itemprop="name" content="前端叨叨客">
+        </div>
+        <div itemprop="author" itemscope itemtype="https://schema.org/Person">
+          <meta itemprop="name" content="见见">
+        </div>
+
+        <header class="article-header">
+          <h1 class="article-title">Rollup 和 Webpack 之 Tree Shaking</h1>
+
+          <time>
+            
+              见见
+            
+          </time>
+          <time itemprop="datePublished" pubdate="pubdate" datetime="0001-01-01T00:00:00&#43;00:00">
+            0001-01-01
+          </time>
+
+          
+            <a href="http://jyu213.github.io/tags/webpack" class="tag">webpack</a> 
+          
+        </header>
+
+        <div class="article-body" itemprop="articleBody">
+          
+
+<p>这个话题最早源于和同事之前的一次讨论。Webpack 也支持 Tree Shaking 了，同样 Rollup 也是，那么它们之间实现是一致的么？写了一半，中间拖了几个月，然后社区中又有两篇比较不错的文章，然后又拖了好久，才慢慢补齐了文章。拖延症伤不起啊😂。</p>
+
+<h3 id="概念">概念</h3>
+
+<p>在此之前先简单的谈谈 Tree Shaking 的概念。最早应该是从 Rollup 来的吧，不过其实简单理解的话，可以当成是 <code>dead code elimination</code> 的另一种说辞，就是把无用代码剔除掉。它们本质的区别在于，Tree Shaking 是导入有用的代码，而 <code>dead code elimination</code> 是排除无用代码。更学术的解释可以看 Rich_Harris 的<a href="https://medium.com/@Rich_Harris/tree-shaking-versus-dead-code-elimination-d3765df85c80#.p4izirx8z">官方说明</a>。</p>
+
+<h3 id="rollup">Rollup</h3>
+
+<p>Rollup 作用于顶级 AST 节点上，依赖于 ES6 模块的静态解析。ES6 模块有个特性很好，就是完全的静态结构，这样导入和导出的声明都放在了模块最顶层，而且都是非动态的。正因这个设计的强大，才使用 Rollup 的 Tree Shaking 得以实现。</p>
+
+<p>我们先从简单的例子开始看。</p>
+
+<pre><code class="language-javascript">// action.js
+export const walk = () =&gt; console.log('jianjian is walking')
+export const run = () =&gt; console.log('jianjian is running')
+
+// index.js
+import {walk} from './action.js'
+walk()
+</code></pre>
+
+<p><code>action.js</code> 中定义了两个行为函数并导出，在 <code>index.js</code> 中使用 <code>walk</code> 函数。Rollup 编译后的结果如下：</p>
+
+<pre><code class="language-javascript">'use strict';
+const walk = () =&gt; console.log('jianjian is walking');
+walk();
+</code></pre>
+
+<p>很明显，未使用到的 <code>run</code> 函数则在编译的时候被移除掉了。</p>
+
+<blockquote>
+<p>如果是 CommonJS 写法的话，还需要通过 <code>rollup-plugin-commonjs</code> 插件来转换一下。</p>
+</blockquote>
+
+<p>再来看一看对类的处理。</p>
+
+<pre><code class="language-javascript">// action.js 
+class action1 {
+  talk() {
+    console.log('jianjian is talking')
+  }
+  walk() {
+    console.log('jianjian is walking')
+  }
+}
+
+class action2 {
+  walk() {
+    console.log('jianjian is walking')
+  }
+}
+export {
+    action1,
+    action2
+}
+
+// index.js 
+import {action1, action2} from './class.js'
+
+let act = new action1()
+act.talk()
+</code></pre>
+
+<p>输出的结果如下：</p>
+
+<pre><code class="language-javascript">'use strict';
+
+class action1 {
+  talk() {
+    console.log('jianjian is talking');
+  }
+  walk() {
+    console.log('jianjian is walking');
+  }
+}
+
+let act = new action1();
+act.talk();
+
+</code></pre>
+
+<p>类 <code>action1</code> 中定义了两个函数，<code>walk</code> 未使用到， 但是实际结果还是会输出的，而 <code>action2</code> 未使用到则不输出。如果打包的时候加了 babel 将 class 语法转换为 ES5 的实现的话就无能为力了，毕竟对动态语法的分析有可能导致更大的问题，有兴趣的同学可以参看<a href="https://github.com/rollup/rollup/issues/349">话题讨论</a>。这也导致 Tree shaking 在实际的使用场景中显得有些尴尬，毕竟目前能优化的空间上有限。</p>
+
+<p>Rollup 的主要构建流程做了如下几步：</p>
+
+<ol>
+<li>查找。找到对应 <code>entry</code> 模块的所有依赖项并导入(可以是 <code>plugin</code> 处理后的内容，上面讲到的 <code>commonjs</code> 的处理就是如此)，返回模块包含 <code>code</code>, <code>ast</code>, <code>map</code> 等的 JSON 信息。同时存储相关的依赖 <code>imports</code>, <code>externals</code> 等等。</li>
+<li>绑定。将索引与之相关联，来生成完整的依赖代码。</li>
+<li>标记。引用所有需要被包含的申明( Tree Shaking 就是在这一步进行处理)</li>
+<li>排序。使用增强的拓扑排序对模块进行排序，解决诸如全局命名冲突等问题。</li>
+</ol>
+
+<p>而  Tree Shaking 实际针对 AST 进行删减处理，主要有以下内容，具体可以查找对应 AST 语法。如果错误，欢迎指正。</p>
+
+<ul>
+<li><p>classDeclaration</p></li>
+
+<li><p>conditional express</p></li>
+
+<li><p>ExportDefaultDeclaration</p></li>
+
+<li><p>FunctionDeclaration</p></li>
+
+<li><p>isStatement</p></li>
+
+<li><p>SequenceExpression</p></li>
+
+<li><p>Statement</p></li>
+
+<li><p>VariableDeclaration</p></li>
+
+<li><p>VariableDeclarator</p></li>
+</ul>
+
+<p>​</p>
+
+<p>不对上面语法树替换做进一步说明了，主要展开来篇幅有点长。</p>
+
+<h3 id="webpack">Webpack</h3>
+
+<p>再来看看 Webpack 的相关处理。同样的先从函数入手。取了核心的编译后的文件，如下：</p>
+
+<pre><code class="language-javascript">/***/ }),
+/* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+&quot;use strict&quot;;
+Object.defineProperty(__webpack_exports__, &quot;__esModule&quot;, { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__action_js__ = __webpack_require__(2);
+
+Object(__WEBPACK_IMPORTED_MODULE_0__action_js__[&quot;a&quot; /* walk */])()
+
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+&quot;use strict&quot;;
+const walk = () =&gt; console.log('walk')
+/* harmony export (immutable) */ __webpack_exports__[&quot;a&quot;] = walk;
+
+const run = () =&gt; console.log('run')
+/* unused harmony export run */
+</code></pre>
+
+<p><code>walk</code> 和 <code>run</code> 函数还在，区别在于 <code>run</code> 函数处有 <code>unused harmony export run</code> 的注释，从而在 <code>UglifyjsWebpackPlugin</code> (底层用的是 uglify-js) 的时候做删除处理。</p>
+
+<p>类的结果处理类似，这里不具体展开了。</p>
+
+<p>抛除 Webpack 整个复杂的构建过程，在  Tree Shaking  中主要处理的两步，</p>
+
+<ul>
+<li>抓取所有模块合并到一个包文件中，任何未导入的文件都不会被导出</li>
+<li>在执行压缩的过程中，移除 dead code</li>
+</ul>
+
+<blockquote>
+<p>我个人觉得 Webpack 的这个处理方式还是 DCE 而不该定义做  Tree Shaking。不过也就名字而已。</p>
+</blockquote>
+
+<h2 id="todo">TODO</h2>
+
+<p>待续😂…</p>
+
+        </div>
+
+
+        <aside>
+          
+
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+
+
+<div id="comments" class="comments" data-thread-key="http://jyu213.github.io/blog/1/01/01/rollup-%E5%92%8C-webpack-%E4%B9%8B-tree-shaking/" data-title="Rollup 和 Webpack 之 Tree Shaking" data-url="http://jyu213.github.io/blog/1/01/01/rollup-%E5%92%8C-webpack-%E4%B9%8B-tree-shaking/"></div>
+<script type="text/javascript">
+    const gitment = new Gitment({
+      id: 'http:\/\/jyu213.github.io\/blog\/1\/01\/01\/rollup-%E5%92%8C-webpack-%E4%B9%8B-tree-shaking\/',
+      title: 'Rollup 和 Webpack 之 Tree Shaking',
+      owner: 'jyu213',
+      repo: 'blog_comments',
+      oauth: {
+        client_id: '3bee402f3d2d77bfe52a',
+        client_secret: 'a03e8940e2210e7990ad0ad89f6eb1259b1facb6',
+      },
+    })
+
+    gitment.render('comments')
+</script>
+
+
+        </aside>
+
+      </article>
+
+    </div>
+  </div>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site">
+      <div class="container text-center">
+        <p>&copy; 2017 前端叨叨客</p>
+      </div>
+    </footer>
+
+    <script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-41493088-2', 'auto');
+      ga('send', 'pageview');
+    </script>
+    
+
+  </body>
+</html>
+
