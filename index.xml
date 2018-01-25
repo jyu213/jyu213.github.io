@@ -5,8 +5,183 @@
     <link>http://jyu213.github.io/</link>
     <description>Recent content in 前端叨叨客 on 前端叨叨客</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 28 Sep 2017 00:47:14 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 18 Oct 2017 00:00:00 +0000</lastBuildDate>
     <atom:link href="/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Rollup 和 Webpack 之 Tree Shaking</title>
+      <link>http://jyu213.github.io/blog/2017/10/18/rollup-%E5%92%8C-webpack-%E4%B9%8B-tree-shaking/</link>
+      <pubDate>Wed, 18 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://jyu213.github.io/blog/2017/10/18/rollup-%E5%92%8C-webpack-%E4%B9%8B-tree-shaking/</guid>
+      <description>
+
+&lt;p&gt;这个话题最早源于和同事之前的一次讨论。Webpack 也支持 Tree Shaking 了，同样 Rollup 也是，那么它们之间实现是一致的么？写了一半，中间拖了几个月，然后社区中又有两篇比较不错的文章，然后又拖了好久，才慢慢补齐了文章。拖延症伤不起啊😂。&lt;/p&gt;
+
+&lt;h3 id=&#34;概念&#34;&gt;概念&lt;/h3&gt;
+
+&lt;p&gt;在此之前先简单的谈谈 Tree Shaking 的概念。最早应该是从 Rollup 来的吧，不过其实简单理解的话，可以当成是 &lt;code&gt;dead code elimination&lt;/code&gt; 的另一种说辞，就是把无用代码剔除掉。它们本质的区别在于，Tree Shaking 是导入有用的代码，而 &lt;code&gt;dead code elimination&lt;/code&gt; 是排除无用代码。更学术的解释可以看 Rich_Harris 的&lt;a href=&#34;https://medium.com/@Rich_Harris/tree-shaking-versus-dead-code-elimination-d3765df85c80#.p4izirx8z&#34;&gt;官方说明&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h3 id=&#34;rollup&#34;&gt;Rollup&lt;/h3&gt;
+
+&lt;p&gt;Rollup 作用于顶级 AST 节点上，依赖于 ES6 模块的静态解析。ES6 模块有个特性很好，就是完全的静态结构，这样导入和导出的声明都放在了模块最顶层，而且都是非动态的。正因这个设计的强大，才使用 Rollup 的 Tree Shaking 得以实现。&lt;/p&gt;
+
+&lt;p&gt;我们先从简单的例子开始看。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;// action.js
+export const walk = () =&amp;gt; console.log(&#39;jianjian is walking&#39;)
+export const run = () =&amp;gt; console.log(&#39;jianjian is running&#39;)
+
+// index.js
+import {walk} from &#39;./action.js&#39;
+walk()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;action.js&lt;/code&gt; 中定义了两个行为函数并导出，在 &lt;code&gt;index.js&lt;/code&gt; 中使用 &lt;code&gt;walk&lt;/code&gt; 函数。Rollup 编译后的结果如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;&#39;use strict&#39;;
+const walk = () =&amp;gt; console.log(&#39;jianjian is walking&#39;);
+walk();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;很明显，未使用到的 &lt;code&gt;run&lt;/code&gt; 函数则在编译的时候被移除掉了。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;如果是 CommonJS 写法的话，还需要通过 &lt;code&gt;rollup-plugin-commonjs&lt;/code&gt; 插件来转换一下。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;再来看一看对类的处理。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;// action.js
+class action1 {
+  talk() {
+    console.log(&#39;jianjian is talking&#39;)
+  }
+  walk() {
+    console.log(&#39;jianjian is walking&#39;)
+  }
+}
+
+class action2 {
+  walk() {
+    console.log(&#39;jianjian is walking&#39;)
+  }
+}
+export {
+    action1,
+    action2
+}
+
+// index.js
+import {action1, action2} from &#39;./class.js&#39;
+
+let act = new action1()
+act.talk()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;输出的结果如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;&#39;use strict&#39;;
+
+class action1 {
+  talk() {
+    console.log(&#39;jianjian is talking&#39;);
+  }
+  walk() {
+    console.log(&#39;jianjian is walking&#39;);
+  }
+}
+
+let act = new action1();
+act.talk();
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;类 &lt;code&gt;action1&lt;/code&gt; 中定义了两个函数，&lt;code&gt;walk&lt;/code&gt; 未使用到， 但是实际结果还是会输出的，而 &lt;code&gt;action2&lt;/code&gt; 未使用到则不输出。如果打包的时候加了 babel 将 class 语法转换为 ES5 的实现的话就无能为力了，毕竟对动态语法的分析有可能导致更大的问题，有兴趣的同学可以参看&lt;a href=&#34;https://github.com/rollup/rollup/issues/349&#34;&gt;话题讨论&lt;/a&gt;。这也导致 Tree shaking 在实际的使用场景中显得有些尴尬，毕竟目前能优化的空间上有限。&lt;/p&gt;
+
+&lt;p&gt;Rollup 的主要构建流程做了如下几步：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;查找。找到对应 &lt;code&gt;entry&lt;/code&gt; 模块的所有依赖项并导入(可以是 &lt;code&gt;plugin&lt;/code&gt; 处理后的内容，上面讲到的 &lt;code&gt;commonjs&lt;/code&gt; 的处理就是如此)，返回模块包含 &lt;code&gt;code&lt;/code&gt;, &lt;code&gt;ast&lt;/code&gt;, &lt;code&gt;map&lt;/code&gt; 等的 JSON 信息。同时存储相关的依赖 &lt;code&gt;imports&lt;/code&gt;, &lt;code&gt;externals&lt;/code&gt; 等等。&lt;/li&gt;
+&lt;li&gt;绑定。将索引与之相关联，来生成完整的依赖代码。&lt;/li&gt;
+&lt;li&gt;标记。引用所有需要被包含的申明( Tree Shaking 就是在这一步进行处理)&lt;/li&gt;
+&lt;li&gt;排序。使用增强的拓扑排序对模块进行排序，解决诸如全局命名冲突等问题。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;而  Tree Shaking 实际针对 AST 进行删减处理，主要有以下内容，具体可以查找对应 AST 语法。如果错误，欢迎指正。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;classDeclaration&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;conditional express&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;ExportDefaultDeclaration&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;FunctionDeclaration&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;isStatement&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;SequenceExpression&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Statement&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;VariableDeclaration&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;VariableDeclarator&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;​&lt;/p&gt;
+
+&lt;p&gt;不对上面语法树替换做进一步说明了，主要展开来篇幅有点长。&lt;/p&gt;
+
+&lt;h3 id=&#34;webpack&#34;&gt;Webpack&lt;/h3&gt;
+
+&lt;p&gt;再来看看 Webpack 的相关处理。同样的先从函数入手。取了核心的编译后的文件，如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;/***/ }),
+/* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+&amp;quot;use strict&amp;quot;;
+Object.defineProperty(__webpack_exports__, &amp;quot;__esModule&amp;quot;, { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__action_js__ = __webpack_require__(2);
+
+Object(__WEBPACK_IMPORTED_MODULE_0__action_js__[&amp;quot;a&amp;quot; /* walk */])()
+
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+&amp;quot;use strict&amp;quot;;
+const walk = () =&amp;gt; console.log(&#39;walk&#39;)
+/* harmony export (immutable) */ __webpack_exports__[&amp;quot;a&amp;quot;] = walk;
+
+const run = () =&amp;gt; console.log(&#39;run&#39;)
+/* unused harmony export run */
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;walk&lt;/code&gt; 和 &lt;code&gt;run&lt;/code&gt; 函数还在，区别在于 &lt;code&gt;run&lt;/code&gt; 函数处有 &lt;code&gt;unused harmony export run&lt;/code&gt; 的注释，从而在 &lt;code&gt;UglifyjsWebpackPlugin&lt;/code&gt; (底层用的是 uglify-js) 的时候做删除处理。&lt;/p&gt;
+
+&lt;p&gt;类的结果处理类似，这里不具体展开了。&lt;/p&gt;
+
+&lt;p&gt;抛除 Webpack 整个复杂的构建过程，在  Tree Shaking  中主要处理的两步，&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;抓取所有模块合并到一个包文件中，任何未导入的文件都不会被导出&lt;/li&gt;
+&lt;li&gt;在执行压缩的过程中，移除 dead code&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;我个人觉得 Webpack 的这个处理方式还是 DCE 而不该定义做  Tree Shaking。不过也就名字而已。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;todo&#34;&gt;TODO&lt;/h2&gt;
+
+&lt;p&gt;待续😂…&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>ES6 proxy</title>
@@ -1703,181 +1878,6 @@ xhr.send();
 &lt;li&gt;HTML5 离线文件&lt;/li&gt;
 &lt;li&gt;localStorage 存储&lt;/li&gt;
 &lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Rollup 和 Webpack 之 Tree Shaking</title>
-      <link>http://jyu213.github.io/blog/1/01/01/rollup-%E5%92%8C-webpack-%E4%B9%8B-tree-shaking/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://jyu213.github.io/blog/1/01/01/rollup-%E5%92%8C-webpack-%E4%B9%8B-tree-shaking/</guid>
-      <description>
-
-&lt;p&gt;这个话题最早源于和同事之前的一次讨论。Webpack 也支持 Tree Shaking 了，同样 Rollup 也是，那么它们之间实现是一致的么？写了一半，中间拖了几个月，然后社区中又有两篇比较不错的文章，然后又拖了好久，才慢慢补齐了文章。拖延症伤不起啊😂。&lt;/p&gt;
-
-&lt;h3 id=&#34;概念&#34;&gt;概念&lt;/h3&gt;
-
-&lt;p&gt;在此之前先简单的谈谈 Tree Shaking 的概念。最早应该是从 Rollup 来的吧，不过其实简单理解的话，可以当成是 &lt;code&gt;dead code elimination&lt;/code&gt; 的另一种说辞，就是把无用代码剔除掉。它们本质的区别在于，Tree Shaking 是导入有用的代码，而 &lt;code&gt;dead code elimination&lt;/code&gt; 是排除无用代码。更学术的解释可以看 Rich_Harris 的&lt;a href=&#34;https://medium.com/@Rich_Harris/tree-shaking-versus-dead-code-elimination-d3765df85c80#.p4izirx8z&#34;&gt;官方说明&lt;/a&gt;。&lt;/p&gt;
-
-&lt;h3 id=&#34;rollup&#34;&gt;Rollup&lt;/h3&gt;
-
-&lt;p&gt;Rollup 作用于顶级 AST 节点上，依赖于 ES6 模块的静态解析。ES6 模块有个特性很好，就是完全的静态结构，这样导入和导出的声明都放在了模块最顶层，而且都是非动态的。正因这个设计的强大，才使用 Rollup 的 Tree Shaking 得以实现。&lt;/p&gt;
-
-&lt;p&gt;我们先从简单的例子开始看。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;// action.js
-export const walk = () =&amp;gt; console.log(&#39;jianjian is walking&#39;)
-export const run = () =&amp;gt; console.log(&#39;jianjian is running&#39;)
-
-// index.js
-import {walk} from &#39;./action.js&#39;
-walk()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;action.js&lt;/code&gt; 中定义了两个行为函数并导出，在 &lt;code&gt;index.js&lt;/code&gt; 中使用 &lt;code&gt;walk&lt;/code&gt; 函数。Rollup 编译后的结果如下：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;&#39;use strict&#39;;
-const walk = () =&amp;gt; console.log(&#39;jianjian is walking&#39;);
-walk();
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;很明显，未使用到的 &lt;code&gt;run&lt;/code&gt; 函数则在编译的时候被移除掉了。&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;如果是 CommonJS 写法的话，还需要通过 &lt;code&gt;rollup-plugin-commonjs&lt;/code&gt; 插件来转换一下。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;再来看一看对类的处理。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;// action.js 
-class action1 {
-  talk() {
-    console.log(&#39;jianjian is talking&#39;)
-  }
-  walk() {
-    console.log(&#39;jianjian is walking&#39;)
-  }
-}
-
-class action2 {
-  walk() {
-    console.log(&#39;jianjian is walking&#39;)
-  }
-}
-export {
-    action1,
-    action2
-}
-
-// index.js 
-import {action1, action2} from &#39;./class.js&#39;
-
-let act = new action1()
-act.talk()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;输出的结果如下：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;&#39;use strict&#39;;
-
-class action1 {
-  talk() {
-    console.log(&#39;jianjian is talking&#39;);
-  }
-  walk() {
-    console.log(&#39;jianjian is walking&#39;);
-  }
-}
-
-let act = new action1();
-act.talk();
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;类 &lt;code&gt;action1&lt;/code&gt; 中定义了两个函数，&lt;code&gt;walk&lt;/code&gt; 未使用到， 但是实际结果还是会输出的，而 &lt;code&gt;action2&lt;/code&gt; 未使用到则不输出。如果打包的时候加了 babel 将 class 语法转换为 ES5 的实现的话就无能为力了，毕竟对动态语法的分析有可能导致更大的问题，有兴趣的同学可以参看&lt;a href=&#34;https://github.com/rollup/rollup/issues/349&#34;&gt;话题讨论&lt;/a&gt;。这也导致 Tree shaking 在实际的使用场景中显得有些尴尬，毕竟目前能优化的空间上有限。&lt;/p&gt;
-
-&lt;p&gt;Rollup 的主要构建流程做了如下几步：&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;查找。找到对应 &lt;code&gt;entry&lt;/code&gt; 模块的所有依赖项并导入(可以是 &lt;code&gt;plugin&lt;/code&gt; 处理后的内容，上面讲到的 &lt;code&gt;commonjs&lt;/code&gt; 的处理就是如此)，返回模块包含 &lt;code&gt;code&lt;/code&gt;, &lt;code&gt;ast&lt;/code&gt;, &lt;code&gt;map&lt;/code&gt; 等的 JSON 信息。同时存储相关的依赖 &lt;code&gt;imports&lt;/code&gt;, &lt;code&gt;externals&lt;/code&gt; 等等。&lt;/li&gt;
-&lt;li&gt;绑定。将索引与之相关联，来生成完整的依赖代码。&lt;/li&gt;
-&lt;li&gt;标记。引用所有需要被包含的申明( Tree Shaking 就是在这一步进行处理)&lt;/li&gt;
-&lt;li&gt;排序。使用增强的拓扑排序对模块进行排序，解决诸如全局命名冲突等问题。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;而  Tree Shaking 实际针对 AST 进行删减处理，主要有以下内容，具体可以查找对应 AST 语法。如果错误，欢迎指正。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;classDeclaration&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;conditional express&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;ExportDefaultDeclaration&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;FunctionDeclaration&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;isStatement&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;SequenceExpression&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Statement&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;VariableDeclaration&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;VariableDeclarator&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;​&lt;/p&gt;
-
-&lt;p&gt;不对上面语法树替换做进一步说明了，主要展开来篇幅有点长。&lt;/p&gt;
-
-&lt;h3 id=&#34;webpack&#34;&gt;Webpack&lt;/h3&gt;
-
-&lt;p&gt;再来看看 Webpack 的相关处理。同样的先从函数入手。取了核心的编译后的文件，如下：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;/***/ }),
-/* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-&amp;quot;use strict&amp;quot;;
-Object.defineProperty(__webpack_exports__, &amp;quot;__esModule&amp;quot;, { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__action_js__ = __webpack_require__(2);
-
-Object(__WEBPACK_IMPORTED_MODULE_0__action_js__[&amp;quot;a&amp;quot; /* walk */])()
-
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-&amp;quot;use strict&amp;quot;;
-const walk = () =&amp;gt; console.log(&#39;walk&#39;)
-/* harmony export (immutable) */ __webpack_exports__[&amp;quot;a&amp;quot;] = walk;
-
-const run = () =&amp;gt; console.log(&#39;run&#39;)
-/* unused harmony export run */
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;walk&lt;/code&gt; 和 &lt;code&gt;run&lt;/code&gt; 函数还在，区别在于 &lt;code&gt;run&lt;/code&gt; 函数处有 &lt;code&gt;unused harmony export run&lt;/code&gt; 的注释，从而在 &lt;code&gt;UglifyjsWebpackPlugin&lt;/code&gt; (底层用的是 uglify-js) 的时候做删除处理。&lt;/p&gt;
-
-&lt;p&gt;类的结果处理类似，这里不具体展开了。&lt;/p&gt;
-
-&lt;p&gt;抛除 Webpack 整个复杂的构建过程，在  Tree Shaking  中主要处理的两步，&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;抓取所有模块合并到一个包文件中，任何未导入的文件都不会被导出&lt;/li&gt;
-&lt;li&gt;在执行压缩的过程中，移除 dead code&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;我个人觉得 Webpack 的这个处理方式还是 DCE 而不该定义做  Tree Shaking。不过也就名字而已。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&#34;todo&#34;&gt;TODO&lt;/h2&gt;
-
-&lt;p&gt;待续😂…&lt;/p&gt;
 </description>
     </item>
     

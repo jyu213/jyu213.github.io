@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>http://jyu213.github.io/blog/2017/10/18/rollup-%E5%92%8C-webpack-%E4%B9%8B-tree-shaking/</loc>
+    <lastmod>2017-10-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>http://jyu213.github.io/blog/2017/09/28/es6-proxy/</loc>
     <lastmod>2017-09-28T00:47:14+08:00</lastmod>
   </url>
@@ -108,12 +113,8 @@
   
   <url>
     <loc>http://jyu213.github.io/post/</loc>
-    <lastmod>2017-09-28T00:47:14+08:00</lastmod>
+    <lastmod>2017-10-18T00:00:00+00:00</lastmod>
     <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://jyu213.github.io/blog/1/01/01/rollup-%E5%92%8C-webpack-%E4%B9%8B-tree-shaking/</loc>
   </url>
   
   <url>
@@ -136,6 +137,7 @@
   
   <url>
     <loc>http://jyu213.github.io/tags/webpack/</loc>
+    <lastmod>2017-10-18T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -145,7 +147,7 @@
   
   <url>
     <loc>http://jyu213.github.io/</loc>
-    <lastmod>2017-09-28T00:47:14+08:00</lastmod>
+    <lastmod>2017-10-18T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   

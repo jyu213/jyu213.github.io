@@ -5,14 +5,15 @@
     <link>http://jyu213.github.io/tags/webpack/</link>
     <description>Recent content in Webpack on 前端叨叨客</description>
     <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 18 Oct 2017 00:00:00 +0000</lastBuildDate>
     <atom:link href="/tags/webpack/" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Rollup 和 Webpack 之 Tree Shaking</title>
-      <link>http://jyu213.github.io/blog/1/01/01/rollup-%E5%92%8C-webpack-%E4%B9%8B-tree-shaking/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <link>http://jyu213.github.io/blog/2017/10/18/rollup-%E5%92%8C-webpack-%E4%B9%8B-tree-shaking/</link>
+      <pubDate>Wed, 18 Oct 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://jyu213.github.io/blog/1/01/01/rollup-%E5%92%8C-webpack-%E4%B9%8B-tree-shaking/</guid>
+      <guid>http://jyu213.github.io/blog/2017/10/18/rollup-%E5%92%8C-webpack-%E4%B9%8B-tree-shaking/</guid>
       <description>
 
 &lt;p&gt;这个话题最早源于和同事之前的一次讨论。Webpack 也支持 Tree Shaking 了，同样 Rollup 也是，那么它们之间实现是一致的么？写了一半，中间拖了几个月，然后社区中又有两篇比较不错的文章，然后又拖了好久，才慢慢补齐了文章。拖延症伤不起啊😂。&lt;/p&gt;
@@ -51,7 +52,7 @@ walk();
 
 &lt;p&gt;再来看一看对类的处理。&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;// action.js 
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;// action.js
 class action1 {
   talk() {
     console.log(&#39;jianjian is talking&#39;)
@@ -71,7 +72,7 @@ export {
     action2
 }
 
-// index.js 
+// index.js
 import {action1, action2} from &#39;./class.js&#39;
 
 let act = new action1()
