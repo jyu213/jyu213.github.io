@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.30.2" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://jyu213.github.io//index.xml">
+
+    
+    <title>swr 读码 - 前端叨叨客</title>
+    <meta property='og:title' content="swr 读码 - 前端叨叨客">
+    <meta property="og:type" content="article">
+    
+
+    <meta property="og:url" content="http://jyu213.github.io/blog/1/01/01/swr-%E8%AF%BB%E7%A0%81/">
+    <meta name="description" content="swr 源码解析">
+    
+
+  </head>
+
+  <body>
+
+    <header class="site">
+      <nav class="navbar navbar-inverse">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            
+            <a class="navbar-brand" href="http://jyu213.github.io/">前端叨叨客</a>
+          </div>
+
+          <div id="navbar" class="collapse navbar-collapse">
+            
+            <ul class="nav navbar-nav navbar-right">
+              
+              
+              <li><a href="/categories/css">CSS</a></li>
+              
+              
+              
+              <li><a href="/categories/js">JS</a></li>
+              
+              
+              
+              <li><a href="/categories/translate">翻译</a></li>
+              
+              
+              
+              <li><a href="/">首页</a></li>
+              
+              
+            </ul>
+            
+          </div>
+
+        </div>
+      </nav>
+    </header>
+
+    <div class="site">
+      <div class="container">
+
+
+
+<div class="single">
+
+  <div class="row">
+    <div class="col-md-12">
+
+      <article class="single" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+        <meta itemprop="mainEntityOfPage"  itemType="https://schema.org/WebPage" content="http://jyu213.github.io/"/>
+        <meta itemprop="dateModified" content="0001-01-01T00:00:00&#43;00:00">
+        <meta itemprop="headline" content="swr 读码">
+        <meta itemprop="description" content="在 React Hook 兴起之后，关于数据获取的库 swr 也跟着突然流行起来。 函数式组件的出现，但却一直困扰于数据状态的处理，直到 React Hook 的出现，使得状态更加的隔离。尽">
+        <meta itemprop="url" content="http://jyu213.github.io/blog/1/01/01/swr-%E8%AF%BB%E7%A0%81/">
+        <div itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
+          <meta itemprop="url" content="http://jyu213.github.io/images/default.jpg" />
+          <meta itemprop="width" content="800">
+          <meta itemprop="height" content="800">
+        </div>
+        <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
+          <div itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
+            <meta itemprop="url" content="http://jyu213.github.io/images/logo.jpg">
+            <meta itemprop="width" content="100">
+            <meta itemprop="height" content="100">
+          </div>
+          <meta itemprop="name" content="前端叨叨客">
+        </div>
+        <div itemprop="author" itemscope itemtype="https://schema.org/Person">
+          <meta itemprop="name" content="见见">
+        </div>
+
+        <header class="article-header">
+          <h1 class="article-title">swr 读码</h1>
+
+          <time>
+            
+              见见
+            
+          </time>
+          <time itemprop="datePublished" pubdate="pubdate" datetime="0001-01-01T00:00:00&#43;00:00">
+            0001-01-01
+          </time>
+
+          
+            <a href="http://jyu213.github.io/tags/%e6%ba%90%e7%a0%81" class="tag">源码</a> <a href="http://jyu213.github.io/tags/JS" class="tag">JS</a> 
+          
+        </header>
+
+        <div class="article-body" itemprop="articleBody">
+          
+
+<p>在 React Hook 兴起之后，关于数据获取的库 <code>swr</code> 也跟着突然流行起来。</p>
+
+<p>函数式组件的出现，但却一直困扰于数据状态的处理，直到 React Hook 的出现，使得状态更加的隔离。尽管使用 <code>useState</code> 来改变组件内部状态，不过在数据获取上，还是缺少了点数据驱动的意味。 <code>swr</code> 就是针对与此，使得我们可以在 Hook 中更优雅的获取数据，其核心思想就是通过 <code>use</code> 组件来返回 <code>data, isLoading, error</code> 等相关数据，这样组件可以更加的处理 UI 相关的展示。</p>
+
+<p>本文不是对 <code>swr</code> 源码的解读，只是在看代码之中的一些感悟。目前相关版本 <code>0.1.13</code>。</p>
+
+<h2 id="数据获取">数据获取</h2>
+
+<p>首先关于数据获取常见的一些手段，如接口数据缓存，错误重试，数据格式约定校验等等。</p>
+
+<p><code>swr</code> 源于 <code>stale-while-revalidate</code>，<a href="https://tools.ietf.org/html/rfc5861">HTTP RFC 5861</a> 的缓存失效策略。其核心思想是当缓存过期的时候，可以先直接使用缓存，等数据更新后再重新刷新数据。其实在 <code>Cache-Control</code> 中也有该属性。</p>
+
+<p>存储方便很常规，<code>new Map()</code> 的 Hash Key 来存储各数据。</p>
+
+<h3 id="全局配置">全局配置</h3>
+
+<p><code>swr</code> 函数还贴心的提供全局的配置，核心是使用 <code>Context Provider</code> 方法来设置，最终和 <code>useSWR</code> merge 得到。</p>
+
+<h3 id="数据请求">数据请求</h3>
+
+<p>在数据请求相关方面，swr 还是有蛮多的小细节设计。比如本地数据缓存（优化组件销毁重新创建时的渲染），超时重试，条件取数据等等，甚至还支持了 <code>GraphQL</code> 的方式。</p>
+
+<h3 id="依赖请求">依赖请求</h3>
+
+<p>使用 <code>try..catch + onErrorRetry</code> 来实现多个请求的顺序执行。在 service 未获取到数据的时候，进入 catch 并执行 onErrorRetry 来不断的重新执行。方案稍微有点暴力，不过正常场景下适用了。</p>
+
+<p>在 <code>onErrorRetry</code> 中，有累计重试的机制。</p>
+
+<pre><code class="language-javascript">	const timeout =
+    ~~((Math.random() + 0.5) * (1 &lt;&lt; count)) * config.errorRetryInterval
+  setTimeout(revalidate, timeout, opts)
+</code></pre>
+
+<h3 id="requestidlecallback">requestIdleCallback</h3>
+
+<p>设计的时候还贴心的考虑到了如果浏览器繁忙的时候的处理。</p>
+
+<pre><code class="language-javsscript">// 伪代码
+if (window['requestIdleCallback']) {
+	window['requestIdleCallback'](softRevalidate)
+} else {
+	softRevalidate()
+}
+</code></pre>
+
+<h3 id="ssr-的支持">SSR 的支持</h3>
+
+<p>SSR 的方案，先通过 <code>initialData</code> 传入服务的获取到的数据，然后再前端再次请求，通过 <code>useEffect</code> 和 <code>useLayoutEffect</code> 区分渲染客户端还是服务端。</p>
+
+<h3 id="细节一">细节一</h3>
+
+<p><code>data, error, isValidating</code> 如果分开 <code>setState</code> 的话，会多次触发，<code>swr</code> 中使用 <code>useReducer</code> 来合并数据已达到更新一次的目的。</p>
+
+<h3 id="细节二">细节二</h3>
+
+<p>使用 <code>useRef</code> 来存储 update 状态值，因为 <code>useRef</code> 返回的是一个可变对象，<a href="https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables">详见官方说明</a>，一般常用场景如存一个布尔值来表示是否首次渲染，或者手动存储上一轮的 state 属性等等。</p>
+
+        </div>
+
+
+        <aside>
+          
+
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+
+
+<div id="comments" class="comments" data-thread-key="http://jyu213.github.io/blog/1/01/01/swr-%E8%AF%BB%E7%A0%81/" data-title="swr 读码" data-url="http://jyu213.github.io/blog/1/01/01/swr-%E8%AF%BB%E7%A0%81/"></div>
+<script type="text/javascript">
+    const gitment = new Gitment({
+      id: 'http:\/\/jyu213.github.io\/blog\/1\/01\/01\/swr-%E8%AF%BB%E7%A0%81\/',
+      title: 'swr 读码',
+      owner: 'jyu213',
+      repo: 'blog_comments',
+      oauth: {
+        client_id: '3bee402f3d2d77bfe52a',
+        client_secret: 'a03e8940e2210e7990ad0ad89f6eb1259b1facb6',
+      },
+    })
+
+    gitment.render('comments')
+</script>
+
+
+        </aside>
+
+      </article>
+
+    </div>
+  </div>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site">
+      <div class="container text-center">
+        <p>&copy; 2017 前端叨叨客</p>
+      </div>
+    </footer>
+
+    <script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-41493088-2', 'auto');
+      ga('send', 'pageview');
+    </script>
+    
+
+  </body>
+</html>
+

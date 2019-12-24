@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>源码 on 前端叨叨客</title>
+    <link>http://jyu213.github.io/tags/%E6%BA%90%E7%A0%81/</link>
+    <description>Recent content in 源码 on 前端叨叨客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <atom:link href="/tags/%E6%BA%90%E7%A0%81/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>swr 读码</title>
+      <link>http://jyu213.github.io/blog/1/01/01/swr-%E8%AF%BB%E7%A0%81/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://jyu213.github.io/blog/1/01/01/swr-%E8%AF%BB%E7%A0%81/</guid>
+      <description>
+
+&lt;p&gt;在 React Hook 兴起之后，关于数据获取的库 &lt;code&gt;swr&lt;/code&gt; 也跟着突然流行起来。&lt;/p&gt;
+
+&lt;p&gt;函数式组件的出现，但却一直困扰于数据状态的处理，直到 React Hook 的出现，使得状态更加的隔离。尽管使用 &lt;code&gt;useState&lt;/code&gt; 来改变组件内部状态，不过在数据获取上，还是缺少了点数据驱动的意味。 &lt;code&gt;swr&lt;/code&gt; 就是针对与此，使得我们可以在 Hook 中更优雅的获取数据，其核心思想就是通过 &lt;code&gt;use&lt;/code&gt; 组件来返回 &lt;code&gt;data, isLoading, error&lt;/code&gt; 等相关数据，这样组件可以更加的处理 UI 相关的展示。&lt;/p&gt;
+
+&lt;p&gt;本文不是对 &lt;code&gt;swr&lt;/code&gt; 源码的解读，只是在看代码之中的一些感悟。目前相关版本 &lt;code&gt;0.1.13&lt;/code&gt;。&lt;/p&gt;
+
+&lt;h2 id=&#34;数据获取&#34;&gt;数据获取&lt;/h2&gt;
+
+&lt;p&gt;首先关于数据获取常见的一些手段，如接口数据缓存，错误重试，数据格式约定校验等等。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;swr&lt;/code&gt; 源于 &lt;code&gt;stale-while-revalidate&lt;/code&gt;，&lt;a href=&#34;https://tools.ietf.org/html/rfc5861&#34;&gt;HTTP RFC 5861&lt;/a&gt; 的缓存失效策略。其核心思想是当缓存过期的时候，可以先直接使用缓存，等数据更新后再重新刷新数据。其实在 &lt;code&gt;Cache-Control&lt;/code&gt; 中也有该属性。&lt;/p&gt;
+
+&lt;p&gt;存储方便很常规，&lt;code&gt;new Map()&lt;/code&gt; 的 Hash Key 来存储各数据。&lt;/p&gt;
+
+&lt;h3 id=&#34;全局配置&#34;&gt;全局配置&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;swr&lt;/code&gt; 函数还贴心的提供全局的配置，核心是使用 &lt;code&gt;Context Provider&lt;/code&gt; 方法来设置，最终和 &lt;code&gt;useSWR&lt;/code&gt; merge 得到。&lt;/p&gt;
+
+&lt;h3 id=&#34;数据请求&#34;&gt;数据请求&lt;/h3&gt;
+
+&lt;p&gt;在数据请求相关方面，swr 还是有蛮多的小细节设计。比如本地数据缓存（优化组件销毁重新创建时的渲染），超时重试，条件取数据等等，甚至还支持了 &lt;code&gt;GraphQL&lt;/code&gt; 的方式。&lt;/p&gt;
+
+&lt;h3 id=&#34;依赖请求&#34;&gt;依赖请求&lt;/h3&gt;
+
+&lt;p&gt;使用 &lt;code&gt;try..catch + onErrorRetry&lt;/code&gt; 来实现多个请求的顺序执行。在 service 未获取到数据的时候，进入 catch 并执行 onErrorRetry 来不断的重新执行。方案稍微有点暴力，不过正常场景下适用了。&lt;/p&gt;
+
+&lt;p&gt;在 &lt;code&gt;onErrorRetry&lt;/code&gt; 中，有累计重试的机制。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;	const timeout =
+    ~~((Math.random() + 0.5) * (1 &amp;lt;&amp;lt; count)) * config.errorRetryInterval
+  setTimeout(revalidate, timeout, opts)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;requestidlecallback&#34;&gt;requestIdleCallback&lt;/h3&gt;
+
+&lt;p&gt;设计的时候还贴心的考虑到了如果浏览器繁忙的时候的处理。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javsscript&#34;&gt;// 伪代码
+if (window[&#39;requestIdleCallback&#39;]) {
+	window[&#39;requestIdleCallback&#39;](softRevalidate)
+} else {
+	softRevalidate()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;ssr-的支持&#34;&gt;SSR 的支持&lt;/h3&gt;
+
+&lt;p&gt;SSR 的方案，先通过 &lt;code&gt;initialData&lt;/code&gt; 传入服务的获取到的数据，然后再前端再次请求，通过 &lt;code&gt;useEffect&lt;/code&gt; 和 &lt;code&gt;useLayoutEffect&lt;/code&gt; 区分渲染客户端还是服务端。&lt;/p&gt;
+
+&lt;h3 id=&#34;细节一&#34;&gt;细节一&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;data, error, isValidating&lt;/code&gt; 如果分开 &lt;code&gt;setState&lt;/code&gt; 的话，会多次触发，&lt;code&gt;swr&lt;/code&gt; 中使用 &lt;code&gt;useReducer&lt;/code&gt; 来合并数据已达到更新一次的目的。&lt;/p&gt;
+
+&lt;h3 id=&#34;细节二&#34;&gt;细节二&lt;/h3&gt;
+
+&lt;p&gt;使用 &lt;code&gt;useRef&lt;/code&gt; 来存储 update 状态值，因为 &lt;code&gt;useRef&lt;/code&gt; 返回的是一个可变对象，&lt;a href=&#34;https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables&#34;&gt;详见官方说明&lt;/a&gt;，一般常用场景如存一个布尔值来表示是否首次渲染，或者手动存储上一轮的 state 属性等等。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
